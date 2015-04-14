@@ -1,13 +1,13 @@
 /* Author:   	Sklug a.k.a TheGenomeWhisperer
 |       	  	The following functions are commonly called to be used as a "help"
-|		          For common scripting events as part of questing profile behaviors.
+|		        For common scripting events as part of questing profile behaviors.
 | NOTE:     	"ExecuteLua" API function executes "LUA" code language inserted into the C#
 | NOTE:     	ALSO!!! This not a more standardized API with setters and getters, which ultimately would be nice,
 | NOTE:	    	but I am writing more focused script functions specifically for questing, so 
 | NOTE:	    	please understand if this is lacking common programming practices :D
-| Final Note: Class does not need Static Main as it will be injected into the Rebot.exe through the "Editor"
-|             Additional Information can be found at Rebot.to
-*/
+| Final Note:   Class does not need Static Main as it will be injected into the Rebot.exe through the "Editor"
+|              Additional Information can be found at Rebot.to
+*/  
 
 
 class QuestingHelps
@@ -45,8 +45,8 @@ class QuestingHelps
     // Function:      PlayerNeedsExpPotions(int)
     // What it does:  Returns a boolean on if it needs to purchase potions or not.
     // Purpose:       To determine if the player has enough and can buy more XP potions.
-    //		          This is a good boolean gate to prevent
-    //		  
+    //	              This is a good boolean gate to prevent the need to execute the bulkier
+    //                in the "BuyExpPotions(int)" method if player has no need.
     public static bool PlayerNeedsExpPotions(int maxOwn)
     {
         bool result = false;
@@ -112,9 +112,55 @@ class QuestingHelps
         }
     }
     
+    // Function:      UseGuildBanner()
+    // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
+    // Purpose:       If the banner is not on cooldown, it will use it when called upon so player may level faster.
+    //	              Also, it prioritizes the best of the banners to be used so you are always using best one available.
+    public static void UseGuildBanner()
+    {
+        if (API.HasItem(64402) && API.ItemCooldown(64402) == 0)
+        {
+            API.Print("Using \"Battle Standard of Coordination\"");
+            API.UseItem(64402);
+        }
+        else if (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
+        {
+            API.Print("Using \"Standard of Unity\"");
+            API.UseItem(64401);
+        }
+        else if (API.HasItem(64400) && API.ItemCooldown(64400) == 0)
+        {
+            API.Print("Using \"Banner of Cooperation\"");
+            API.UseItem(64400);
+        }
+    }
     
-    
-    
+    // Function:      PlaceGuildBannerAtDestination(Vector3)
+    // What it does:  Basic check to first, see if one of the 3 banners is available.  If so,
+    //		          it will execute the MoveTo to the given location and then use an available banner.
+    // Purpose:       The reason why this is separated from the previous function GuildBanners() is because
+    //		          it is necessary to do a check before telling the player to moveTo a destination.
+    //		          It would be time-wasting of the player to move to the destination to use banner if it
+    //		          was not currently available in the first place.
+    //		          The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
+    //		          that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
+    //		          explicit pre-determined location I can, or I can implement give it an object location as well.
+    public static IEnumerable<int> PlaceGuildBannerAtDestination(Vector3 travel)
+   {
+        if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
+	    {
+		     while (API.Me.Distance2DTo(travel) > 5)
+		     {
+			 API.MoveTo(travel);
+			 yield return 100;
+		     }
+		     UseGuildBanner();
+	    }
+	    else
+	    {
+		     API.Print("Guild Banner Not Currently Available");
+	    }
+    }   
     
 // End Class
 }
