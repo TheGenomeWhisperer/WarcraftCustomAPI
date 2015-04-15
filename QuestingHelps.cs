@@ -184,7 +184,6 @@ class QuestingHelps
     //		      If you use it in main thread, bot will not continue whilst banners on cooldown.
     public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
     {
-        API.Print("test");
         if (!API.HasItem(64402) && !API.HasItem(64401) && !API.HasItem(64400))
         {
             yield break;  // No Banners in Possession, ends thread.
@@ -237,7 +236,50 @@ class QuestingHelps
         PlaceGuildBannerOnAuraCheck();
     }
     
-    
+    // Function:      RemainingQuests(int[])
+    // What it does:  It returns how many quests are remaining to complete within the profile.
+    // Purpose:       Basically to just keep track of profile progress so the player can know how much is remaining
+    //                to Do each time player begins the script
+    public static int RemainingQuests(int[] questArray)
+    {
+        int count = 0;
+
+        for (int i = 0; i < questArray.Length; i++)
+        {
+            if (!API.IsQuestCompleted(questArray[i]))
+            {
+                count++;
+            }
+        }
+        API.Print("You Have " + count + " quests left to complete in this questpack!");
+        return count;
+    }
+
+    // Function:      questObjectiveProgress(int, int, string)
+    // What it does:  This does a boolean check on quest progress for a given objective and
+    //                returns true if the current quest progress matches the one given in the argument.
+    // Purpose:       Occasionally when writing quest templates, sometimes you want something to keep
+    //                checking or doing things over and over again until it accomplishes it.  For example,
+    //                imagine a quest that wanted you to destroy 5 targets, but it was all one objective
+    //                so you start off with a description like "0/5 targets destroyed."  Often these targets
+    //                are not repeatable as the server stores some private information tied to your character, however,
+    //                given the current interact and collectobject abilities within Rebot, it will often attempt to
+    //                destroy the same target over and over again.  This allows you to break up a single
+    //                quest objective into different pieces, because if say the objective changes to "1/5 targets destroyed"
+    //                then it will carry on to the next sub-part of the objective rather than being stuck
+    //                in often what can occur is an infinite loop.
+    public static bool questObjectiveProgress(int questID, int objective, string description)
+    {
+        bool result = false;
+        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
+        string progress = API.ExecuteLua<string>(luaCall);
+
+        if (progress.Equals(description))
+        {
+            result = true;
+        }
+        return result;
+    }
     
     
 // End Class
