@@ -137,14 +137,14 @@ class QuestingHelps
     
     // Function:      PlaceGuildBannerAtDestination(Vector3)
     // What it does:  Basic check to first, see if one of the 3 banners is available.  If so,
-    //		          it will execute the MoveTo to the given location and then use an available banner.
+    //		      it will execute the MoveTo to the given location and then use an available banner.
     // Purpose:       The reason why this is separated from the previous function GuildBanners() is because
-    //		          it is necessary to do a check before telling the player to moveTo a destination.
-    //		          It would be time-wasting of the player to move to the destination to use banner if it
-    //		          was not currently available in the first place.
-    //		          The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
-    //		          that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
-    //		          explicit pre-determined location I can, or I can implement give it an object location as well.
+    //		      it is necessary to do a check before telling the player to moveTo a destination.
+    //		      It would be time-wasting of the player to move to the destination to use banner if it
+    //		      was not currently available in the first place.
+    //		      The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
+    //		      that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
+    //		      explicit pre-determined location I can, or I can implement give it an object location as well.
     public static IEnumerable<int> PlaceGuildBannerAtDestination(Vector3 travel)
    {
         if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
@@ -163,14 +163,17 @@ class QuestingHelps
     }   
     
     /*
-    |  The Following two Banner methods are based on the idea of having an aura check whilst in combat
+    |  The Following Banner method is based on the idea of having an aura check whilst in combat
     | and if you are lacking the aura (i.e. no banner nearby), then it drops one, rather than
     |  relying on a specific location pre-determined.  These are to be used as a forked thread
     |  from the main thread to run in parallel to the script to aura check in the background.
     */
 
-    // Function:      GuildBannerAura()
+    // Function:      PlaceGuildBannerOnAuraCheck()
     // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
+    //                To Be Used recursively, hence it yield breaks if player hits lvl 99, or is player has no banners.
+    //                This also delays the continuous check if all 3 banners are on CD, and it ONLY does a check
+    //                to be used if in combat.
     // Purpose:       If the banner is not on cooldown, it will use it when called upon so player may level faster.
     //	              Also, it prioritizes the best of the banners to be used so you are always using best one available.
     //		      What makes this different from previous UseGuildBanner() function is...
@@ -179,86 +182,60 @@ class QuestingHelps
     //		      Ideally, this is a feature to be used with a background aura that checks continuously.
     //		      WARNING! DO NOT USE unless thread is forked and this is checking in the background in parallel
     //		      If you use it in main thread, bot will not continue whilst banners on cooldown.
-    public static IEnumerable<int> GuildBannerAura()
+    public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
     {
-        if (API.HasItem(64402) && API.ItemCooldown(64402) == 0)
+        API.Print("test");
+        if (!API.HasItem(64402) && !API.HasItem(64401) && !API.HasItem(64400))
         {
-            API.Print("Using \"Battle Standard of Coordination\"");
-            API.UseItem(64402);
+            yield break;  // No Banners in Possession, ends thread.
         }
-        else if (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
+        if (API.Me.Level > 99)
         {
-            API.Print("Using \"Standard of Unity\"");
-            API.UseItem(64401);
+            yield break;  // Player hits level 100, ends thread.
         }
-        else if (API.HasItem(64400) && API.ItemCooldown(64400) == 0)
+        if (API.Me.Target != null && API.Me.Target.Distance < 100 && !API.Me.Target.IsFriendly && !API.Me.Target.IsDead)
         {
-            API.Print("Using \"Banner of Cooperation\"");
-            API.UseItem(64400);
-        }
-        else
-        {
-            API.Print("All Available Banners on Cooldown");
-            float Banner1 = API.ItemCooldown(64402);
-            float Banner2 = API.ItemCooldown(64401);
-            float Banner3 = API.ItemCooldown(64400);
-            float waitTime = 0.0f;
-
-            if (Banner1 != -1)
+            if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
             {
-                waitTime = Banner1;
+                UseGuildBanner();
             }
-            if (Banner2 != -1 && Banner2 < waitTime)
+            else
             {
-                waitTime = Banner2;
-                if (Banner3 != -1 && Banner3 < waitTime)
+                API.Print("All Available Banners on Cooldown");
+                float Banner1 = API.ItemCooldown(64402);
+                float Banner2 = API.ItemCooldown(64401);
+                float Banner3 = API.ItemCooldown(64400);
+                float waitTime = 0.0f;
+
+                if (Banner1 != -1)
+                {
+                    waitTime = Banner1;
+                }
+                if (Banner2 != -1 && Banner2 < waitTime)
+                {
+                    waitTime = Banner2;
+                    if (Banner3 != -1 && Banner3 < waitTime)
+                    {
+                        waitTime = Banner3;
+                    }
+                }
+                else if (Banner3 != -1 && Banner3 < waitTime)
                 {
                     waitTime = Banner3;
                 }
-            }
-            else if (Banner3 != -1 && Banner3 < waitTime)
-            {
-                waitTime = Banner3;
-            }
-            int delay = (int)waitTime;
-            delay = delay * 1000;
-            int minutes = delay / 60000;
-            int seconds = (delay % 60000) / 1000;
-            API.Print("Next Banner Will Be Available in " + minutes + " minutes and " + seconds + " seconds.");
-            yield return delay;
-        }
-    }
-
-    // Function:      PlaceGuildBannerOnAuraCheck()
-    // What it does:  If player is in Combat and it is lacking the guild banner aura, as in no guild banner planted within
-    //		      100 yards, then it calls for the banner use from the previous function UseGuildBannerAuraCheck().  It all works //		  recursively, so if the player hits lvl 100, it will "return" and end the recursive loop check
-    //		      as the banner is not very useful at lvl 100.  People that wish to use this method for say, rep farming,
-    //		      need only to remove the lvl 100 check. 
-    //		      Also, the wait time between recursive checks is generated as a random number between 4 and 5 seconds.
-    // Purpose:       Ultimately, to level more efficiently.  Often the placing banner on location can be good, as you can place them 
-    //		      in ideal locations to maximize XP gains, but sometimes you miss out on a lot of experience gains
-    //		      because the effort to travel to ideal location means killing half a dozen npcs along the way.
-    //		      Here, no matter where you are or what you are doing, if you get in combat, and a banner is available, it will
-    //		      use it.
-    public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
-    {
-        if (API.Me.Level > 99)
-        {
-            yield break;
-        }
-        if ((!API.Me.HasAura(90708) && !API.Me.HasAura(90632) && !API.Me.HasAura(90631)) && API.Me.InCombat)
-        {
-            var support = new Fiber<int>(GuildBannerAura());
-            while (support.Run())
-            {
-                yield return 0;
+                int delay = (int)waitTime;
+                delay = delay * 1000;
+                int minutes = delay / 60000;
+                int seconds = (delay % 60000) / 1000;
+                API.Print("Next Banner Will Be Available in " + minutes + " minutes and " + seconds + " seconds.");
+                yield return delay;
             }
         }
         Random rnd = new Random();
         int wait = rnd.Next(4000, 5000);
         yield return wait;
-        
-    }    
+        PlaceGuildBannerOnAuraCheck();
+    }
     
     
     
