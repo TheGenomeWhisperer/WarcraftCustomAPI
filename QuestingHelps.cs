@@ -162,5 +162,106 @@ class QuestingHelps
 	    }
     }   
     
+    /*
+    |  The Following two Banner methods are based on the idea of having an aura check whilst in combat
+    | and if you are lacking the aura (i.e. no banner nearby), then it drops one, rather than
+    |  relying on a specific location pre-determined.  These are to be used as a forked thread
+    |  from the main thread to run in parallel to the script to aura check in the background.
+    */
+
+    // Function:      GuildBannerAura()
+    // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
+    // Purpose:       If the banner is not on cooldown, it will use it when called upon so player may level faster.
+    //	              Also, it prioritizes the best of the banners to be used so you are always using best one available.
+    //		      What makes this different from previous UseGuildBanner() function is...
+    //		      ...in effort to conserve from spamming the conditionals, if all 3 banners are on cooldown
+    //		      then it determines the shortest cooldown time then "yield returns" or "waits" to carry on
+    //		      Ideally, this is a feature to be used with a background aura that checks continuously.
+    //		      WARNING! DO NOT USE unless thread is forked and this is checking in the background in parallel
+    //		      If you use it in main thread, bot will not continue whilst banners on cooldown.
+    public static IEnumerable<int> GuildBannerAura()
+    {
+        if (API.HasItem(64402) && API.ItemCooldown(64402) == 0)
+        {
+            API.Print("Using \"Battle Standard of Coordination\"");
+            API.UseItem(64402);
+        }
+        else if (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
+        {
+            API.Print("Using \"Standard of Unity\"");
+            API.UseItem(64401);
+        }
+        else if (API.HasItem(64400) && API.ItemCooldown(64400) == 0)
+        {
+            API.Print("Using \"Banner of Cooperation\"");
+            API.UseItem(64400);
+        }
+        else
+        {
+            API.Print("All Available Banners on Cooldown");
+            float Banner1 = API.ItemCooldown(64402);
+            float Banner2 = API.ItemCooldown(64401);
+            float Banner3 = API.ItemCooldown(64400);
+            float waitTime = 0.0f;
+
+            if (Banner1 != -1)
+            {
+                waitTime = Banner1;
+            }
+            if (Banner2 != -1 && Banner2 < waitTime)
+            {
+                waitTime = Banner2;
+                if (Banner3 != -1 && Banner3 < waitTime)
+                {
+                    waitTime = Banner3;
+                }
+            }
+            else if (Banner3 != -1 && Banner3 < waitTime)
+            {
+                waitTime = Banner3;
+            }
+            int delay = (int)waitTime;
+            delay = delay * 1000;
+            int minutes = delay / 60000;
+            int seconds = (delay % 60000) / 1000;
+            API.Print("Next Banner Will Be Available in " + minutes + " minutes and " + seconds + " seconds.");
+            yield return delay;
+        }
+    }
+
+    // Function:      PlaceGuildBannerOnAuraCheck()
+    // What it does:  If player is in Combat and it is lacking the guild banner aura, as in no guild banner planted within
+    //		      100 yards, then it calls for the banner use from the previous function UseGuildBannerAuraCheck().  It all works //		  recursively, so if the player hits lvl 100, it will "return" and end the recursive loop check
+    //		      as the banner is not very useful at lvl 100.  People that wish to use this method for say, rep farming,
+    //		      need only to remove the lvl 100 check. 
+    //		      Also, the wait time between recursive checks is generated as a random number between 4 and 5 seconds.
+    // Purpose:       Ultimately, to level more efficiently.  Often the placing banner on location can be good, as you can place them 
+    //		      in ideal locations to maximize XP gains, but sometimes you miss out on a lot of experience gains
+    //		      because the effort to travel to ideal location means killing half a dozen npcs along the way.
+    //		      Here, no matter where you are or what you are doing, if you get in combat, and a banner is available, it will
+    //		      use it.
+    public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
+    {
+        if (API.Me.Level > 99)
+        {
+            yield break;
+        }
+        if ((!API.Me.HasAura(90708) && !API.Me.HasAura(90632) && !API.Me.HasAura(90631)) && API.Me.InCombat)
+        {
+            var support = new Fiber<int>(GuildBannerAura());
+            while (support.Run())
+            {
+                yield return 0;
+            }
+        }
+        Random rnd = new Random();
+        int wait = rnd.Next(4000, 5000);
+        yield return wait;
+        
+    }    
+    
+    
+    
+    
 // End Class
 }
