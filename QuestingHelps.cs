@@ -38,6 +38,65 @@ public class QuestingHelps
     }
 
 
+    // What it does:  Sets given NPC to the focus target and also targets it.
+    // Purpose:       Useful to have a target set as focus as often it is easy to lose the target.
+    //                This also prevents potential crashing by checking empty objects. You can now do a simple
+    //                if Me.Focus != null and know that you are secure.
+    public static void SetFocusUnit(int ID)
+    {
+        foreach (var unit in API.Units)
+        {
+            if (unit.EntryID == ID && !unit.IsDead)
+            {
+                API.Me.SetFocus(unit);
+                API.Me.SetTarget(unit);
+                break;
+            }
+        }
+    }
+
+
+    // What it does:  Targets and sets focus to the closest give unit.
+    // Purpose:       Sometimes when iterating through the list of "Units," the closest does not always come first.
+    //                Often it is more effective to target closest unit first, rather than seemingly any
+    //                random unit within 100 yrds.
+    public static void SetNearestFocusUnit(int ID)
+    {
+        var killTarget = API.Me.GUID;
+        float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+
+        // Identifying Closest Desired Unit
+        foreach (var unit in API.Units)
+        {
+            if (unit.EntryID == ID && !unit.IsDead)
+            {
+                if (unit.Distance < closestUnit)
+                {
+                    closestUnit = unit.Distance;
+                    killTarget = unit.GUID;
+                }
+            }
+        }
+        if (closestUnit == 5000)
+        {
+            API.Print("No Units Found Within Targetable Range.");
+        }
+        else
+        {
+            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print
+            API.Print("Closest target is " + closest + " yards away.");
+            // Setting Focus to closest Unit
+            foreach (var unit in API.Units)
+            {
+                if (unit.GUID == killTarget)
+                {
+                    API.Me.SetFocus(unit);
+                    API.Me.SetTarget(unit);
+                    break;
+                }
+            }
+        }
+    }
     // What it does:  Moves to Focus Position, then uses zone ability, prioritizing both attacks.
     // Purpose:       Using the zone ability is critical, and to keep the code from getting too 
     //                bloated, calling this method should be a more sufficient method for repeat use.
@@ -46,7 +105,6 @@ public class QuestingHelps
         API.DisableCombat = true;
         while (API.Me.Focus.Distance2D > 10.0)
         {
-
             API.CTM(API.Me.Focus.Position);
             yield return 200;
         }
