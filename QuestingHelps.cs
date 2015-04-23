@@ -97,6 +97,32 @@ public class QuestingHelps
             }
         }
     }
+    
+    // What it does:  Determines if a lootable GameObject is within range.
+    // Purpose:       Occasionally when destroyed a target, often they will drop many items to loot.
+    //                The way Rebot does the "CollectObject" in the editor is it will loot 1 object only
+    //                This is not good if you have a chain of actions to take, like "Use rocket" then loot items.
+    //                This will allow you to place this block of code within a while loop conditional
+    //                and then identify all detected objects until none are detected.
+    public static bool UnitFoundToLoot(int ID)
+    {
+        bool found = false;
+        foreach (var unit in API.GameObjects)
+        {
+            if (unit.EntryID == ID && API.Me.Distance2DTo(unit.Position) < 90)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found == false)
+        {
+            API.Print("There Are No Lootable Items in Range");
+        }
+        return found;
+    }
+    
+    
     // What it does:  Moves to Focus Position, then uses zone ability, prioritizing both attacks.
     // Purpose:       Using the zone ability is critical, and to keep the code from getting too 
     //                bloated, calling this method should be a more sufficient method for repeat use.
