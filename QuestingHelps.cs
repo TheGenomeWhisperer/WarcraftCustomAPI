@@ -8,15 +8,16 @@
 | NOTE:	    	please understand if this is lacking common programming practices :D
 | Final Note:   Class does not need Static Main as it will be injected into the Rebot.exe through the "Editor"
 |               Additional Information can be found at Rebot.to
+|               QH = Questing Helps
 */  
 
-public class QuestingHelps
+public class QH
 {
 
     public static ReBotAPI API;
-    public static Fiber<int> QH;
+    public static Fiber<int> Fib;
 
-    public QuestingHelps() { }
+    public QH() { }
 
 
     // What it does:  It returns how many quests are remaining to complete within the profile.
@@ -37,6 +38,77 @@ public class QuestingHelps
         return count;
     }
 
+    // What it does:  Scans through the bags for an open bag slot, and if it finds one, places weapon there.
+    // Purpose:       Some quests are hard to complete because you need to use an item on a low-HP NPC.
+    //                Unfortunately, the bot often will kill the NPC off before you can use the item if your gear is high level.
+    //                By unequipping the weapon, you lose a TON of damage and make these events more unlikely.
+    public static void UnequipWeapon()
+    {
+        var position = API.Me.Position;
+        try
+        {
+            if (API.GetFreeBagSlots() == 0)
+            {
+                throw new System.Exception("Unable to Unequip Your Weapon Due to No Free Bag Slots.");
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (API.ExecuteLua<int>("return GetContainerNumFreeSlots(" + i + ");") > 0)
+                {
+                    API.AutoEquipSettings.EquipItems = false;
+
+                    // Checking if weapon is equipped
+                    if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);") != 0)
+                    {
+                        // Setting Global variable on Server Side for Future Access
+                        API.ExecuteLua<int>("weaponID = GetInventoryItemID(\"player\", 16);");
+                        API.ExecuteMacro("/script PickupInventoryItem(16);");
+
+                        if (i == 0)
+                        {
+                            API.Print("Placing Weapon Temporarily in Backpack");
+                            API.ExecuteMacro("/script PutItemInBackpack();");
+                            break;
+                        }
+                        else
+                        {
+                            int inventoryID = 19 + i;
+                            API.Print("Placing Weapon in bag " + i + " to the left of your backpack.");
+                            API.ExecuteMacro("/script PutItemInBag(" + inventoryID + ");");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            API.Print(e + "Opening Vendor to Cleanup Some Bag Slots.");
+            // Force Vendor - Todo, need to find API to force vendor.
+
+            // try again
+            UnequipWeapon();
+        }
+    }
+    
+    // What it does:  Re-Equips the same weapon you had previously removed. Reactivates "Auto-Equip"
+    // Purpose:       So you have a weapon again!!!                
+    public static void EquipWeapon()
+    {
+        int hasWeapon = API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);");
+        if (hasWeapon == 0)
+        {
+            // Returning Global Variable from server side -- will not work if you reloaded or relogged.
+        	API.EquipItem(API.ExecuteLua<int>("return weaponID;"));
+            API.Print("Re-Equipping Your Weapon");
+            API.AutoEquipSettings.EquipItems = true;
+        }
+        else
+        {
+            API.Print("Weapon Already Equipped");
+        }
+    }
+    
 
     // What it does:  Sets given NPC to the focus target and also targets it.
     // Purpose:       Useful to have a target set as focus as often it is easy to lose the target.
@@ -53,6 +125,31 @@ public class QuestingHelps
                 break;
             }
         }
+    }
+
+
+    // What it does:  Determines if a lootable GameObject is within range.
+    // Purpose:       Occasionally when destroyed a target, often they will drop many items to loot.
+    //                The way Rebot does the "CollectObject" in the editor is it will loot 1 object only
+    //                This is not good if you have a chain of actions to take, like "Use rocket" then loot items.
+    //                This will allow you to place this block of code within a while loop conditional
+    //                and then identify all detected objects until none are detected.
+    public static bool UnitFoundToLoot(int ID)
+    {
+        bool found = false;
+        foreach (var unit in API.GameObjects)
+        {
+            if (unit.EntryID == ID && API.Me.Distance2DTo(unit.Position) < 90)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found == false)
+        {
+            API.Print("There Are No Lootable Items in Range");
+        }
+        return found;
     }
 
 
@@ -83,7 +180,7 @@ public class QuestingHelps
         }
         else
         {
-            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print
+            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print.
             API.Print("Closest target is " + closest + " yards away.");
             // Setting Focus to closest Unit
             foreach (var unit in API.Units)
@@ -97,39 +194,14 @@ public class QuestingHelps
             }
         }
     }
-    
-    // What it does:  Determines if a lootable GameObject is within range.
-    // Purpose:       Occasionally when destroyed a target, often they will drop many items to loot.
-    //                The way Rebot does the "CollectObject" in the editor is it will loot 1 object only
-    //                This is not good if you have a chain of actions to take, like "Use rocket" then loot items.
-    //                This will allow you to place this block of code within a while loop conditional
-    //                and then identify all detected objects until none are detected.
-    public static bool UnitFoundToLoot(int ID)
-    {
-        bool found = false;
-        foreach (var unit in API.GameObjects)
-        {
-            if (unit.EntryID == ID && API.Me.Distance2DTo(unit.Position) < 90)
-            {
-                found = true;
-                break;
-            }
-        }
-        if (found == false)
-        {
-            API.Print("There Are No Lootable Items in Range");
-        }
-        return found;
-    }
-    
-    
+
     // What it does:  Moves to Focus Position, then uses zone ability, prioritizing both attacks.
     // Purpose:       Using the zone ability is critical, and to keep the code from getting too 
     //                bloated, calling this method should be a more sufficient method for repeat use.
-    public static IEnumerable<int> GorgrondGarrisonAbility()
+    public static IEnumerable<int> ShredderGarrisonAbility()
     {
         API.DisableCombat = true;
-        while (API.Me.Focus.Distance2D > 10.0)
+        while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0)
         {
             API.CTM(API.Me.Focus.Position);
             yield return 200;
@@ -168,7 +240,7 @@ public class QuestingHelps
     // Purpose:       Due to the nature of having to call the Garrison ability multiple times when facing
     //                challenging rare monsters in the world, it would be more efficient to
     //                merely require just calling this method.
-    public static IEnumerable<int> TaladorGarrisonAbility()
+    public static IEnumerable<int> ArsenalGarrisonAbility()
     {
         API.DisableCombat = true;
         while (API.Me.Focus != null && API.Me.Focus.Distance2D > 5)  // This ensure player paths to the focus target until it is 5 yrds or closer.
@@ -185,6 +257,7 @@ public class QuestingHelps
         }
         API.DisableCombat = false;
     }
+
 
 
     // What it does:  Algorithm that Determines Amount of XP potions in possession, if you need more, and if you havunds for more.
@@ -238,7 +311,6 @@ public class QuestingHelps
     // What it does:  Returns a boolean on if it needs to purchase potions or not.
     // Purpose:       To determine if the player has enough and can buy more XP potions.
     //		          This is a good boolean gate to prevent
-    //		  
     public static bool PlayerNeedsExpPotions(int maxOwn)
     {
         bool result = false;
@@ -367,7 +439,6 @@ public class QuestingHelps
                 {
                     waitTime = Banner3;
                 }
-                // Determining Cooldown remaining on next banner.
                 int delay = (int)waitTime;
                 delay = delay * 1000;
                 int minutes = delay / 60000;
@@ -407,5 +478,103 @@ public class QuestingHelps
         }
         return result;
     }
-
+    
+    
+    // What it does:  Navigates out of a lvl 2 or 3 Garrison Town Hall
+    // Purpose:       Rebot has serious Mesh issues when starting a script within a Garrison
+    //                But, even worse, starting within a town hall.  This solves this issue
+    //                by using Click-To-Move actions to navigate out of the town hall successfully.
+    //                Use this as a "initialization" conditional check at start of a script, imo.
+    public static IEnumerable<int> GTownHallExit()
+    {
+        int tier = API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
+        string zone = API.ExecuteLua<string>("local zone = GetMinimapZoneText(); return zone;");
+        if (zone.Equals("Town Hall") && API.IsInGarrison && (tier == 2 || tier == 3))
+        {
+            API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
+            while(!API.CTM(5562.576f, 4601.484f, 141.7169f))
+            {
+                yield return 100;
+            }
+            while(!API.CTM(5576.729f, 4584.367f, 141.0846f))  
+            {
+                yield return 100;
+            }
+            while(!API.CTM(5591.181f, 4569.721f, 136.2159f))
+                        {
+                yield return 100;
+            }
+            API.GlobalBotSettings.FlightMasterDiscoverRange = 50.0f;
+        }
+        yield break;
+    }
+    
+    
+    // What it does:  Matches the sub-zone of the player to the given one.
+    // Purpose:       Occasionally scripting requires "helps" or additional "move-tos"
+    //                at times for certain quests, for many reasons.  However, it would be
+    //                very annoying to head to those instructions everytime you stopped and restarted
+    //                the profile.  This makes it so you can first check the sub-zone/area you are in
+    //                before doing so, avoiding a lot of wasted time.
+    public static bool MiniMapZoneEquals(string name)
+    {
+        string zone = API.ExecuteLua<string>("zone = GetMinimapZoneText(); return zone;");
+        if (zone.Equals(name))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    // What it does:  Checks Scenario Stage Progress (or Complex phased Quest Stages)
+    // Purpose:       The Built in API for Rebot only had conditional information on current quest objective.
+    //                Some more complex quests have many sub-objectives.  This will open up more
+    //                control on scripting specifically for sub-objectives of the main objective.
+    public static bool ScenarioStageEquals(int progress)
+    {
+        int stage = API.ExecuteLua<int>("local _, currentStage = C_Scenario.GetInfo(); return currentStage;");
+        bool result = false;
+        if (stage == progress)
+        {
+        	result = true;
+        }
+        return result;
+    }
+    
+    // What it does:  Identifies which Gossip Option with Flightmaster is the correct one.
+    // Purpose:       If a player has many collected quests, certain NPCs can be loaded with gossip options
+    //                thus it is prudent to first check which matches the intended choice before selecting it.
+    //                This largely is used with the first quest to each new zone.
+    public static void DoGossipOnMatch(string choice)
+    {
+        // Initializing Function
+        string title = "title0";
+        string luaCall = ("local title0,_ = GetGossipOptions(); if title0 ~= nil then return title0 else return \"nil\" end");
+        string result = API.ExecuteLua<string>(luaCall);
+        // Now Ready to Iterate through All Gossip Options!
+        int i = 1;
+        string num = "";
+        while (result != null)
+        {
+            if (result.Equals(choice))
+            {
+                API.Print("Flightmaster Selection Found at Gossip Option " + i + ".");
+                API.ExecuteLua("SelectGossipOption(" + i + ");");
+                break;
+            }
+            else
+            {
+                num = i.ToString();
+                title = (title.Substring(0,title.Length-1) + num);
+                luaCall = ("local " + title + ",_," + luaCall.Substring(6,luaCall.Length-6));
+                result = API.ExecuteLua<string>(luaCall);
+                i++;
+            }
+        }
+        if (result == null)
+        {
+            API.Print("Unable to Identify Correct Gossip Option. Please Transverse Manually");
+        }
+    }  
 }
