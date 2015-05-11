@@ -42,41 +42,78 @@ public class QH
     // Purpose:       Some quests are hard to complete because you need to use an item on a low-HP NPC.
     //                Unfortunately, the bot often will kill the NPC off before you can use the item if your gear is high level.
     //                By unequipping the weapon, you lose a TON of damage and make these events more unlikely.
-    public static void UnequipWeapon()
+    public static void UnequipGear(int numItems)
     {
         var position = API.Me.Position;
+        int toRemove = API.GetFreeBagSlots();
+        // Maximum numItems items to take off.
+        if (toRemove > numItems) 
+        {
+            toRemove = numItems;
+        }
+        int temp;
+        int temp2 = 0;
+        int numFree;
+        int inventoryID;
+        
         try
         {
-            if (API.GetFreeBagSlots() == 0)
+            if (toRemove == 0)
             {
                 throw new System.Exception("Unable to Unequip Your Weapon Due to No Free Bag Slots.");
             }
-            for (int i = 0; i < 5; i++)
+            
+            // Need to Temporarily Disable AutoEquip so bot won't try to re-equip weapon.
+            API.AutoEquipSettings.EquipItems = false;
+            // Checking First if Weapon unequipped, if it is, then no need to cycle through this.
+            if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);") != 0) 
             {
-                if (API.ExecuteLua<int>("return GetContainerNumFreeSlots(" + i + ");") > 0)
+                API.ExecuteLua("SaveEquipmentSet(\"Questing\",100)");
+                for (int i = 0; i < 5; i++)
                 {
-                    API.AutoEquipSettings.EquipItems = false;
-
-                    // Checking if weapon is equipped
-                    if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);") != 0)
+                    // Checking how many open slots in a bag.
+                    numFree = API.ExecuteLua<int>("return GetContainerNumFreeSlots(" + i + ");");
+                    inventoryID = 19 + i;
+                    if (numFree > 0)
                     {
-                        // Setting Global variable on Server Side for Future Access
-                        API.ExecuteLua<int>("weaponID = GetInventoryItemID(\"player\", 16);");
-                        API.ExecuteMacro("/script PickupInventoryItem(16);");
-
-                        if (i == 0)
+                        if (numFree > toRemove) 
                         {
-                            API.Print("Placing Weapon Temporarily in Backpack");
+                            numFree = toRemove;
+                        }
+                        
+                        // i = Which Bag
+                        // j = Open Slot in Bag
+                        for (int j = temp2; j < numFree + temp2; j++) 
+                        {
+                            temp = j;
+                            if (j == 0)
+                            {
+                                // Removing Weapon First
+                                temp = 16;
+                            }
+                            if (j == 4) 
+                            {
+                                temp = 15; // Cloak changes to position 15, though it should be 4... not sure why
+                            }
+                            API.ExecuteMacro("/script PickupInventoryItem(" + temp + ");");
+                            if (i == 0)
+                            {
+                            API.Print("Placing Gear Item Temporarily in Backpack");
                             API.ExecuteMacro("/script PutItemInBackpack();");
-                            break;
-                        }
-                        else
-                        {
-                            int inventoryID = 19 + i;
-                            API.Print("Placing Weapon in bag " + i + " to the left of your backpack.");
+                            }
+                            else
+                            {
+                            API.Print("Placing Gear Piece in bag " + i + " to the left of your backpack.");
                             API.ExecuteMacro("/script PutItemInBag(" + inventoryID + ");");
-                            break;
+                            }
                         }
+                    }
+                    // If bag is full, but still gear to remove this will give us a number.
+                    temp2 = temp2 + numFree;
+                    toRemove = toRemove - numFree;
+                    if (toRemove == 0) 
+                    {
+                        break;
                     }
                 }
             }
@@ -85,29 +122,29 @@ public class QH
         {
             API.Print(e + "Opening Vendor to Cleanup Some Bag Slots.");
             // Force Vendor - Todo, need to find API to force vendor.
-
-            // try again
-            UnequipWeapon();
+            // To be Implemented Still...
+            // Then... try again
+            // UnequipGear(numItems);
         }
     }
     
     // What it does:  Re-Equips the same weapon you had previously removed. Reactivates "Auto-Equip"
     // Purpose:       So you have a weapon again!!!                
-    public static void EquipWeapon()
+    public static void ReEquipGear()
     {
         int hasWeapon = API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);");
         if (hasWeapon == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
-        	API.EquipItem(API.ExecuteLua<int>("return weaponID;"));
-            API.Print("Re-Equipping Your Weapon");
+            API.ExecuteLua("UseEquipmentSet(\"Questing\",100)");
+            API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
+            API.ExecuteLua("DeleteEquipmentSet(\"Questing\",100)");
         }
         else
         {
             API.Print("Weapon Already Equipped");
         }
-    }
     
 
     // What it does:  Sets given NPC to the focus target and also targets it.
@@ -351,7 +388,26 @@ public class QH
             API.UseItem(64400);
         }
     }
-
+    
+    // Comment Coming Soon
+    public static bool BannerAvailability()
+    {
+        if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0)) 
+        {
+            return true;
+        }
+        return false;
+    }
+   
+    // Comment Coming Soon
+    public static bool QuestNotDone(int QuestID)
+    {
+        if (!API.IsQuestInLogAndComplete(QuestID) && !API.IsQuestCompleted(QuestID))
+        {
+            return true;
+        }
+        return false;
+    }
 
     // What it does:  Basic check to first, see if one of the 3 banners is available.  If so,
     //		          it will execute the MoveTo to the given location and then use an available banner.
