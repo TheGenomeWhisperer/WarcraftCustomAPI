@@ -1,7 +1,7 @@
 
 /* Author:   	Sklug a.k.a TheGenomeWhisperer
-|       	  	The following functions are commonly called to be used as a "help"
-|		        For common scripting events as part of questing profile behaviors.
+|       	The following functions are commonly called to be used as a "help"
+|		For common scripting events as part of questing profile behaviors.
 | NOTE:     	"ExecuteLua" API function executes "LUA" code language inserted into the C#
 | NOTE:     	ALSO!!! This not a more standardized API with setters and getters, which ultimately would be nice,
 | NOTE:	    	but I am writing more focused script functions specifically for questing, so 
@@ -17,7 +17,8 @@ public class QH
     public static ReBotAPI API;
     public static Fiber<int> Fib;
 
-    public QH() { }
+    public QH() { 
+    }
 
 
     // What it does:  It returns how many quests are remaining to complete within the profile.
@@ -136,7 +137,7 @@ public class QH
         if (hasWeapon == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
-            API.ExecuteLua("UseEquipmentSet(\"Questing\",100)");
+        	API.ExecuteLua("UseEquipmentSet(\"Questing\",100)");
             API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
             API.ExecuteLua("DeleteEquipmentSet(\"Questing\",100)");
@@ -145,6 +146,7 @@ public class QH
         {
             API.Print("Weapon Already Equipped");
         }
+    }
     
 
     // What it does:  Sets given NPC to the focus target and also targets it.
@@ -295,56 +297,6 @@ public class QH
         API.DisableCombat = false;
     }
 
-
-
-    // What it does:  Algorithm that Determines Amount of XP potions in possession, if you need more, and if you havunds for more.
-    //                then it purchases the indicated amount to buy for you from vendor.
-    // Purpose:       To automate XP potion purchasing without wasting Garrison resources.  By automating the purchas of
-    //	  	          say, 5 potions, everytime the profile started, it would buy 5 more.  With connectivity issues
-    //        	      or other misc. interruptions, you could potentially waste tons of resources needlessly and end up
-    //        	      with many remaining useless potions.  This prevents that.
-    //		          Note: Initial value "maxOwn" can be adjusted to any desired potion amount count.
-    public static void BuyExpPotions(int maxOwn)
-    {
-        int toBuy = 0;
-        int currentPotionCount = API.ExecuteLua<int>("local potions = GetItemCount(120182); return potions;");
-        API.Print(currentPotionCount + " XP Potions In Your Possession!");
-
-        if (currentPotionCount < maxOwn)
-        {
-            int gResources = API.ExecuteLua<int>("local _, amount= GetCurrencyInfo(824); return amount;");
-            int canBuy = gResources / 100;
-
-            if (canBuy > maxOwn)
-            {
-                canBuy = maxOwn; // Player is capable of buying more than default amount, so setting lower amount
-            }
-            else if (canBuy == 0)
-            {
-                API.Print("Not Enough Resources to Buy XP Potion");
-            }
-
-            // Next step determines if player should buy max amount, or lesser amount if some already in posession
-
-            if ((canBuy + currentPotionCount) > maxOwn)
-            {
-                toBuy = canBuy - currentPotionCount;
-            }
-            else
-            {
-                toBuy = canBuy; // Basically currentPotionCount is zero
-            }
-
-            string buy = "/run BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
-            API.ExecuteMacro(buy);
-        }
-        else
-        {
-            API.Print("You Already Have a Sufficient Supply of XP Potions! YAY!");
-        }
-    }
-
-
     // What it does:  Returns a boolean on if it needs to purchase potions or not.
     // Purpose:       To determine if the player has enough and can buy more XP potions.
     //		          This is a good boolean gate to prevent
@@ -364,8 +316,6 @@ public class QH
         }
         return result;
     }
-
-
 
     // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
     // Purpose:       If the banner is not on cooldown, it will use it when called upon so player may level faster.
@@ -389,17 +339,26 @@ public class QH
         }
     }
     
-    // Comment Coming Soon
-    public static bool BannerAvailability()
+    // Method:          "BannerAvailable"
+    // What it Does:    Checks if player has any of the 3 Guild Banners AND the Banner is usuable(not on CD)
+    // Purpose:         Help remove code bloat by offering the boolean check here, before cycling through other Banner methods
+    public static bool BannerAvailable()
     {
-        if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0)) 
+        if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
+         || (API.HasItem(64400) && API.ItemCooldown(64400) == 0)) 
         {
             return true;
         }
         return false;
     }
-   
-    // Comment Coming Soon
+
+    // Method:          "QuestNotDone"
+    // What it does:    Verify that the quest is not turned in and completed, but also verifies it is
+    //                  not completed yet still in your logs.
+    // Purpose:         This is an important pre-req check on placing Banners at a specific location.
+    //                  Without this, everytime the script restarted, it would place the banner down at the 
+    //                  given location, wasting time, even if player had the quest in their logs.
+    //                  This is a good boolean check to implement before indicating the need of banners still.
     public static bool QuestNotDone(int QuestID)
     {
         if (!API.IsQuestInLogAndComplete(QuestID) && !API.IsQuestCompleted(QuestID))
@@ -418,15 +377,14 @@ public class QH
     //		          The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
     //		          that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
     //		          explicit pre-determined location I can, or I can implement give it an object location as well.
-    public static IEnumerable<int> PlaceGuildBannerAtDestination(Vector3 travel)
+    public static IEnumerable<int> PlaceGuildBannerAt(float x, float y, float z)
    {
-        if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
+        if (BannerAvailable())
 	    {
-		     while (API.Me.Distance2DTo(travel) > 5)
-		     {
-			 API.MoveTo(travel);
-			 yield return 100;
-		     }
+            Vector3 location = new Vector3(x,y,z);
+		     while (!API.MoveTo(location)) {
+                 yield return 100;
+             }
 		     UseGuildBanner();
 	    }
 	    else
@@ -467,7 +425,8 @@ public class QH
         }
         if (API.Me.Target != null && API.Me.Target.Distance < 100 && !API.Me.Target.IsFriendly && !API.Me.Target.IsDead)
         {
-            if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0) || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
+            if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
+             || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
             {
                 UseGuildBanner();
             }
@@ -598,7 +557,17 @@ public class QH
         return result;
     }
     
-    // What it does:  Identifies which Gossip Option with Flightmaster is the correct one.
+    public static bool IsClose(float x, float y, float z, int distance)
+    {
+        Vector3 location = new Vector3(x,y,z);
+        if (API.Me.Distance2DTo(location) < distance)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    // What it does:  Identifies which Gossip Option is the correct one.
     // Purpose:       If a player has many collected quests, certain NPCs can be loaded with gossip options
     //                thus it is prudent to first check which matches the intended choice before selecting it.
     //                This largely is used with the first quest to each new zone.
@@ -615,7 +584,7 @@ public class QH
         {
             if (result.Equals(choice))
             {
-                API.Print("Flightmaster Selection Found at Gossip Option " + i + ".");
+                API.Print("Selection Found at Gossip Option " + i + ".");
                 API.ExecuteLua("SelectGossipOption(" + i + ");");
                 break;
             }
@@ -630,7 +599,99 @@ public class QH
         }
         if (result == null)
         {
-            API.Print("Unable to Identify Correct Gossip Option. Please Transverse Manually");
+            API.Print("Unable to Identify Correct Gossip Option.");
         }
     }  
+    
+    // Method:          "RemainingSpellCD"
+    // What it Does:    Returns, in Seconds, how long until the spell is available again
+    // Purpose:         Useful for conditional checks on spell casting, prioritization of a spell, etc.    
+    public static int RemainingSpellCD(int spellID)
+    {
+        int start = API.ExecuteLua<int>("local start = GetSpellCooldown(" + spellID + "); return start;");
+        int duration = API.ExecuteLua<int>("local _,duration = GetSpellCooldown(164050); return duration;");
+        int timePassed = API.ExecuteLua<int>("return GetTime();");
+        int coolDown = timePassed - start;
+        return (duration - coolDown);    
+    }
+    
+    public static bool ShadowElixerNeeded() {
+        int[] quests = {36386,36390,36389,36388,36381};
+        int count = 0;
+        for (int i = 0; i < quests.Length; i++) {
+            if (!API.IsQuestCompleted(quests[i])) {
+                count++;
+            }
+        }
+        if (API.ItemCount(234735) < count) {
+            return true;
+        }
+        return false;
+    }
+    
+    //
+    public static int ExpPotionsNeeded() {
+        // Adding a Quick escape if Player is almost lvl 100... no need to waste resources.
+        if (API.Me.Level == 99) {
+            float currXP = API.ExecuteLua<float>("return UnitXP(\"player\")");
+            float nextLvl = API.ExecuteLua<float>("return UnitXPMax(\"player\")");
+            if  (API.Me.HasAura(178119) && currXP/nextLvl > 0.75) {
+                API.Print("You are Almost Level 100! No Need to buy any more XP potions... Aura still Active.");
+                return 0;
+            }
+            else if (currXP/nextLvl > 0.85) {
+                API.Print("You are less than 15% XP From Level 100. Let's Not Waste Any Garrison Resources on Potions!");
+                return 0;
+            }
+        }
+        // Calculating How Many Potions a Player at this lvl should buy.
+        double num = (100 - (API.Me.Level))*1.4;
+        int maxOwn = (int)num;
+        int toBuy;
+        int currentPotionCount = API.ExecuteLua<int>("potions = GetItemCount(120182); return potions;");
+        API.Print(currentPotionCount + " XP Potions In Your Possession!");
+        
+        if (currentPotionCount < maxOwn) 
+        {
+        	int gResources = API.ExecuteLua<int>("_, amount = GetCurrencyInfo(824); return amount;");
+        	int canBuy = gResources / 100;
+        
+        	if (canBuy > maxOwn)
+        	{
+        		canBuy = maxOwn;
+        	} 
+        	else if (canBuy == 0)
+        	{
+        		API.Print("Not Enough Resources to Buy XP Potion");
+        	}
+        	if ((canBuy + currentPotionCount) > maxOwn)
+        	{
+        		toBuy = canBuy - currentPotionCount;
+        	}
+        	else
+        	{
+        		toBuy = canBuy;
+        	}
+        }
+        else 
+        {
+            API.Print("You Already Have a Sufficient Supply of XP Potions! YAY!");
+            toBuy = 0;
+        }
+        if (toBuy > 0) {
+            API.Print("You Should Buy " + toBuy + " XP Potions at Your Garrison!");
+        }
+        return toBuy;
+    }
+    
+    public static void BuyExpPotions(int toBuy)
+    {
+        if (toBuy > 0) {
+            string buy = "/run BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
+            API.ExecuteMacro(buy);
+        }
+    }
+
 }
+
+   
