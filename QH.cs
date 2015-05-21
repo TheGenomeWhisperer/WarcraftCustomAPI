@@ -1,7 +1,7 @@
 
 /* Author:   	Sklug a.k.a TheGenomeWhisperer
-|       	The following functions are commonly called to be used as a "help"
-|		For common scripting events as part of questing profile behaviors.
+|       	 The following functions are commonly called to be used as a "help"
+|		 For common scripting events as part of questing profile behaviors.
 | NOTE:     	"ExecuteLua" API function executes "LUA" code language inserted into the C#
 | NOTE:     	ALSO!!! This not a more standardized API with setters and getters, which ultimately would be nice,
 | NOTE:	    	but I am writing more focused script functions specifically for questing, so 
@@ -233,6 +233,18 @@ public class QH
             }
         }
     }
+    
+    // Comment Incoming
+    public static IEnumerable<int> CTA_GarrisonAbility() {
+        API.DisableCombat = true;
+        while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) {
+            API.MoveTo(API.Me.Focus.Position);
+            yield return 200;
+        }
+        API.ExecuteMacro("/use Garrison Ability");
+        yield return 500;
+        API.DisableCombat = false;
+    }
 
     // What it does:  Moves to Focus Position, then uses zone ability, prioritizing both attacks.
     // Purpose:       Using the zone ability is critical, and to keep the code from getting too 
@@ -295,26 +307,6 @@ public class QH
             yield return 1500;
         }
         API.DisableCombat = false;
-    }
-
-    // What it does:  Returns a boolean on if it needs to purchase potions or not.
-    // Purpose:       To determine if the player has enough and can buy more XP potions.
-    //		          This is a good boolean gate to prevent
-    public static bool PlayerNeedsExpPotions(int maxOwn)
-    {
-        bool result = false;
-        int currentPotionCount = API.ExecuteLua<int>("local potions = GetItemCount(120182); return potions;");
-
-        if (currentPotionCount < maxOwn)
-        {
-            int gResources = API.ExecuteLua<int>("local _, amount= GetCurrencyInfo(824); return amount;");
-            int canBuy = gResources / 100;
-            if (canBuy != 0)
-            {
-                result = true;
-            }
-        }
-        return result;
     }
 
     // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
@@ -425,8 +417,7 @@ public class QH
         }
         if (API.Me.Target != null && API.Me.Target.Distance < 100 && !API.Me.Target.IsFriendly && !API.Me.Target.IsDead)
         {
-            if ((API.HasItem(64402) && API.ItemCooldown(64402) == 0) || (API.HasItem(64401) && API.ItemCooldown(64401) == 0)
-             || (API.HasItem(64400) && API.ItemCooldown(64400) == 0))
+            if (BannerAvailable())
             {
                 UseGuildBanner();
             }
@@ -454,6 +445,7 @@ public class QH
                 {
                     waitTime = Banner3;
                 }
+                // Setting up delay timer on recursive method if banners on CD
                 int delay = (int)waitTime;
                 delay = delay * 1000;
                 int minutes = delay / 60000;
@@ -465,7 +457,10 @@ public class QH
         Random rnd = new Random();
         int wait = rnd.Next(4000, 5000);
         yield return wait;
-        PlaceGuildBannerOnAuraCheck();
+        var check = new Fiber<int>(PlaceGuildBannerOnAuraCheck());
+        while (check.Run()) {
+            yield return 100;
+        }
     }
 
 
@@ -504,7 +499,8 @@ public class QH
     {
         int tier = API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
         string zone = API.ExecuteLua<string>("local zone = GetMinimapZoneText(); return zone;");
-        if (zone.Equals("Town Hall") && API.IsInGarrison && (tier == 2 || tier == 3))
+        Vector3 location = new Vector3(5559.2f, 4604.8f, 141.7f);
+        if (API.Me.Distance2DTo(location) < 24 || (zone.Equals("Town Hall")) && API.IsInGarrison && (tier == 2 || tier == 3))
         {
             API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
             while(!API.CTM(5562.576f, 4601.484f, 141.7169f))
@@ -608,15 +604,20 @@ public class QH
     // Purpose:         Useful for conditional checks on spell casting, prioritization of a spell, etc.    
     public static int RemainingSpellCD(int spellID)
     {
-        int start = API.ExecuteLua<int>("local start = GetSpellCooldown(" + spellID + "); return start;");
-        int duration = API.ExecuteLua<int>("local _,duration = GetSpellCooldown(164050); return duration;");
-        int timePassed = API.ExecuteLua<int>("return GetTime();");
-        int coolDown = timePassed - start;
-        return (duration - coolDown);    
+        float start = API.ExecuteLua<float>("local start = GetSpellCooldown(" + spellID + "); return start;");
+        float duration = API.ExecuteLua<float>("local _,duration = GetSpellCooldown(" + spellID + "); return duration;");
+        float timePassed = API.ExecuteLua<float>("return GetTime();");
+        float coolDown = timePassed - start;
+        int result = (int)(duration-coolDown);
+        if (result < 0) {
+            result = 0;
+        }
+        return result;
     }
     
+    // Comment Incoming
     public static bool ShadowElixerNeeded() {
-        int[] quests = {36386,36390,36389,36388,36381};
+        int[] quests = {36386,36390,36389,36388,36381,36392};
         int count = 0;
         for (int i = 0; i < quests.Length; i++) {
             if (!API.IsQuestCompleted(quests[i])) {
@@ -629,7 +630,7 @@ public class QH
         return false;
     }
     
-    //
+    // Comment Incoming
     public static int ExpPotionsNeeded() {
         // Adding a Quick escape if Player is almost lvl 100... no need to waste resources.
         if (API.Me.Level == 99) {
@@ -684,6 +685,7 @@ public class QH
         return toBuy;
     }
     
+    // Comment Incoming
     public static void BuyExpPotions(int toBuy)
     {
         if (toBuy > 0) {
@@ -691,7 +693,240 @@ public class QH
             API.ExecuteMacro(buy);
         }
     }
-
+    
+    // Comment Incoming
+    public static IEnumerable<int> XPMacro() {
+        if (API.Me.Level > 99) {
+            API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
+            yield break;
+        }
+        if (!API.IsQuestCompleted(34378)) {
+            Random rnd = new Random();
+            int pause = rnd.Next(300000,302000);
+            yield return pause;
+        }
+        if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) {
+            API.ExecuteMacro("/use Excess Potion of Accelerated Learning");
+        }
+        Random rand = new Random();
+        int wait = rand.Next(15000,17000);
+        yield return wait;
+        // Recursive Return
+        var check = new Fiber<int>(XPMacro());
+        while (check.Run()) {
+            yield return 100;
+        }
+    }
+    
+    // Comment Incoming
+    public static bool IsMovingAway(int initialDistance) {
+        bool result = false;
+        if (API.Me.Focus != null) {
+            if (API.Me.Focus.Distance > initialDistance) {
+            result = true;
+            }
+        }
+        else {
+            API.Print("Unable to find target...");
+        }
+        return result;
+    }
+    
+    // Comment Incoming
+    public static bool HasGuildBannerAura() {
+        if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) {
+            return true;
+        }
+        return false;
+    }
+    
+    // Comment Incoming
+    public static bool HasProfession() {
+        int prof1 = API.ExecuteLua<int>("local prof1 = GetProfessions(); return prof1");
+        int prof2 = API.ExecuteLua<int>("local _,prof2 = GetProfessions(); return prof2");
+        
+        if (prof1 != 0 || prof2 != 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    // Comment Incoming
+    public static int ProfBuildingID(string professionName) {
+        int idNumber;
+        switch(professionName) {
+            case "Alchemy":
+                idNumber = 76;
+                break;
+            case "Enchanting" : 
+            	idNumber = 93;
+                break;
+            case "Engineering":
+            	idNumber = 91;
+                break;
+            case "Jewelcrafting":
+            	idNumber = 96;
+                break;
+            case "Inscription":
+            	idNumber = 95;
+                break;
+            case "Tailoring": 
+            	idNumber = 94;
+                break;
+            case "Blacksmithing": 
+            	idNumber = 60;
+                break;
+            case "Leatherworking":
+            	idNumber = 90;
+                break;
+            case "Herbalism":
+            	API.Print("Herbalism Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            case "Mining":
+            	API.Print("Mining Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            case "Skinning":
+            	API.Print("Skinning Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            default:
+                API.Print("No Valid Profession Identified...");
+                idNumber = 0;
+                break;
+        }
+        return idNumber;    
+    }
+    
+    // Comment Incoming
+    public static IEnumerable<int> HearthToGarrison() {
+        if (!API.IsInGarrison) {
+            if (API.ItemCooldown(110560) == 0) {
+                API.Print("Hearthing to Garrison");
+                API.UseItem(110560);
+                while(API.Me.IsCasting) {
+                    yield return 100;
+                }
+                while (!API.IsInGarrison) {
+                    yield return 100;
+                }
+            }
+            else {
+                API.Print("Player Wanted to hearth to Garrison, but it is on Cooldown...");
+                yield break;
+            }
+        }
+    }
 }
+//     -- Identifying Primary Professions
+// 
+// local buildingID1 = 93; -- default is Enchanter's Study
+// local buildingID2 = 51; -- default is Storehouse
+// local pName1 = "Enchanting"
+// local pName2 = "Storehouse"
+// local plotID1 = 18
+// local plotID2 = 19
+// 
+// -- Grabbing Profession Index identifies
+// local prof1, prof2 = GetProfessions();
+// if prof1 == nil and prof2 == nil then
+// 	print("No Professions Found, Using Default Professions...")
+// else
+//     -- function to act like a switch statement since LUA has no Switch Logic
+//     
+//     function getBuildingToPlot(professionName) 
+//     	local idNumber = 0
+//     	if professionName == "Alchemy" then 
+//     		idNumber = 76
+//     	elseif professionName == "Enchanting" then 
+//     		idNumber = 93
+//     	elseif professionName == "Engineering" then 
+//     		idNumber = 91
+//     	elseif professionName == "Jewelcrafting" then 
+//     		idNumber = 96
+//     	elseif professionName == "Inscription" then 
+//     		idNumber = 95
+//     	elseif professionName == "Tailoring" then 
+//     		idNumber = 94
+//     	elseif professionName == "Blacksmithing" then 
+//     		idNumber = 60
+//     	elseif professionName == "Leatherworking" then 
+//     		idNumber = 90
+//     	else 
+//     		print("Missing a Profession")
+//     	end
+//     	return idNumber;
+//     end
+//     
+//     if (prof1 ~= nil) then
+//         local name = GetProfessionInfo(prof1);
+//         if name ~=  "Mining" and name ~= "Herbalism" and name ~= "Skinning" then
+//         	pName1 = name;
+//         	buildingID1 = getBuildingToPlot(pName1);
+//         elseif name == "Herbalism" then
+//     		print("Herbalism Has No Corresponding Building to Place. Using Default!")
+//     	elseif name == "Mining" then
+//     		print("Mining Has No Corresponding Building to Place. Using Default!")
+//         elseif name == "Skinning" then
+//             print("Skinning Has No Corresponding Building to Place. Using Default!")
+//         end
+//     end
+//     
+//     if (prof2 ~= nil) then 
+//         local name2 = GetProfessionInfo(prof2);
+//         if name2 ~=  "Mining" and name2 ~= "Herbalism" and name2 ~= "Skinning" then
+//         	pName2 = name2
+//         	buildingID2 = getBuildingToPlot(pName2)
+//         elseif name2 == "Herbalism" then
+//     		print("Herbalism Has No Corresponding Building to Place. Using Default!")
+//     	elseif name2 == "Mining" then
+//     		print("Mining Has No Corresponding Building to Place. Using Default!")
+//         elseif name2 == "Skinning" then
+//             print("Skinning Has No Corresponding Building to Place. Using Default!")
+//         end
+//     end
+// end
+// 
+// local count = 1
+// for x, y in pairs(C_Garrison.GetPlotsForBuilding(buildingID1)) do
+// 	if count == 1 then
+// 		plotID1 = y
+// 		count = count + 1
+// 	elseif count == 2 then
+// 		plotID2 = y
+// 		count = count + 1
+// 	elseif count == 3 then
+// 		print("What!? 3 plots? Do you already have a tier 3 garrison? Only setting for 2 buildings!")
+// 	end
+// end
+// 
+// local builtID1, buildingName1 = C_Garrison.GetOwnedBuildingInfo(plotID1)
+// local builtID2, buildingName2 = C_Garrison.GetOwnedBuildingInfo(plotID2)
+// if builtID1 == nil then
+// 	if plotID1 ~= builtID2 then
+// 		C_Garrison.PlaceBuilding(plotID1, buildingID1);
+// 		print("Placing Plot For " .. pName1 .. "!");
+// 	elseif builtID2 ~= nil then
+// 		C_Garrison.PlaceBuilding(plotID1, buildingID2);
+// 		print("Placing Plot For " .. pName2 .. "!");
+// 	end
+// else
+// 	print("You Already Have the " .. buildingName1 .. " There!")
+// end
+// 
+// local builtID1, buildingName1 = C_Garrison.GetOwnedBuildingInfo(plotID1)
+// local builtID2, buildingName2 = C_Garrison.GetOwnedBuildingInfo(plotID2)
+// 	
+// if builtID2 == nil then
+// 	if plotID2 ~= builtID1 then
+// 		C_Garrison.PlaceBuilding(plotID2, buildingID2);
+// 		print("Placing Plot For " .. pName2 .. "!");
+// 	elseif builtID1 ~= nil then
+// 		C_Garrison.PlaceBuilding(plotID2, buildingID1);
+// 		print("Placing Plot For " .. pName1 .. "!");
+// 	end
+// else
+// 	print("You Already Have the " .. buildingName2 .. " There!")
+// end
 
-   
