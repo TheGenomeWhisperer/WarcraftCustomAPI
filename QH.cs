@@ -1,25 +1,25 @@
 
 /* Author:   	Sklug a.k.a TheGenomeWhisperer
-|       	 The following functions are commonly called to be used as a "help"
-|		 For common scripting events as part of questing profile behaviors.
-| NOTE:     	"ExecuteLua" API function executes "LUA" code language inserted into the C#
+|       	The following functions are commonly called to be used as a "help"
+|		For common scripting events as part of questing profile behaviors.
+| NOTE:     	"ExecuteLua" API function executes "Lua" code language inserted into the C#
 | NOTE:     	ALSO!!! This not a more standardized API with setters and getters, which ultimately would be nice,
 | NOTE:	    	but I am writing more focused script functions specifically for questing, so 
 | NOTE:	    	please understand if this is lacking common programming practices :D
 | Final Note:   Class does not need Static Main as it will be injected into the Rebot.exe through the "Editor"
 |               Additional Information can be found at Rebot.to
 |               QH = Questing Helps
+|
+|       WARNING WARNING!!! I have not yet cleaed this and organized it/alphabetized it yet...
 */  
 
 public class QH
 {
-
     public static ReBotAPI API;
     public static Fiber<int> Fib;
 
     public QH() { 
     }
-
 
     // What it does:  It returns how many quests are remaining to complete within the profile.
     // Purpose:       Basically to just keep track of profile progress so the player can know how much is remaining
@@ -42,13 +42,12 @@ public class QH
     // What it does:  Scans through the bags for an open bag slot, and if it finds one, places weapon there.
     // Purpose:       Some quests are hard to complete because you need to use an item on a low-HP NPC.
     //                Unfortunately, the bot often will kill the NPC off before you can use the item if your gear is high level.
-    //                By unequipping the weapon, you lose a TON of damage and make these events more unlikely.
+    //                By unequipping the weapon and other gear, you lose a TON of damage and make these events more unlikely.
     public static void UnequipGear(int numItems)
     {
-        var position = API.Me.Position;
         int toRemove = API.GetFreeBagSlots();
         // Maximum numItems items to take off.
-        if (toRemove > numItems) 
+        if (toRemove >= numItems) 
         {
             toRemove = numItems;
         }
@@ -166,31 +165,18 @@ public class QH
         }
     }
 
-
-    // What it does:  Determines if a lootable GameObject is within range.
-    // Purpose:       Occasionally when destroyed a target, often they will drop many items to loot.
-    //                The way Rebot does the "CollectObject" in the editor is it will loot 1 object only
-    //                This is not good if you have a chain of actions to take, like "Use rocket" then loot items.
-    //                This will allow you to place this block of code within a while loop conditional
-    //                and then identify all detected objects until none are detected.
-    public static bool UnitFoundToLoot(int ID)
-    {
-        bool found = false;
-        foreach (var unit in API.GameObjects)
+    // comment incoming
+    public static void SetFocusUnitMaxDistance(int ID, int yards) {
+        foreach (var unit in API.Units)
         {
-            if (unit.EntryID == ID && API.Me.Distance2DTo(unit.Position) < 90)
+            if (unit.EntryID == ID && !unit.IsDead && API.Me.Distance2DTo(unit.Position) < yards)
             {
-                found = true;
+                API.Me.SetFocus(unit);
+                API.Me.SetTarget(unit);
                 break;
             }
         }
-        if (found == false)
-        {
-            API.Print("There Are No Lootable Items in Range");
-        }
-        return found;
     }
-
 
     // What it does:  Targets and sets focus to the closest give unit.
     // Purpose:       Sometimes when iterating through the list of "Units," the closest does not always come first.
@@ -234,16 +220,46 @@ public class QH
         }
     }
     
+    // What it does:  Determines if a lootable GameObject is within range.
+    // Purpose:       Occasionally when destroyed a target, often they will drop many items to loot.
+    //                The way Rebot does the "CollectObject" in the editor is it will loot 1 object only
+    //                This is not good if you have a chain of actions to take, like "Use rocket" then loot items.
+    //                This will allow you to place this block of code within a while loop conditional
+    //                and then identify all detected objects until none are detected.
+    public static bool UnitFoundToLoot(int ID, int yards)
+    {
+        bool found = false;
+        foreach (var unit in API.GameObjects)
+        {
+            if (unit.EntryID == ID && API.Me.Distance2DTo(unit.Position) < yards)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found == false)
+        {
+            API.Print("There Are No Lootable Items in Range");
+        }
+        return found;
+    }
+    
     // Comment Incoming
     public static IEnumerable<int> CTA_GarrisonAbility() {
-        API.DisableCombat = true;
-        while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) {
-            API.MoveTo(API.Me.Focus.Position);
-            yield return 200;
+        if (RemainingSpellCD(161332) == 0) {
+            API.DisableCombat = true;
+            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) {
+                API.CTM(API.Me.Focus.Position);
+                yield return 200;
+            }
+            API.ExecuteMacro("/use Garrison Ability");
+            yield return 500;
+            API.DisableCombat = false;
         }
-        API.ExecuteMacro("/use Garrison Ability");
-        yield return 500;
-        API.DisableCombat = false;
+        else {
+            API.Print("Player Wanted to Use \"Call to Arms\" Garrison Ability, But it Was on CD");
+            yield break;
+        }
     }
 
     // What it does:  Moves to Focus Position, then uses zone ability, prioritizing both attacks.
@@ -251,62 +267,67 @@ public class QH
     //                bloated, calling this method should be a more sufficient method for repeat use.
     public static IEnumerable<int> ShredderGarrisonAbility()
     {
-        API.DisableCombat = true;
-        while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0)
-        {
-            API.CTM(API.Me.Focus.Position);
-            yield return 200;
-        }
-        API.ExecuteMacro("/use Garrison Ability");
-        yield return 3000;
-        while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
-        {
-            API.SetFacing(API.Me.Focus);
-            if (API.Me.Focus.Distance2D <= 13)
+        if (RemainingSpellCD(164050) == 0 || API.Me.IsOnTransport) {
+            API.DisableCombat = true;
+            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 14.0)
             {
-                API.ExecuteMacro("/click OverrideActionBarButton2");
+                API.CTM(API.Me.Focus.Position);
+                yield return 100;
             }
-            else
+            API.SetFacing(API.Me.Focus);
+            if (!API.Me.IsOnTransport) {
+                API.ExecuteMacro("/use Garrison Ability");
+                yield return 2000;
+            }
+            while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
             {
-                while (API.Me.Focus.Distance2D > 13.0)
+                while (API.Me.Focus.Distance2D > 14.0)
                 {
                     API.CTM(API.Me.Focus.Position);
                     yield return 100;
                 }
-                API.ExecuteMacro("/click OverrideActionBarButton2");
+                API.CTM(API.Me.Focus.Position);
+                if (RemainingSpellCD(165422) > 0) {
+                    API.ExecuteMacro("/click OverrideActionBarButton1");
+                    Random rnd = new Random();
+                    yield return rnd.Next(1700, 1900);
+                }
+                else {
+                    API.ExecuteMacro("/click OverrideActionBarButton2");
+                }
             }
-            API.SetFacing(API.Me.Focus);
-            for (int i = 0; i < 3; i++)
-            {
-                API.ExecuteMacro("/click OverrideActionBarButton1");
-                Random rnd = new Random();
-                yield return rnd.Next(1700, 1900);
-            }
+            API.ExecuteMacro("/click OverrideActionBarLeaveFrameLeaveButton");
+            API.DisableCombat = false;
         }
-        API.ExecuteMacro("/click OverrideActionBarLeaveFrameLeaveButton");
-        API.DisableCombat = false;
     }
 
     // What it does:  Moves to Focus Position, then uses zone ability 3 times.
     // Purpose:       Due to the nature of having to call the Garrison ability multiple times when facing
     //                challenging rare monsters in the world, it would be more efficient to
-    //                merely require just calling this method.
-    public static IEnumerable<int> ArsenalGarrisonAbility()
+    //                merely require just calling this method. numStrikes should never be more than 3.
+    public static IEnumerable<int> ArsenalGarrisonAbility(int numStrikes)
     {
-        API.DisableCombat = true;
-        while (API.Me.Focus != null && API.Me.Focus.Distance2D > 5)  // This ensure player paths to the focus target until it is 5 yrds or closer.
-        {
-            API.MoveTo(API.Me.Focus.Position);
-            yield return 100;
+        if (RemainingSpellCD(162075) == 0) {
+            API.DisableCombat = true;
+            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10)  // This ensure player paths to the focus target until it is 5 yrds or closer.
+            {
+                API.MoveTo(API.Me.Focus.Position);
+                yield return 100;
+            }
+            for (int i = 0; i < numStrikes; i++)
+            {
+                while (API.Me.Focus != null) {
+                    API.ExecuteMacro("/use Garrison Ability");
+                    yield return 100;
+                    API.ClickOnTerrain(API.Me.Focus.Position);
+                    yield return 1800;
+                }
+            }
+            API.DisableCombat = false;
         }
-        for (int i = 0; i < 3; i++)
-        {
-            API.ExecuteMacro("/use Garrison Ability");
-            yield return 100;
-            API.ClickOnTerrain(API.Me.Focus.Position);
-            yield return 1500;
+        else {
+            API.Print("Player Wanted to Use the Arsenal Garrison Ability but it was on Cooldown!");
         }
-        API.DisableCombat = false;
     }
 
     // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
@@ -469,7 +490,7 @@ public class QH
     // Purpose:       Occasionally when writing quest templates, sometimes you want something to keep
     //                checking or doing things over and over again until it accomplishes it.  For example,
     //                imagine a quest that wanted you to destroy 5 targets, but it was all one objective
-    //                so you start off with a description like "0/5 targets destroyed."  Often these targets
+    //                so you start off with a description like "0/5"  Often these targets
     //                are not repeatable as the server stores some private information tied to your character, however,
     //                given the current interact and collectobject abilities within Rebot, it will often attempt to
     //                destroy the same target over and over again.  This allows you to break up a single
@@ -478,15 +499,14 @@ public class QH
     //                in often what can occur is an infinite loop.
     public static bool questObjectiveProgress(int questID, int objective, string description)
     {
-        bool result = false;
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
 
-        if (progress.Equals(description))
+        if (progress.Substring(0,3).Equals(description))
         {
-            result = true;
+            return true;
         }
-        return result;
+        return false;
     }
     
     
@@ -515,7 +535,7 @@ public class QH
                         {
                 yield return 100;
             }
-            API.GlobalBotSettings.FlightMasterDiscoverRange = 50.0f;
+            API.GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;
         }
         yield break;
     }
@@ -545,12 +565,11 @@ public class QH
     public static bool ScenarioStageEquals(int progress)
     {
         int stage = API.ExecuteLua<int>("local _, currentStage = C_Scenario.GetInfo(); return currentStage;");
-        bool result = false;
         if (stage == progress)
         {
-        	result = true;
+        	return true;
         }
-        return result;
+        return false;
     }
     
     public static bool IsClose(float x, float y, float z, int distance)
@@ -695,31 +714,36 @@ public class QH
     }
     
     // Comment Incoming
+    // Recursive for live tracking...
     public static IEnumerable<int> XPMacro() {
-        if (API.Me.Level > 99) {
-            API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
-            yield break;
-        }
-        if (!API.IsQuestCompleted(34378)) {
-            Random rnd = new Random();
-            int pause = rnd.Next(300000,302000);
-            yield return pause;
-        }
-        if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) {
-            API.ExecuteMacro("/use Excess Potion of Accelerated Learning");
-        }
-        Random rand = new Random();
-        int wait = rand.Next(15000,17000);
-        yield return wait;
-        // Recursive Return
-        var check = new Fiber<int>(XPMacro());
-        while (check.Run()) {
-            yield return 100;
+        // The initial "If" seems redundant, but what it does is force a bag check, as some API
+        // methods do not work until server LOOKS into a player bag.
+        if (API.HasItem(120182) == true || API.HasItem(120182) == false) {
+            if (API.Me.Level > 99) {
+                API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
+                yield break;
+            }
+            if (!API.IsQuestCompleted(34378)) {
+                Random rnd = new Random();
+                int pause = rnd.Next(300000,302000);
+                yield return pause;
+            }
+            if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) {
+                API.ExecuteMacro("/use Excess Potion of Accelerated Learning");
+            }
+            Random rand = new Random();
+            int wait = rand.Next(15000,17000);
+            yield return wait;
+            // Recursive Return
+            var check = new Fiber<int>(XPMacro());
+            while (check.Run()) {
+                yield return 100;
+            }
         }
     }
     
     // Comment Incoming
-    public static bool IsMovingAway(int initialDistance) {
+    public static bool IsMovingAway(float initialDistance) {
         bool result = false;
         if (API.Me.Focus != null) {
             if (API.Me.Focus.Distance > initialDistance) {
@@ -813,12 +837,112 @@ public class QH
                 }
             }
             else {
-                API.Print("Player Wanted to hearth to Garrison, but it is on Cooldown...");
+                API.Print("Player Wanted to Hearth to Garrison, but it is on Cooldown...");
                 yield break;
             }
         }
     }
+    
+    // Comment Incoming
+    public static bool IsInGordalFortress() {
+        double x = API.ExecuteLua<double>("local posX, _= GetPlayerMapPosition('player'); return posX;");
+        double y = API.ExecuteLua<double>("local _, posY = GetPlayerMapPosition('player'); return posY;");
+        int z = API.ExecuteLua<int>("return GetCurrentMapAreaID()");
+        var v = API.CoordsToPositionByAreaId(x * 100,y * 100,z);
+        Vector3 location = new Vector3(1666.5f, 1743.6f, 298.6f);      
+        
+        if (IsClose(1410f, 1728.5f, 310.3f, 390)) {
+            if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) {
+        		return true;
+        	}       
+        }
+        return false;
+    }
+    
+    // Only use this if you are standing right in front of Elevator at ground floor
+    // Coordinates are for Vector3 position where to go to on Exit
+    // Further Comments incoming.
+    public static IEnumerable<int> TakeElevator(int ElevatorID, int elevatorTravelTime, float x, float y, float z) {
+        double position;
+        double position2;
+        bool elevatorFound = false;
+        Vector3 destination = new Vector3(x,y,z);
+        foreach (var unit in API.GameObjects)
+        {
+        	if (unit.EntryID == ElevatorID)
+        	{
+                elevatorFound = true;
+                API.SetFacing(unit);
+                API.DisableCombat = true;
+                API.Print("Waiting For the Elevator...");
+                position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                yield return 200;
+                position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                yield return 200;
+                if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) {
+                    API.Print("Elevator is Moving...");
+                    if (position > position2) {
+                        API.Print("Elevator is Moving down... Almost Here!");
+                    }
+                    else {
+                        API.Print("Elevator is Moving Up! Patience!");
+                        while(position != position2) {
+                            position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 200;
+                            position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 200;
+                        }
+                        API.Print("Elevator Has Reached the top.  Let's Wait For It To Return!");
+                        while(position == position2) {
+                            position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 200;
+                            position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 200;
+                        }
+                        API.Print("Alright, coming back down. Get Ready!");
+                    }
+                    while(position != position2) {
+                        position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                        yield return 200;
+                        position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                        yield return 200;
+                    }
+                }
+                API.Print("Ah, Excellent! Elevator is at the Bottom! Hop On Quick!");
+                API.CTM(unit.Position);
+                yield return ((elevatorTravelTime + 4) * 1000);
+                while(!API.CTM(destination)) {
+                    yield return 200;
+                }
+                API.Print("You Have Successfully Beaten the Elevator Boss... Congratulations!!!");
+        	}
+        }
+        if (!elevatorFound) {
+            API.Print("No Elevator Found. Please Be Sure elevator ID is Entered Properly and You are Next to It");
+            yield break;
+        }
+        API.DisableCombat = false;
+    }
+
 }
+    // Comment Incoming
+//     public static bool hasMount(string mountName) {
+//         int numMounts = ExecuteLua<int>("local numMounts = C_MountJournal.GetNumMounts(); return numMounts");
+//         G["azure"] = false;
+//         string name = "";
+//         
+//         for (int i = 0; i < numMounts; i++) {
+//             name = ExecuteLua<string>("local name = C_MountJournal.GetMountInfo(" + i + "); return name;");
+//             if (name.Equals(mountName)) {
+//                 G["azure"] = true;
+//                 return true;
+//             }
+//         }
+//         return false;
+//     }
+
+
+
 //     -- Identifying Primary Professions
 // 
 // local buildingID1 = 93; -- default is Enchanter's Study
@@ -930,3 +1054,4 @@ public class QH
 // 	print("You Already Have the " .. buildingName2 .. " There!")
 // end
 
+// LUA Code for Mount Identifier
