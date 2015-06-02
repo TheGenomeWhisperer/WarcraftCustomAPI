@@ -136,10 +136,10 @@ public class QH
         if (hasWeapon == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
-        	API.ExecuteLua("UseEquipmentSet(\"Questing\",100)");
+        	API.ExecuteLua("UseEquipmentSet(\"Questing\")");
             API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
-            API.ExecuteLua("DeleteEquipmentSet(\"Questing\",100)");
+            API.ExecuteLua("DeleteEquipmentSet(\"Questing\")");
         }
         else
         {
@@ -316,7 +316,7 @@ public class QH
             }
             for (int i = 0; i < numStrikes; i++)
             {
-                while (API.Me.Focus != null) {
+                if (API.Me.Focus != null) {
                     API.ExecuteMacro("/use Garrison Ability");
                     yield return 100;
                     API.ClickOnTerrain(API.Me.Focus.Position);
@@ -615,6 +615,8 @@ public class QH
         if (result == null)
         {
             API.Print("Unable to Identify Correct Gossip Option.");
+            API.Print("Player using Non-English Client?  Trying Gossip Option 1");
+            API.ExecuteLua("SelectGossipOption(2);");
         }
     }  
     
@@ -923,6 +925,35 @@ public class QH
         }
         API.DisableCombat = false;
     }
+    
+    // Comment Incoming
+    public static int ItemsNeededForQuest(int questID, int objective) {      
+        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
+        string progress = API.ExecuteLua<string>(luaCall);
+        int result = int.Parse(progress.Substring(0,1));
+        int toLoot = (3 - result);
+        API.Print("Player Needs to Loot This Many More Books: " + toLoot);
+        
+        return toLoot;
+    }
+    
+    // Comment Incoming
+    public static IEnumerable<int> AbandonGarrisonFlightQuests(int questToKeep) {
+        // 36706 - "Ashran Appearance"
+        // 36953, 34681 - "It's a Matter of Strategy"
+        // 36862 - "Pinchwhistel Gearworks"
+        // 36951, 34653 - "Arrakoa Exodus"
+        // 36952, 34794 - "Taking the Flight to Nagrand"
+        int[] questArray = {36706,36953,34681,36862,36951,34653,36952,34794};
+        
+        for (int i = 0; i < questArray.Length; i++) {
+            if (questArray[i] != questToKeep && API.HasQuest(questArray[i])) {
+                API.ExecuteLua("AbandonQuest(" + questArray[i] + ");");
+                yield return 1000;
+            }
+        }
+    }
+    
 
 }
     // Comment Incoming
