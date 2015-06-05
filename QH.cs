@@ -141,10 +141,6 @@ public class QH
             API.AutoEquipSettings.EquipItems = true;
             API.ExecuteLua("DeleteEquipmentSet(\"Questing\")");
         }
-        else
-        {
-            API.Print("Weapon Already Equipped");
-        }
     }
     
 
@@ -166,7 +162,8 @@ public class QH
     }
 
     // comment incoming
-    public static void SetFocusUnitMaxDistance(int ID, int yards) {
+    public static void SetFocusUnitMaxDistance(int ID, int yards) 
+    {
         foreach (var unit in API.Units)
         {
             if (unit.EntryID == ID && !unit.IsDead && API.Me.Distance2DTo(unit.Position) < yards)
@@ -245,10 +242,13 @@ public class QH
     }
     
     // Comment Incoming
-    public static IEnumerable<int> CTA_GarrisonAbility() {
-        if (RemainingSpellCD(161332) == 0) {
+    public static IEnumerable<int> CTA_GarrisonAbility() 
+    {
+        if (RemainingSpellCD(161332) == 0) 
+        {
             API.DisableCombat = true;
-            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) {
+            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) 
+            {
                 API.CTM(API.Me.Focus.Position);
                 yield return 200;
             }
@@ -256,7 +256,8 @@ public class QH
             yield return 500;
             API.DisableCombat = false;
         }
-        else {
+        else 
+        {
             API.Print("Player Wanted to Use \"Call to Arms\" Garrison Ability, But it Was on CD");
             yield break;
         }
@@ -267,7 +268,8 @@ public class QH
     //                bloated, calling this method should be a more sufficient method for repeat use.
     public static IEnumerable<int> ShredderGarrisonAbility()
     {
-        if (RemainingSpellCD(164050) == 0 || API.Me.IsOnTransport) {
+        if (RemainingSpellCD(164050) == 0 || API.Me.IsOnTransport) 
+        {
             API.DisableCombat = true;
             while (API.Me.Focus != null && API.Me.Focus.Distance2D > 14.0)
             {
@@ -275,7 +277,8 @@ public class QH
                 yield return 100;
             }
             API.SetFacing(API.Me.Focus);
-            if (!API.Me.IsOnTransport) {
+            if (!API.Me.IsOnTransport) 
+            {
                 API.ExecuteMacro("/use Garrison Ability");
                 yield return 2000;
             }
@@ -287,12 +290,14 @@ public class QH
                     yield return 100;
                 }
                 API.CTM(API.Me.Focus.Position);
-                if (RemainingSpellCD(165422) > 0) {
+                if (RemainingSpellCD(165422) > 0) 
+                {
                     API.ExecuteMacro("/click OverrideActionBarButton1");
                     Random rnd = new Random();
                     yield return rnd.Next(1700, 1900);
                 }
-                else {
+                else 
+                {
                     API.ExecuteMacro("/click OverrideActionBarButton2");
                 }
             }
@@ -307,7 +312,8 @@ public class QH
     //                merely require just calling this method. numStrikes should never be more than 3.
     public static IEnumerable<int> ArsenalGarrisonAbility(int numStrikes)
     {
-        if (RemainingSpellCD(162075) == 0) {
+        if (RemainingSpellCD(162075) == 0) 
+        {
             API.DisableCombat = true;
             while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10)  // This ensure player paths to the focus target until it is 5 yrds or closer.
             {
@@ -316,7 +322,8 @@ public class QH
             }
             for (int i = 0; i < numStrikes; i++)
             {
-                if (API.Me.Focus != null) {
+                if (API.Me.Focus != null) 
+                {
                     API.ExecuteMacro("/use Garrison Ability");
                     yield return 100;
                     API.ClickOnTerrain(API.Me.Focus.Position);
@@ -325,7 +332,8 @@ public class QH
             }
             API.DisableCombat = false;
         }
-        else {
+        else 
+        {
             API.Print("Player Wanted to Use the Arsenal Garrison Ability but it was on Cooldown!");
         }
     }
@@ -395,7 +403,8 @@ public class QH
         if (BannerAvailable())
 	    {
             Vector3 location = new Vector3(x,y,z);
-		     while (!API.MoveTo(location)) {
+		     while (!API.MoveTo(location)) 
+             {
                  yield return 100;
              }
 		     UseGuildBanner();
@@ -479,7 +488,8 @@ public class QH
         int wait = rnd.Next(4000, 5000);
         yield return wait;
         var check = new Fiber<int>(PlaceGuildBannerOnAuraCheck());
-        while (check.Run()) {
+        while (check.Run()) 
+        {
             yield return 100;
         }
     }
@@ -520,6 +530,7 @@ public class QH
         int tier = API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
         string zone = API.ExecuteLua<string>("local zone = GetMinimapZoneText(); return zone;");
         Vector3 location = new Vector3(5559.2f, 4604.8f, 141.7f);
+        
         if (API.Me.Distance2DTo(location) < 24 || (zone.Equals("Town Hall")) && API.IsInGarrison && (tier == 2 || tier == 3))
         {
             API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
@@ -532,7 +543,7 @@ public class QH
                 yield return 100;
             }
             while(!API.CTM(5591.181f, 4569.721f, 136.2159f))
-                        {
+            {
                 yield return 100;
             }
             API.GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;
@@ -630,38 +641,47 @@ public class QH
         float timePassed = API.ExecuteLua<float>("return GetTime();");
         float coolDown = timePassed - start;
         int result = (int)(duration-coolDown);
-        if (result < 0) {
+        if (result < 0) 
+        {
             result = 0;
         }
         return result;
     }
     
     // Comment Incoming
-    public static bool ShadowElixerNeeded() {
+    public static bool ShadowElixerNeeded() 
+    {
         int[] quests = {36386,36390,36389,36388,36381,36392};
         int count = 0;
-        for (int i = 0; i < quests.Length; i++) {
-            if (!API.IsQuestCompleted(quests[i])) {
+        for (int i = 0; i < quests.Length; i++) 
+        {
+            if (!API.IsQuestCompleted(quests[i])) 
+            {
                 count++;
             }
         }
-        if (API.ItemCount(234735) < count) {
+        if (API.ItemCount(234735) < count) 
+        {
             return true;
         }
         return false;
     }
     
     // Comment Incoming
-    public static int ExpPotionsNeeded() {
+    public static int ExpPotionsNeeded() 
+    {
         // Adding a Quick escape if Player is almost lvl 100... no need to waste resources.
-        if (API.Me.Level == 99) {
+        if (API.Me.Level == 99) 
+        {
             float currXP = API.ExecuteLua<float>("return UnitXP(\"player\")");
             float nextLvl = API.ExecuteLua<float>("return UnitXPMax(\"player\")");
-            if  (API.Me.HasAura(178119) && currXP/nextLvl > 0.75) {
+            if  (API.Me.HasAura(178119) && currXP/nextLvl > 0.75) 
+            {
                 API.Print("You are Almost Level 100! No Need to buy any more XP potions... Aura still Active.");
                 return 0;
             }
-            else if (currXP/nextLvl > 0.85) {
+            else if (currXP/nextLvl > 0.85) 
+            {
                 API.Print("You are less than 15% XP From Level 100. Let's Not Waste Any Garrison Resources on Potions!");
                 return 0;
             }
@@ -709,7 +729,8 @@ public class QH
     // Comment Incoming
     public static void BuyExpPotions(int toBuy)
     {
-        if (toBuy > 0) {
+        if (toBuy > 0) 
+        {
             string buy = "/run BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
             API.ExecuteMacro(buy);
         }
@@ -717,38 +738,46 @@ public class QH
     
     // Comment Incoming
     // Recursive for live tracking...
-    public static IEnumerable<int> XPMacro() {
+    public static IEnumerable<int> XPMacro() 
+    {
         // The initial "If" seems redundant, but what it does is force a bag check, as some API
         // methods do not work until server LOOKS into a player bag.
-        if (API.HasItem(120182) == true || API.HasItem(120182) == false) {
-            if (API.Me.Level > 99) {
+        if (API.HasItem(120182) == true || API.HasItem(120182) == false) 
+        {
+            if (API.Me.Level > 99) 
+            {
                 API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
                 yield break;
             }
-            if (!API.IsQuestCompleted(34378)) {
+            if (!API.IsQuestCompleted(34378)) 
+            {
                 Random rnd = new Random();
                 int pause = rnd.Next(300000,302000);
                 yield return pause;
             }
-            if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) {
-                API.ExecuteMacro("/use Excess Potion of Accelerated Learning");
+            if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) 
+            {
+                API.UseItem(120182);
             }
             Random rand = new Random();
             int wait = rand.Next(15000,17000);
             yield return wait;
             // Recursive Return
             var check = new Fiber<int>(XPMacro());
-            while (check.Run()) {
+            while (check.Run()) 
+            {
                 yield return 100;
             }
         }
     }
     
     // Comment Incoming
-    public static bool IsMovingAway(float initialDistance) {
+    public static bool IsMovingAway(float initialDistance) 
+    {
         bool result = false;
         if (API.Me.Focus != null) {
-            if (API.Me.Focus.Distance > initialDistance) {
+            if (API.Me.Focus.Distance > initialDistance) 
+            {
             result = true;
             }
         }
@@ -759,28 +788,34 @@ public class QH
     }
     
     // Comment Incoming
-    public static bool HasGuildBannerAura() {
-        if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) {
+    public static bool HasGuildBannerAura() 
+    {
+        if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) 
+        {
             return true;
         }
         return false;
     }
     
     // Comment Incoming
-    public static bool HasProfession() {
+    public static bool HasProfession() 
+    {
         int prof1 = API.ExecuteLua<int>("local prof1 = GetProfessions(); return prof1");
         int prof2 = API.ExecuteLua<int>("local _,prof2 = GetProfessions(); return prof2");
         
-        if (prof1 != 0 || prof2 != 0) {
+        if (prof1 != 0 || prof2 != 0) 
+        {
             return true;
         }
         return false;
     }
     
     // Comment Incoming
-    public static int ProfBuildingID(string professionName) {
+    public static int ProfBuildingID(string professionName)
+    {
         int idNumber;
-        switch(professionName) {
+        switch(professionName) 
+        {
             case "Alchemy":
                 idNumber = 76;
                 break;
@@ -826,19 +861,25 @@ public class QH
     }
     
     // Comment Incoming
-    public static IEnumerable<int> HearthToGarrison() {
-        if (!API.IsInGarrison) {
-            if (API.ItemCooldown(110560) == 0) {
+    public static IEnumerable<int> HearthToGarrison() 
+    {
+        if (!API.IsInGarrison) 
+        {
+            if (API.ItemCooldown(110560) == 0) 
+            {
                 API.Print("Hearthing to Garrison");
                 API.UseItem(110560);
-                while(API.Me.IsCasting) {
+                while(API.Me.IsCasting) 
+                {
                     yield return 100;
                 }
-                while (!API.IsInGarrison) {
+                while (!API.IsInGarrison) 
+                {
                     yield return 100;
                 }
             }
-            else {
+            else 
+            {
                 API.Print("Player Wanted to Hearth to Garrison, but it is on Cooldown...");
                 yield break;
             }
@@ -846,15 +887,18 @@ public class QH
     }
     
     // Comment Incoming
-    public static bool IsInGordalFortress() {
+    public static bool IsInGordalFortress() 
+    {
         double x = API.ExecuteLua<double>("local posX, _= GetPlayerMapPosition('player'); return posX;");
         double y = API.ExecuteLua<double>("local _, posY = GetPlayerMapPosition('player'); return posY;");
         int z = API.ExecuteLua<int>("return GetCurrentMapAreaID()");
         var v = API.CoordsToPositionByAreaId(x * 100,y * 100,z);
         Vector3 location = new Vector3(1666.5f, 1743.6f, 298.6f);      
         
-        if (IsClose(1410f, 1728.5f, 310.3f, 390)) {
-            if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) {
+        if (IsClose(1410f, 1728.5f, 310.3f, 390)) 
+        {
+            if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
+            {
         		return true;
         	}       
         }
@@ -864,7 +908,8 @@ public class QH
     // Only use this if you are standing right in front of Elevator at ground floor
     // Coordinates are for Vector3 position where to go to on Exit
     // Further Comments incoming.
-    public static IEnumerable<int> TakeElevator(int ElevatorID, int elevatorTravelTime, float x, float y, float z) {
+    public static IEnumerable<int> TakeElevator(int ElevatorID, int elevatorTravelTime, float x, float y, float z) 
+    {
         double position;
         double position2;
         bool elevatorFound = false;
@@ -881,45 +926,54 @@ public class QH
                 yield return 200;
                 position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                 yield return 200;
-                if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) {
+                
+                if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) 
+                {
                     API.Print("Elevator is Moving...");
-                    if (position > position2) {
-                        API.Print("Elevator is Moving down... Almost Here!");
+                    if (position > position2) 
+                    {
+                        API.Print("Elevator is Moving Towards Us... Almost Here!");
                     }
-                    else {
-                        API.Print("Elevator is Moving Up! Patience!");
-                        while(position != position2) {
+                    else 
+                    {
+                        API.Print("Elevator is Moving Away! Patience!");
+                        while(position != position2) 
+                        {
                             position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                             yield return 200;
                             position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                             yield return 200;
                         }
-                        API.Print("Elevator Has Reached the top.  Let's Wait For It To Return!");
-                        while(position == position2) {
+                        API.Print("Elevator Has Stopped at Other Side.  Let's Wait For It To Return!");
+                        while(position == position2) 
+                        {
                             position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                             yield return 200;
                             position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                             yield return 200;
                         }
-                        API.Print("Alright, coming back down. Get Ready!");
+                        API.Print("Alright, It Is Coming Back to us. Get Ready!");
                     }
-                    while(position != position2) {
+                    while(position != position2) 
+                    {
                         position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                         yield return 200;
                         position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                         yield return 200;
                     }
                 }
-                API.Print("Ah, Excellent! Elevator is at the Bottom! Hop On Quick!");
+                API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
                 API.CTM(unit.Position);
                 yield return ((elevatorTravelTime + 4) * 1000);
-                while(!API.CTM(destination)) {
+                while(!API.CTM(destination)) 
+                {
                     yield return 200;
                 }
                 API.Print("You Have Successfully Beaten the Elevator Boss... Congratulations!!!");
         	}
         }
-        if (!elevatorFound) {
+        if (!elevatorFound) 
+        {
             API.Print("No Elevator Found. Please Be Sure elevator ID is Entered Properly and You are Next to It");
             yield break;
         }
@@ -927,7 +981,8 @@ public class QH
     }
     
     // Comment Incoming
-    public static int ItemsNeededForQuest(int questID, int objective) {      
+    public static int ItemsNeededForQuest(int questID, int objective) 
+    {      
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
         int result = int.Parse(progress.Substring(0,1));
@@ -938,25 +993,50 @@ public class QH
     }
     
     // Comment Incoming
-    public static IEnumerable<int> AbandonGarrisonFlightQuests(int questToKeep) {
-        // 36706 - "Ashran Appearance"
-        // 36953, 34681 - "It's a Matter of Strategy"
-        // 36862 - "Pinchwhistel Gearworks"
-        // 36951, 34653 - "Arrakoa Exodus"
-        // 36952, 34794 - "Taking the Flight to Nagrand"
+    // Method is a work in progrss... still needs to open Quest window then select the quest
+    // Then abandon.  You cannot abandon a quest unless you have it selected...
+    // 36706 -        "Ashran Appearance"
+    // 36953, 34681 - "It's a Matter of Strategy"
+    // 36862 -        "Pinchwhistel Gearworks"
+    // 36951, 34653 - "Arrakoa Exodus"
+    // 36952, 34794 - "Taking the Flight to Nagrand"
+    public static IEnumerable<int> AbandonGarrisonFlightQuests(int questToKeep) 
+    {
         int[] questArray = {36706,36953,34681,36862,36951,34653,36952,34794};
         
-        for (int i = 0; i < questArray.Length; i++) {
-            if (questArray[i] != questToKeep && API.HasQuest(questArray[i])) {
-                API.ExecuteLua("AbandonQuest(" + questArray[i] + ");");
-                yield return 1000;
+        for (int i = 0; i < questArray.Length; i++)
+        {
+            if ((questArray[i] != questToKeep) && (API.HasQuest(questArray[i])))
+            {
+                API.ExecuteLua("ind = GetQuestLogIndexByID(" + questArray[i] + "); title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+                string title = API.ExecuteLua<string>("return title;");
+                API.Print("Removing Quest(temporarily) to Leave One Gossip Option at Flightmaster \"" + title + "\"");
+                yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.q
             }
         }
     }
     
-
-}
     // Comment Incoming
+    public static void AbandonQuest(int questID)
+    {
+        API.ExecuteLua("ind = GetQuestLogIndexByID(" + questID + "); title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+        string title = API.ExecuteLua<string>("return title;");
+        API.Print("The Quest \"" + title + "\" Has Been Removed.");
+    }
+    
+    // Comment Incoming
+    public static bool HasArchaeology() 
+    {
+       if (API.ExecuteLua<string>("_,_, archaeology = GetProfessions(); return archaeology;") != null)
+       {
+           return true;
+       }
+       return false;
+    }
+
+ }
+ 
+// Comment Incoming
 //     public static bool hasMount(string mountName) {
 //         int numMounts = ExecuteLua<int>("local numMounts = C_MountJournal.GetNumMounts(); return numMounts");
 //         G["azure"] = false;
