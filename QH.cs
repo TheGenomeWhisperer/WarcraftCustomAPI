@@ -1033,6 +1033,114 @@ public class QH
        }
        return false;
     }
+    
+    //comment Incoming
+    // I could've just done name matching, but for localization reasons I wanted 
+    // to have another method prepped, by looking at displayID.
+    public static bool NeedsFollower(string Name)
+    {
+        string followerName = ("\"" + Name + "\"");
+        bool toBuy = false;
+        int displayID = API.ExecuteLua<int>("local allFollowers = C_Garrison.GetFollowers(); followerID = 0; for x, y in pairs(allFollowers) do if (y.name == " + followerName + ") then followerID = y.displayID; break; end end; return followerID;");
+        toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + displayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy");
+        return toBuy;
+    }
+
+    // Comment Incoming
+    public static IEnumerable<int> SmugglingRunMacro()
+    {
+        // Smuggler's Run is Not on CoolDown
+        if (RemainingSpellCD(170097) == 0 && API.Me.ZoneId == 6722)
+        {
+            if (API.ItemCount(113277) < 1 || API.ItemCount(113276) < 1 || API.ItemCount(113275) < 1 || API.ItemCount(113274) < 1 || API.ItemCount(113273) < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
+            {
+                API.ExecuteMacro("/use Garrison Ability");
+                yield return 1000;
+                // Targeting NPC Smuggler
+                while (API.Me.Focus == null) 
+                {
+                    SetFocusUnit(84243);
+                }
+                while (API.Me.Focus != null && API.Me.Focus.Distance > 5) 
+                {
+                    API.CTM(API.Me.Focus.Position);
+                    yield return 100;
+                }
+                if (API.Me.Focus != null && API.Me.Focus.EntryID == 84243) 
+                {
+                    API.Me.Focus.Interact();
+                    yield return 1000;
+                    API.ExecuteLua("GossipTitleButton1:Click()");
+                    yield return 1000;
+                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276) < 1 or GetItemCount(113275) < 1 or GetItemCount(113273) < 1) or GetItemCount(113277) < 1) or (price == 54595 and GetItemCount(113274) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
+                    yield return 500;
+                    if ((NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
+                    {
+                        API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
+                        API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
+                        yield return 500;
+                    }
+                    API.ExecuteLua("CloseMerchant()");
+                    yield return 1000;
+                }
+            }
+        }
+        else if (API.Me.ZoneId != 6722)  // This is the escape from the macro to end it.
+        {
+            API.Print("Player Is No Longer in the Spires of Arak. Smuggler's Run Macro Not Needed...");
+            yield break;
+        }
+        if (API.HasItem(113277) && !API.HasAura(166357))
+        {
+            API.Print("Using \"Ogreblood Potion\" for 20% Increased Damage and Healing");
+            API.UseItem(113277);
+        }        
+        if (API.HasItem(113276) && !API.HasAura(166361))
+        {
+            API.Print("Using \"Pridehunter's Fang\" for 20% Bleed Damage");
+            API.UseItem(113276);
+        }
+        if (API.HasItem(113275) && !API.HasAura(166355))
+        {
+            API.Print("Using \"Ravenlord's Talon\" for 30% Reduced Class Ability Costs");
+            API.UseItem(113275);
+        }
+        if (API.HasItem(113273) && !API.HasAura(166353))
+        {
+            API.Print("Using \"Orb of the Soulstealer\" for 5% Increased Damage and Healing");
+            API.UseItem(113273);
+        }
+        if (API.HasItem(113274) && !API.HasAura(166354))
+        {
+            API.Print("Using \"Plume of Celerity\" for 10% Increased Haste and Movement Speed");
+            API.UseItem(113274);
+        }
+        // Waiting 10-15 seconds before re-checking again.
+        Random rand = new Random();
+        int wait = rand.Next(10000,15000);
+        yield return wait;
+        // Recursive Return
+        var check = new Fiber<int>(SmugglingRunMacro());
+        while (check.Run()) 
+        {
+            yield return 100;
+        }
+    }
+    
+    // Comment Incoming
+    public static int GetGarrisonResources() 
+    {
+        return API.ExecuteLua<int>("local _, gResources = GetCurrencyInfo(824); return gResources");
+    }
+    
+    // Comment Incoming
+    // Rounds down to even Gold number.
+    public static int GetPlayerGold()
+    {
+        int money = API.ExecuteLua<int>("return GetMoney()");
+        return (money/10000);
+    }
+    
 
  }
  
@@ -1052,7 +1160,7 @@ public class QH
 //         return false;
 //     }
 
-
+ 
 
 //     -- Identifying Primary Professions
 // 
