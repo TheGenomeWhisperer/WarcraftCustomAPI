@@ -43,6 +43,7 @@ public class QH
     // Purpose:       Some quests are hard to complete because you need to use an item on a low-HP NPC.
     //                Unfortunately, the bot often will kill the NPC off before you can use the item if your gear is high level.
     //                By unequipping the weapon and other gear, you lose a TON of damage and make these events more unlikely.
+    //                Starts at Index "1" first so it at least keeps weapon equipped for abilities.
     public static void UnequipGear(int numItems)
     {
         int toRemove = API.GetFreeBagSlots();
@@ -52,7 +53,7 @@ public class QH
             toRemove = numItems;
         }
         int temp;
-        int temp2 = 0;
+        int temp2 = 1;
         int numFree;
         int inventoryID;
         
@@ -86,11 +87,6 @@ public class QH
                         for (int j = temp2; j < numFree + temp2; j++) 
                         {
                             temp = j;
-                            if (j == 0)
-                            {
-                                // Removing Weapon First
-                                temp = 16;
-                            }
                             if (j == 4) 
                             {
                                 temp = 15; // Cloak changes to position 15, though it should be 4... not sure why
@@ -128,12 +124,12 @@ public class QH
         }
     }
     
-    // What it does:  Re-Equips the same weapon you had previously removed. Reactivates "Auto-Equip"
-    // Purpose:       So you have a weapon again!!!                
+    // What it does:  Re-Equips the same Gear you had previously removed. Reactivates "Auto-Equip"
+    // Purpose:       So you have Your Gear Again!                
     public static void ReEquipGear()
     {
-        int hasWeapon = API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);");
-        if (hasWeapon == 0)
+        int hasGearOn = API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 1);");
+        if (hasGearOn == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
         	API.ExecuteLua("UseEquipmentSet(\"Questing\")");
@@ -511,8 +507,15 @@ public class QH
     {
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
-
-        if (progress.Substring(0,3).Equals(description))
+        for (int i = 0; i < progress.Length; i++) 
+        {
+            if (progress[i] > 47 && progress[i] < 58 )
+            {
+                progress = progress.Substring(i,3);
+                break;
+            }
+        }
+        if (progress.Equals(description))
         {
             return true;
         }
@@ -530,20 +533,26 @@ public class QH
         int tier = API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
         string zone = API.ExecuteLua<string>("local zone = GetMinimapZoneText(); return zone;");
         Vector3 location = new Vector3(5559.2f, 4604.8f, 141.7f);
+        Vector3 location2 = new Vector3(5562.576f, 4601.484f, 141.7169f);
+        Vector3 location3 = new Vector3(5576.729f, 4584.367f, 141.0846f);
+        Vector3 location4 = new Vector3(5591.181f, 4569.721f, 136.2159f);
         
-        if (API.Me.Distance2DTo(location) < 24 || (zone.Equals("Town Hall")) && API.IsInGarrison && (tier == 2 || tier == 3))
+        if (API.Me.Distance2DTo(location) < 25 && API.IsInGarrison && (tier == 2 || tier == 3))
         {
             API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
-            while(!API.CTM(5562.576f, 4601.484f, 141.7169f))
+            while(API.Me.Distance2DTo(location2) > 5)
             {
+                API.CTM(location2);
                 yield return 100;
             }
-            while(!API.CTM(5576.729f, 4584.367f, 141.0846f))  
+            while(API.Me.Distance2DTo(location3) > 5)
             {
+                API.CTM(location3);
                 yield return 100;
             }
-            while(!API.CTM(5591.181f, 4569.721f, 136.2159f))
+            while(API.Me.Distance2DTo(location4) > 5)
             {
+                API.CTM(location4);
                 yield return 100;
             }
             API.GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;
@@ -877,6 +886,8 @@ public class QH
                 {
                     yield return 100;
                 }
+                API.Print("One Moment, Giving Mesh a Chance to Catchup!");
+                yield return 5000;
             }
             else 
             {
@@ -981,15 +992,29 @@ public class QH
     }
     
     // Comment Incoming
-    public static int ItemsNeededForQuest(int questID, int objective) 
+    // Quests Using This: (32994)
+    public static bool ItemsNeededForQuest(int questID, int objective, int itemID) 
     {      
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
-        int result = int.Parse(progress.Substring(0,1));
-        int toLoot = (3 - result);
-        API.Print("Player Needs to Loot This Many More Books: " + toLoot);
+        for (int i = 0; i < progress.Length; i++)
+             {
+            if (progress[i] > 47 && progress[i] < 58 )
+            {
+                progress = progress.Substring(i,3);
+                break;
+            }
+        }
+        int notNeeded = int.Parse(progress.Substring(0,1));
+        int total = int.Parse(progress.Substring(2,3));
+        int toLoot = (total - notNeeded);
+        API.Print("Player Needs to Loot " +toLoot+ " More Items");
         
-        return toLoot;
+        if (API.ItemCount(itemID) < toLoot)
+        {
+	       return true;
+        }
+        return false;
     }
     
     // Comment Incoming
@@ -1046,16 +1071,15 @@ public class QH
         return toBuy;
     }
 
-    // Comment Incoming
     public static IEnumerable<int> SmugglingRunMacro()
     {
-        // Smuggler's Run is Not on CoolDown
-        if (RemainingSpellCD(170097) == 0 && API.Me.ZoneId == 6722)
+         // Smuggler's Run is Not on CoolDown and you are in the right zone, and not on a transport.
+        if (RemainingSpellCD(170097) == 0 && API.Me.ZoneId == 6722 && !API.Me.IsOnTransport)
         {
             if (API.ItemCount(113277) < 1 || API.ItemCount(113276) < 1 || API.ItemCount(113275) < 1 || API.ItemCount(113274) < 1 || API.ItemCount(113273) < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
             {
                 API.ExecuteMacro("/use Garrison Ability");
-                yield return 1000;
+                yield return 6000;
                 // Targeting NPC Smuggler
                 while (API.Me.Focus == null) 
                 {
@@ -1064,7 +1088,7 @@ public class QH
                 while (API.Me.Focus != null && API.Me.Focus.Distance > 5) 
                 {
                     API.CTM(API.Me.Focus.Position);
-                    yield return 100;
+                    yield return 50;
                 }
                 if (API.Me.Focus != null && API.Me.Focus.EntryID == 84243) 
                 {
@@ -1072,23 +1096,18 @@ public class QH
                     yield return 1000;
                     API.ExecuteLua("GossipTitleButton1:Click()");
                     yield return 1000;
-                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276) < 1 or GetItemCount(113275) < 1 or GetItemCount(113273) < 1) or GetItemCount(113277) < 1) or (price == 54595 and GetItemCount(113274) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
-                    yield return 500;
                     if ((NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
                     {
                         API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
                         API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
                         yield return 500;
                     }
+                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276) < 1 or GetItemCount(113275) < 1 or GetItemCount(113273) < 1 or GetItemCount(113277) < 1)) or (price == 54595 and GetItemCount(113274) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
+                    yield return 1000;                    
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
                 }
             }
-        }
-        else if (API.Me.ZoneId != 6722)  // This is the escape from the macro to end it.
-        {
-            API.Print("Player Is No Longer in the Spires of Arak. Smuggler's Run Macro Not Needed...");
-            yield break;
         }
         if (API.HasItem(113277) && !API.HasAura(166357))
         {
@@ -1115,16 +1134,7 @@ public class QH
             API.Print("Using \"Plume of Celerity\" for 10% Increased Haste and Movement Speed");
             API.UseItem(113274);
         }
-        // Waiting 10-15 seconds before re-checking again.
-        Random rand = new Random();
-        int wait = rand.Next(10000,15000);
-        yield return wait;
-        // Recursive Return
-        var check = new Fiber<int>(SmugglingRunMacro());
-        while (check.Run()) 
-        {
-            yield return 100;
-        }
+        yield break;
     }
     
     // Comment Incoming
@@ -1144,6 +1154,9 @@ public class QH
 
  }
  
+ 
+
+
 // Comment Incoming
 //     public static bool hasMount(string mountName) {
 //         int numMounts = ExecuteLua<int>("local numMounts = C_MountJournal.GetNumMounts(); return numMounts");
