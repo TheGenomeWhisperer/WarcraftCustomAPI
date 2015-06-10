@@ -968,10 +968,17 @@ public class QH
                 API.DisableCombat = true;
                 API.Print("Waiting For the Elevator...");
                 position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                yield return 200;
+                yield return 100;
                 position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                yield return 200;
+                yield return 100;
                 
+                while (position == position2)
+                {
+                    position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                    yield return 100;
+                    position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                    yield return 100;
+                }
                 if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) 
                 {
                     API.Print("Elevator is Moving...");
