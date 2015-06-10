@@ -248,7 +248,7 @@ public class QH
                 API.CTM(API.Me.Focus.Position);
                 yield return 200;
             }
-            API.ExecuteMacro("/use Garrison Ability");
+            API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
             yield return 500;
             API.DisableCombat = false;
         }
@@ -275,7 +275,7 @@ public class QH
             API.SetFacing(API.Me.Focus);
             if (!API.Me.IsOnTransport) 
             {
-                API.ExecuteMacro("/use Garrison Ability");
+                API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 2000;
             }
             while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
@@ -288,16 +288,16 @@ public class QH
                 API.CTM(API.Me.Focus.Position);
                 if (RemainingSpellCD(165422) > 0) 
                 {
-                    API.ExecuteMacro("/click OverrideActionBarButton1");
+                    API.ExecuteLua("OverrideActionBarButton1:Click()");
                     Random rnd = new Random();
                     yield return rnd.Next(1700, 1900);
                 }
                 else 
                 {
-                    API.ExecuteMacro("/click OverrideActionBarButton2");
+                    API.ExecuteLua("OverrideActionBarButton2:Click()");
                 }
             }
-            API.ExecuteMacro("/click OverrideActionBarLeaveFrameLeaveButton");
+            API.ExecuteLua("OverrideActionBarLeaveFrameLeaveButton:Click()");
             API.DisableCombat = false;
         }
     }
@@ -320,7 +320,7 @@ public class QH
             {
                 if (API.Me.Focus != null) 
                 {
-                    API.ExecuteMacro("/use Garrison Ability");
+                    API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                     yield return 100;
                     API.ClickOnTerrain(API.Me.Focus.Position);
                     yield return 1800;
@@ -503,15 +503,49 @@ public class QH
     //                quest objective into different pieces, because if say the objective changes to "1/5 targets destroyed"
     //                then it will carry on to the next sub-part of the objective rather than being stuck
     //                in often what can occur is an infinite loop.
-    public static bool questObjectiveProgress(int questID, int objective, string description)
+    public static bool QuestObjectiveProgress(int questID, int objective, int numberToCompleteObjective, string description)
     {
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
+        int stringLength = 3;
+        int count = -1;
+        if (numberToCompleteObjective > 10)
+        {
+            for (int i = 0; i < description.Length; i++)
+            {
+                if (description[i] != 47) // if it does not equal the '/' symbol
+                {
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        if (numberToCompleteObjective > 10 && numberToCompleteObjective <= 100) 
+        {
+            // One Extra Character needed because string length going up by 1
+            if (numberToCompleteObjective == 100)
+            {
+                count++;
+            }
+            stringLength = 4 + count;
+        }
+        else if (numberToCompleteObjective > 100 && numberToCompleteObjective <= 1000)
+        {
+            // One Extra Character needed because string length going up by 1
+            if (numberToCompleteObjective == 1000)
+            {
+                count++;
+            }
+            stringLength = 5 + count;
+        }
         for (int i = 0; i < progress.Length; i++) 
         {
             if (progress[i] > 47 && progress[i] < 58 )
             {
-                progress = progress.Substring(i,3);
+                progress = progress.Substring(i,stringLength);
                 break;
             }
         }
@@ -951,26 +985,26 @@ public class QH
                         while(position != position2) 
                         {
                             position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                            yield return 200;
+                            yield return 100;
                             position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                            yield return 200;
+                            yield return 100;
                         }
                         API.Print("Elevator Has Stopped at Other Side.  Let's Wait For It To Return!");
                         while(position == position2) 
                         {
                             position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                            yield return 200;
+                            yield return 100;
                             position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                            yield return 200;
+                            yield return 100;
                         }
                         API.Print("Alright, It Is Coming Back to us. Get Ready!");
                     }
                     while(position != position2) 
                     {
                         position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                        yield return 200;
+                        yield return 100;
                         position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
-                        yield return 200;
+                        yield return 100;
                     }
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
@@ -1078,7 +1112,7 @@ public class QH
         {
             if (API.ItemCount(113277) < 1 || API.ItemCount(113276) < 1 || API.ItemCount(113275) < 1 || API.ItemCount(113274) < 1 || API.ItemCount(113273) < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
             {
-                API.ExecuteMacro("/use Garrison Ability");
+                API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 6000;
                 // Targeting NPC Smuggler
                 while (API.Me.Focus == null) 
@@ -1151,9 +1185,55 @@ public class QH
         return (money/10000);
     }
     
-
+    // Comment Incoming
+    public static IEnumerable<int> WaitForSpell(int spellID)
+    {
+        int time = RemainingSpellCD(spellID);
+        if (time > 0) 
+        {
+            string name = API.ExecuteLua<string>("local name = GetSpellInfo(" + spellID + "); return name;");
+            API.Print("The Spell \"" + name + "\" Is Still on Cooldown. Waiting " + time + " seconds!");
+            while (time != 0) 
+            {
+                if (time <= 15)
+                {
+                    API.Print("The Spell is Just About Ready! " + time + " seconds...");
+                    yield return (time * 1000);
+                    yield break;
+                }
+                else
+                {
+                    yield return 15000;
+                    time = RemainingSpellCD(spellID);
+                    API.Print(time + " Seconds Until Spell Is Ready. Patience!!!");
+                }
+            }
+        }
+    }
+    
  }
  
+//   DisableCombat = true;
+
+//  while(Me.Focus != null && Me.Focus.Distance2D > 10)
+//  {
+//  	MoveTo(Me.Focus.Position);
+//  	yield return 100;
+//  }
+
+//  for (int i = 0; i < 3; i++) 
+//  {
+//  	if (Me.Focus != null)
+//  	{
+//  		ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
+//  		yield return 100;
+//  		ClickOnTerrain(Me.Focus.Position);
+//  		yield return 1500;
+//  	}
+//  }
+
+//  DisableCombat = false;
+
  
 
 
