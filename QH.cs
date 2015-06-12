@@ -53,7 +53,7 @@ public class QH
             toRemove = numItems;
         }
         int temp;
-        int temp2 = 1;
+        int temp2 = 0;
         int numFree;
         int inventoryID;
         
@@ -66,8 +66,8 @@ public class QH
             
             // Need to Temporarily Disable AutoEquip so bot won't try to re-equip weapon.
             API.AutoEquipSettings.EquipItems = false;
-            // Checking First if Weapon unequipped, if it is, then no need to cycle through this.
-            if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 16);") != 0) 
+            // Checking First if gear item is unequipped, if it is, then no need to cycle through this.
+            if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 1);") != 0) 
             {
                 API.ExecuteLua("SaveEquipmentSet(\"Questing\",100)");
                 for (int i = 0; i < 5; i++)
@@ -91,16 +91,16 @@ public class QH
                             {
                                 temp = 15; // Cloak changes to position 15, though it should be 4... not sure why
                             }
-                            API.ExecuteMacro("/script PickupInventoryItem(" + temp + ");");
+                            API.ExecuteLua("PickupInventoryItem(" + temp + ");");
                             if (i == 0)
                             {
                             API.Print("Placing Gear Item Temporarily in Backpack");
-                            API.ExecuteMacro("/script PutItemInBackpack();");
+                            API.ExecuteLua("PutItemInBackpack();");
                             }
                             else
                             {
                             API.Print("Placing Gear Piece in bag " + i + " to the left of your backpack.");
-                            API.ExecuteMacro("/script PutItemInBag(" + inventoryID + ");");
+                            API.ExecuteLua("PutItemInBag(" + inventoryID + ");");
                             }
                         }
                     }
@@ -135,7 +135,7 @@ public class QH
         	API.ExecuteLua("UseEquipmentSet(\"Questing\")");
             API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
-            API.ExecuteLua("DeleteEquipmentSet(\"Questing\")");
+            API.ExecuteLua("DeleteEquipmentSet(\"Questing\")"); // Remove quest fingerprint...
         }
     }
     
@@ -157,7 +157,7 @@ public class QH
         }
     }
 
-    // comment incoming
+    // What it does: Not only does it set focus target
     public static void SetFocusUnitMaxDistance(int ID, int yards) 
     {
         foreach (var unit in API.Units)
@@ -703,7 +703,7 @@ public class QH
                 count++;
             }
         }
-        if (API.ItemCount(234735) < count) 
+        if (API.ItemCount(115463) < count) 
         {
             return true;
         }
@@ -774,8 +774,8 @@ public class QH
     {
         if (toBuy > 0) 
         {
-            string buy = "/run BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
-            API.ExecuteMacro(buy);
+            string buy = "BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
+            API.ExecuteLua(buy);
         }
     }
     
@@ -1124,7 +1124,9 @@ public class QH
                 // Targeting NPC Smuggler
                 while (API.Me.Focus == null) 
                 {
+                    API.Print("Targeting the Smuggler...");
                     SetFocusUnit(84243);
+                    yield return 2000;
                 }
                 while (API.Me.Focus != null && API.Me.Focus.Distance > 5) 
                 {
@@ -1142,6 +1144,7 @@ public class QH
                         API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
                         API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
                         yield return 500;
+                        API.UseItem(116915);
                     }
                     API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276) < 1 or GetItemCount(113275) < 1 or GetItemCount(113273) < 1 or GetItemCount(113277) < 1)) or (price == 54595 and GetItemCount(113274) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
                     yield return 1000;                    
@@ -1175,7 +1178,6 @@ public class QH
             API.Print("Using \"Plume of Celerity\" for 10% Increased Haste and Movement Speed");
             API.UseItem(113274);
         }
-        yield break;
     }
     
     // Comment Incoming
@@ -1219,28 +1221,6 @@ public class QH
     }
     
  }
- 
-//   DisableCombat = true;
-
-//  while(Me.Focus != null && Me.Focus.Distance2D > 10)
-//  {
-//  	MoveTo(Me.Focus.Position);
-//  	yield return 100;
-//  }
-
-//  for (int i = 0; i < 3; i++) 
-//  {
-//  	if (Me.Focus != null)
-//  	{
-//  		ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
-//  		yield return 100;
-//  		ClickOnTerrain(Me.Focus.Position);
-//  		yield return 1500;
-//  	}
-//  }
-
-//  DisableCombat = false;
-
  
 
 
