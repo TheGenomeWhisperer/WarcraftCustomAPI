@@ -143,7 +143,7 @@ public class QH
     // What it does:  Sets given NPC to the focus target and also targets it.
     // Purpose:       Useful to have a target set as focus as often it is easy to lose the target.
     //                This also prevents potential crashing by checking empty objects. You can now do a simple
-    //                if Me.Focus != null and know that you are secure.
+    //                If Me.Focus != null and know that you are secure.
     public static void SetFocusUnit(int ID)
     {
         foreach (var unit in API.Units)
@@ -157,7 +157,10 @@ public class QH
         }
     }
 
-    // What it does: Not only does it set focus target
+    // What it does:  Sets focus to target within the givin range limit.
+    // Purpise:       Occasionally you only want to target units within a given range.  Typically you could just
+    //                target units that are closest, but occasionally none exist at the moment, but you ALSO don't
+    //                want to be chasing any down.
     public static void SetFocusUnitMaxDistance(int ID, int yards) 
     {
         foreach (var unit in API.Units)
@@ -187,7 +190,10 @@ public class QH
             {
                 if (unit.Distance < closestUnit)
                 {
+                    // This stores the distance of the new unit, so when it re-iterates through,
+                    // ultimately the unit with the lowest distance, or the one closest to you is stored
                     closestUnit = unit.Distance;
+                    // This stores the GUID, which is necessary as ALL units share the same UnitID, but the GUID is a unique identifier.
                     killTarget = unit.GUID;
                 }
             }
@@ -237,7 +243,8 @@ public class QH
         return found;
     }
     
-    // Comment Incoming
+    // What it Does:  This uses the Frotfire Ridge Garrison ability "Call to Arms"
+    // Purpose:       This is very critical to assist in the player NOT dying to often challenging mobs.
     public static IEnumerable<int> CTA_GarrisonAbility() 
     {
         if (RemainingSpellCD(161332) == 0) 
@@ -248,6 +255,8 @@ public class QH
                 API.CTM(API.Me.Focus.Position);
                 yield return 200;
             }
+            // While I wanted to use "/use Garrison Ability" originally, in an ExecuteMacro method, I found that is not viable unless you
+            // are ONLY using the English client.  For all languages to be compatible, it needs to execute in Lua Code!
             API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
             yield return 500;
             API.DisableCombat = false;
@@ -266,18 +275,24 @@ public class QH
     {
         if (RemainingSpellCD(164050) == 0 || API.Me.IsOnTransport) 
         {
+            // Necessary to disable combat because bot will get distracted and activate combat base and not attack the main target.
             API.DisableCombat = true;
+            // while player is far away... move to target
             while (API.Me.Focus != null && API.Me.Focus.Distance2D > 14.0)
             {
                 API.CTM(API.Me.Focus.Position);
                 yield return 100;
             }
+            // This is important because often you get turned around for whatever reason right when you target NPC
+            // and then your first shot or two is wasted.
             API.SetFacing(API.Me.Focus);
             if (!API.Me.IsOnTransport) 
             {
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 2000;
             }
+            // The while "Me.IsOnTransport" is critical because what if you did not kill the npc before your time expired.
+            // The script needs to stop attempting to use vehicle abilities once you have exited the vehicle.
             while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
             {
                 while (API.Me.Focus.Distance2D > 14.0)
@@ -285,7 +300,11 @@ public class QH
                     API.CTM(API.Me.Focus.Position);
                     yield return 100;
                 }
+                // This extra "CTM" method is placed here because it just one-clicks and forces you to face target again.
+                // Without this the npc often will move, and in a vehicle, the shredder, player movement doesn't function normal
+                // with the bot.
                 API.CTM(API.Me.Focus.Position);
+                // The following if/else is to prioritise vehicle abilities...Number 2 is prioritised. 
                 if (RemainingSpellCD(165422) > 0) 
                 {
                     API.ExecuteLua("OverrideActionBarButton1:Click()");
@@ -297,21 +316,23 @@ public class QH
                     API.ExecuteLua("OverrideActionBarButton2:Click()");
                 }
             }
+            // If NPC is killed with time still left, why stand there and wait til it goes away?  Just exit it and keep moving on.
             API.ExecuteLua("OverrideActionBarLeaveFrameLeaveButton:Click()");
             API.DisableCombat = false;
         }
     }
 
-    // What it does:  Moves to Focus Position, then uses zone ability 3 times.
+    // What it does:  Moves to Focus Position, then uses zone ability the given times (max 3).
     // Purpose:       Due to the nature of having to call the Garrison ability multiple times when facing
     //                challenging rare monsters in the world, it would be more efficient to
     //                merely require just calling this method. numStrikes should never be more than 3.
     public static IEnumerable<int> ArsenalGarrisonAbility(int numStrikes)
     {
+        // Do Not even attempt if spell is on cooldown.
         if (RemainingSpellCD(162075) == 0) 
         {
             API.DisableCombat = true;
-            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10)  // This ensure player paths to the focus target until it is 5 yrds or closer.
+            while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10)  // This ensure player paths to the focus target until it is 10 yrds or closer.
             {
                 API.MoveTo(API.Me.Focus.Position);
                 yield return 100;
@@ -334,7 +355,7 @@ public class QH
         }
     }
 
-    // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
+    // What it does:  Uses a Horde Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worst (5%).
     // Purpose:       If the banner is not on cooldown, it will use it when called upon so player may level faster.
     //	              Also, it prioritizes the best of the banners to be used so you are always using best one available.
     public static void UseGuildBanner()
@@ -410,15 +431,8 @@ public class QH
 		     API.Print("Guild Banner Not Currently Available");
 	    }
     }
-
-    /*
-    |  The Following Banner method is based on the idea of having an aura check whilst in combat
-    | and if you are lacking the aura (i.e. no banner nearby), then it drops one, rather than
-    |  relying on a specific location pre-determined.  These are to be used as a forked thread
-    |  from the main thread to run in parallel to the script to aura check in the background.
-    */
-
-
+    
+    // WARNING - Method not yet completed!!!!!
     // What it does:  Uses a Guild Banner at Player Position by, prioritization of best (15% bonus gains) to worse (5%).
     //                To Be Used recursively, hence it yield breaks if player hits lvl 99, or is player has no banners.
     //                This also delays the continuous check if all 3 banners are on CD, and it ONLY does a check
@@ -433,15 +447,14 @@ public class QH
     //		          If you use it in main thread, bot will not continue whilst banners on cooldown.
     public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
     {
-        if (!API.HasItem(64402) && !API.HasItem(64401) && !API.HasItem(64400))
+        if ((!API.HasItem(64402) && !API.HasItem(64401) && !API.HasItem(64400)) || API.Me.Level > 99)
         {
-            yield break;  // No Banners in Possession, ends thread.
+            yield break;  // No Banners in Possession or player is lvl 100, ends thread.
         }
-        if (API.Me.Level > 99)
-        {
-            yield break;  // Player hits level 100, ends thread.
-        }
-        if (API.Me.Target != null && API.Me.Target.Distance < 100 && !API.Me.Target.IsFriendly && !API.Me.Target.IsDead)
+        // Basically the bot ONLY targets an NPC typically if it wants to kill it.  I am not 100% certain of this though.  If this is 
+        // Running in a background thread, I should test if it will override combatbase and use the banner.  There does not
+        // appear to be ab API to check if player is in combat.
+        if (!HasGuildBannerAura() && API.Me.Target != null && API.Me.Target.Distance < 100 && !API.Me.Target.IsFriendly && !API.Me.Target.IsDead)
         {
             if (BannerAvailable())
             {
@@ -455,6 +468,8 @@ public class QH
                 float Banner3 = API.ItemCooldown(64400);
                 float waitTime = 0.0f;
 
+
+                // If it DOES = -1 it means it is on cooldown. 
                 if (Banner1 != -1)
                 {
                     waitTime = Banner1;
@@ -525,7 +540,7 @@ public class QH
         }
         if (numberToCompleteObjective > 10 && numberToCompleteObjective <= 100) 
         {
-            // One Extra Character needed because string length going up by 1
+            // One Extra Character needed because string length going up by 1 (ex... 9/15 = 4 Length, whilst 10/15 = 5 Length)
             if (numberToCompleteObjective == 100)
             {
                 count++;
@@ -541,6 +556,9 @@ public class QH
             }
             stringLength = 5 + count;
         }
+        // For loop searchest for the first Char that is a NUMBER, indicating the progress we are trying to find.
+        // Warning, this will ultimately fail if quest objective description has a number in it besides progress, but I have yet to find quest
+        // that fits those circumstances.
         for (int i = 0; i < progress.Length; i++) 
         {
             if (progress[i] > 47 && progress[i] < 58 )
@@ -573,6 +591,8 @@ public class QH
         
         if (API.Me.Distance2DTo(location) < 25 && API.IsInGarrison && (tier == 2 || tier == 3))
         {
+            // If I do not disable Flightmaster discovery, then it tries to run to flightmaster BEFORE executing CTM actions
+            // which with the lack of a mesh, often results in the player just running helplessly into the wall with mesh errors spamming.
             API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
             while(API.Me.Distance2DTo(location2) > 5)
             {
@@ -596,11 +616,10 @@ public class QH
     
     
     // What it does:  Matches the sub-zone of the player to the given one.
-    // Purpose:       Occasionally scripting requires "helps" or additional "move-tos"
-    //                at times for certain quests, for many reasons.  However, it would be
-    //                very annoying to head to those instructions everytime you stopped and restarted
-    //                the profile.  This makes it so you can first check the sub-zone/area you are in
-    //                before doing so, avoiding a lot of wasted time.
+    // Purpose:       This can be useful if trying to match "sub-zones" since there is no actual universal ID to do it.  However,
+    //                be warned, that in using this, your "string" you are matching might only work on the client language you choose to match.
+    //                Often the subzones names vary between translations, be it English/German/French... etc.  So, I'd often say it is best to use
+    //                "IsClose()" method in determining positioning to spare client/language issues and make it universally compatible.
     public static bool MiniMapZoneEquals(string name)
     {
         string zone = API.ExecuteLua<string>("zone = GetMinimapZoneText(); return zone;");
@@ -626,6 +645,11 @@ public class QH
         return false;
     }
     
+    // What it does:  Checks the distance of the player at the given time to the Vec3 position and returns a boolean if it is within 
+    //                the given distance.
+    // Purpose:       The main purpose of this is to enable distance checks to find player positionals.  The advantage of doing this
+    //                is that instead of relying on minimap string names or zone IDs (which can differ on diff. language clients),
+    //                the developer can instead create stuff that is client-friendly for positional checks.
     public static bool IsClose(float x, float y, float z, int distance)
     {
         Vector3 location = new Vector3(x,y,z);
@@ -636,6 +660,7 @@ public class QH
         return false;
     }
     
+    // NOTE - THIS IS WORKING, BUT IT CAN PROBABLY BE WRITTEN BETTER... Just need to identify usable API for gossip to quest linking on NPC.
     // What it does:  Identifies which Gossip Option is the correct one.
     // Purpose:       If a player has many collected quests, certain NPCs can be loaded with gossip options
     //                thus it is prudent to first check which matches the intended choice before selecting it.
@@ -647,6 +672,7 @@ public class QH
         string luaCall = ("local title0,_ = GetGossipOptions(); if title0 ~= nil then return title0 else return \"nil\" end");
         string result = API.ExecuteLua<string>(luaCall);
         // Now Ready to Iterate through All Gossip Options!
+        // The reason "1" is used instead of the conventional "0" is because Gossip options start at 1.
         int i = 1;
         string num = "";
         while (result != null)
@@ -659,6 +685,7 @@ public class QH
             }
             else
             {
+                // This builds the new string to be added into an Lua API call.
                 num = i.ToString();
                 title = (title.Substring(0,title.Length-1) + num);
                 luaCall = ("local " + title + ",_," + luaCall.Substring(6,luaCall.Length-6));
@@ -668,13 +695,16 @@ public class QH
         }
         if (result == null)
         {
+            // This is kind of a "stop-gap" hack until I find the right API... basically for international, non-English clients,
+            // this clearly will not match correctly, so what it does is it selects the only option that would be available if the player
+            // had abandoned all the garrison quests that add options to the flightmaster.
             API.Print("Unable to Identify Correct Gossip Option.");
             API.Print("Player using Non-English Client?  Trying Gossip Option 1");
             API.ExecuteLua("SelectGossipOption(2);");
         }
     }  
     
-    // Method:          "RemainingSpellCD"
+    // Method:          "RemainingSpellCD(int)"
     // What it Does:    Returns, in Seconds, how long until the spell is available again
     // Purpose:         Useful for conditional checks on spell casting, prioritization of a spell, etc.    
     public static int RemainingSpellCD(int spellID)
@@ -691,9 +721,16 @@ public class QH
         return result;
     }
     
-    // Comment Incoming
+    // Method:          "ShadowElixirNeeded()"
+    // What it Does:    Determines if a player even needs the shadow elixir in Spires of Arak anymore.  Returns boolean.
+    // Purpose:         Essentially there are these repeatable weekly quests where you can loot shadow elixirs.  These elixirs
+    //                  are particularly useful as they allow you to phase into a shadow realm at certain shrines and obtain
+    //                  6 different weapons/treasures.  Thus, to prevent the bot from re-colleecting the elixirs needlessly if a player
+    //                  revisited that profile at a later date, it checks how many of the treasures remain to be looted, and then checks
+    //                  how many elixirs the player possesses.  If it is less than the needed amount, the bot will then go collect a shadow elixir.
     public static bool ShadowElixerNeeded() 
     {
+        // Each of theses quest IDs represents one of the treasures to be looted at the shrines in Spires of Arak.
         int[] quests = {36386,36390,36389,36388,36381,36392};
         int count = 0;
         for (int i = 0; i < quests.Length; i++) 
@@ -710,7 +747,17 @@ public class QH
         return false;
     }
     
-    // Comment Incoming
+    // Method:          ExpPotionsNeeded()
+    // What it Does:    Returns the number of experience potions a player should buy based on their player level.
+    // Purpose:         This is mainly to optimize player XP potion buying from the garrison vendor.  Often in a profile that purchases
+    //                  potions, it will just be a static amount to purchase.  This is a problem because one, if a player is level 100, that would
+    //                  be an unwise thing to do, but furthermore, what if a player was lvl 99, or 98?  Is it still a good idea
+    //                  to purchase 10 potions, or whatever amount?  No!!!  Thus, I have a multiplier I use that seems ok.  Basically, for
+    //                  whatever remaining levels the players has until 100 (for example, lvl 96 player = 4 remaining levels), I then
+    //                  multiple it by 1.4, convert it to an INT to round down to a whole number, and then buy that many potions.
+    //                  Also, it will make a consideration, if player is 99, and has the aura still, well it would not be a good idea to buy
+    //                  an XP potions for the remaining 10% of experience needed til 100, would it?  So, this algorithm further optimizes
+    //                  XP potion buy to be the most efficient and least wasteful as possible.
     public static int ExpPotionsNeeded() 
     {
         // Adding a Quick escape if Player is almost lvl 100... no need to waste resources.
@@ -718,11 +765,13 @@ public class QH
         {
             float currXP = API.ExecuteLua<float>("return UnitXP(\"player\")");
             float nextLvl = API.ExecuteLua<float>("return UnitXPMax(\"player\")");
+            // If player HAS the aura, and there is less than 25% less to level, it will not buy another XP potion wastefully.
             if  (API.Me.HasAura(178119) && currXP/nextLvl > 0.75) 
             {
                 API.Print("You are Almost Level 100! No Need to buy any more XP potions... Aura still Active.");
                 return 0;
             }
+            // If player does NOT have the aura, and has no potions, the player will STILL NOT buy XP potions wastefully if only 15% left to lvl.
             else if (currXP/nextLvl > 0.85) 
             {
                 API.Print("You are less than 15% XP From Level 100. Let's Not Waste Any Garrison Resources on Potions!");
@@ -736,6 +785,8 @@ public class QH
         int currentPotionCount = API.ExecuteLua<int>("potions = GetItemCount(120182); return potions;");
         API.Print(currentPotionCount + " XP Potions In Your Possession!");
         
+        // Algorithm to determine how many potions to buy based on how many they should AND how many they are even 
+        // capable of purchasing based upon Garrison resources
         if (currentPotionCount < maxOwn) 
         {
         	int gResources = API.ExecuteLua<int>("_, amount = GetCurrencyInfo(824); return amount;");
@@ -769,7 +820,10 @@ public class QH
         return toBuy;
     }
     
-    // Comment Incoming
+    // Method:          BuyExpPotions(int)
+    // What it Does:    Uses the given argument as the number of XP potions to buy from the garrison vendor, inserting Lua to do it.
+    // Purpose:         To make it easy to use the method ExpPotionsNeeded() -- Example:  "BuyExpPotions(ExpPotionsNeeded())" whilst
+    //                  standing at the correct vendor to purchase them from.  Makes a lot of lines of code very simple when building the profiles.
     public static void BuyExpPotions(int toBuy)
     {
         if (toBuy > 0) 
@@ -779,8 +833,12 @@ public class QH
         }
     }
     
-    // Comment Incoming
-    // Recursive for live tracking...
+    // Method:          XPMacro()
+    // What it Does:    Recursively checks if the player HAS used an XP potion and has the 20% bonus aura.  If not, then if the player has the
+    //                  potion in their bags it will use it.  It also checks player level and will exit the recursive method if player hits lvl 100.
+    // Purpose:         Rather than have players configure their own macros, this one will spam slightly more intelligently in the background.
+    //                  Also, it gives an escape more intelligently if player hits lvl 100.  ALSO, if say, the macro is activated but it turns out the
+    //                  Garrison is not yet established, it impliments a 5 min delay before checking again if it is, to prevent again, unnecessary spam.
     public static IEnumerable<int> XPMacro() 
     {
         // The initial "If" seems redundant, but what it does is force a bag check, as some API
@@ -792,6 +850,7 @@ public class QH
                 API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
                 yield break;
             }
+            // If Garrison is not yet established!
             if (!API.IsQuestCompleted(34378)) 
             {
                 Random rnd = new Random();
@@ -814,7 +873,11 @@ public class QH
         }
     }
     
-    // Comment Incoming
+    // Method:          IsMovingAway(float)
+    // What it Does:    Determines if an object or NPC is moving away from the player.
+    // Purpose:         This can be useful for say, sending the player to attack a fast-moving flying target that can outrun you.
+    //                  Without this, the player may end up chasing an object hundreds of yards, resulting in easy "stucks."
+    //                  This helps avoid these situations.
     public static bool IsMovingAway(float initialDistance) 
     {
         bool result = false;
@@ -830,7 +893,10 @@ public class QH
         return result;
     }
     
-    // Comment Incoming
+    // Method:          HasGuildBannerAura()
+    // What it Does:    Determines if the player is within 100 yrds of any of the 3 guild banners, thus having its aura.
+    // Purpose:         At times it would be unwise to drop a 2nd banner if still in range of another. This adds an additional
+    //                  check to avoid wasteful banner use, needlessly putting it on a 15 min cooldown.        
     public static bool HasGuildBannerAura() 
     {
         if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) 
@@ -840,7 +906,11 @@ public class QH
         return false;
     }
     
-    // Comment Incoming
+    // Method:          Hasprofession()
+    // What it Does:    Returns a boolean on whether the player has any profession or not.
+    // Purpose:         There are a few instances with the Garrison to match profession buildings, that first
+    //                  determining if the player has existing professions before even bothering to was efforts in
+    //                  identifying them and matching them to profession buildings can be useful.
     public static bool HasProfession() 
     {
         int prof1 = API.ExecuteLua<int>("local prof1 = GetProfessions(); return prof1");
@@ -853,7 +923,12 @@ public class QH
         return false;
     }
     
-    // Comment Incoming
+    //  WARNING - Method is only compatible with ENGLISH clients and should probably be made redundant.  Used til universal
+    //            method is built.
+    // Method:          ProfBuildingID(string)
+    // What it Does:    This matches the player's profession to the correct building ID within the garrison
+    // Purpose:         This is important because each Garrison Building has a corresponding ID.  This will match the
+    //                  given profession to its corresponding ID so that the correct matching building can be placed.
     public static int ProfBuildingID(string professionName)
     {
         int idNumber;
@@ -903,23 +978,33 @@ public class QH
         return idNumber;    
     }
     
-    // Comment Incoming
+    // Method:          HearthToGarrison()
+    // What it Does:    Exactly as described, use the Garrison hearthstone.
+    // Purpose:         Extraordinarily useful for speed.  If player needs to pickup a quest that starts in the garrison and they are not there
+    //                  by adding this option it will hearth them back, likewise with turning in something.
+    //                  This method is invaluable and used incredibly frequently to maximize the efficiency of player scripts and believable player
+    //                  behavior.
     public static IEnumerable<int> HearthToGarrison() 
     {
         if (!API.IsInGarrison) 
         {
+            // Verifying Garrison hearthstone is not on Cooldown.
             if (API.ItemCooldown(110560) == 0) 
             {
                 API.Print("Hearthing to Garrison");
                 API.UseItem(110560);
+                // This keeps the player from attempting the next action until the Garrison hearthstone is successfully used
                 while(API.Me.IsCasting) 
                 {
                     yield return 100;
                 }
+                // Loops until player is in Garrison. Many people's loading screens can take varying lengths of time to complete...
                 while (!API.IsInGarrison) 
                 {
                     yield return 100;
                 }
+                // Sometimes mesh errors occur by trying to CTM because it tries as soon as loading screen goes away but maybe some assets
+                // are not fully loaded in the world.  This gives a slight delay to ensure no error.  Really depends on player PC and connection.
                 API.Print("One Moment, Giving Mesh a Chance to Catchup!");
                 yield return 5000;
             }
@@ -931,9 +1016,18 @@ public class QH
         }
     }
     
-    // Comment Incoming
+    // Method:          IsInGordalFortress()
+    // What it Does:    Retunrs a boolean if the player is located within the specific zone called "Gordal Fortress" located in Talador.
+    // Purpose:         Gordal Fortress has a barrier to get to and the mesh system can be problematic navigating it. For all the quests
+    //                  located within this area, it can be very important to do a check that if they are OUT of the fortress, then to use 
+    //                  a specific navigation routine to get in, or if they are Inside of it, to avoie that routine.
+    //                  This is more of a quality of life method for players that maybe hearthed away in the middle of questing in this zone
+    //                  or missed something here for whatever reason.
     public static bool IsInGordalFortress() 
     {
+        // This takes the following player coordinates, X and Y, and converts them into a Vector3 position.  Blizzard's API only gives us
+        // 2 coordinates, but not the 3-dimensional z-coordinate, so using a simple algorithm we can determine the z coordinate based on
+        // the MapAreaID.
         double x = API.ExecuteLua<double>("local posX, _= GetPlayerMapPosition('player'); return posX;");
         double y = API.ExecuteLua<double>("local _, posY = GetPlayerMapPosition('player'); return posY;");
         int z = API.ExecuteLua<int>("return GetCurrentMapAreaID()");
@@ -942,6 +1036,9 @@ public class QH
         
         if (IsClose(1410f, 1728.5f, 310.3f, 390)) 
         {
+            // Z location is important because the Gordal fortress is high, so by determining player IS close to zone AND is above the z coordinate,
+            // the height of the player can be determined as likely to represent its position.  I COULD write a 3D area map, but this was significantly
+            // less time-consuming and just as effeective.
             if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
             {
         		return true;
@@ -950,9 +1047,14 @@ public class QH
         return false;
     }
     
-    // Only use this if you are standing right in front of Elevator at ground floor
-    // Coordinates are for Vector3 position where to go to on Exit
-    // Further Comments incoming.
+    // Method:          TakeElevator(int,int,float,float,float)
+    // What it Does:    Allows the navigation of an elevator
+    // Purpose:         At times in the script, transversing an elevator effectively can be a cumbersome to program
+    //                  and as such I wrote a scalable method... the only key thing needed is for the developer to
+    //                  time how long it takes the elevator to go from the bottom to the top, or the other way around.
+    //                  Also, the position you would like the player to exit the elevator and travel to.  The travel time
+    //                  was kind of a rough solution because it appears that while on the elevator, the API freezes all return values
+    //                  thus I cannot seem to get an accurate positional check, so the timing allows me to enter, then determine exit time.
     public static IEnumerable<int> TakeElevator(int ElevatorID, int elevatorTravelTime, float x, float y, float z) 
     {
         double position;
@@ -961,10 +1063,13 @@ public class QH
         Vector3 destination = new Vector3(x,y,z);
         foreach (var unit in API.GameObjects)
         {
+            // This first determines if the elevator is properly identified.
         	if (unit.EntryID == ElevatorID)
         	{
                 elevatorFound = true;
                 API.SetFacing(unit);
+                // The choice to disable combat is because once on the elevator, player should not attempt to leave it
+                // or it could mess up the passing as the bot remembers its last spot before combat starts then returns to it
                 API.DisableCombat = true;
                 API.Print("Waiting For the Elevator...");
                 position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
@@ -972,6 +1077,13 @@ public class QH
                 position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                 yield return 100;
                 
+                // The two positional checks right after each other are to determine movement of the elevator.
+                // if they are equal, elevator is not moving, but if they are different, like the second location is further than the first,
+                // then it can easily be determined it is moving away from you.
+                // This first check holds position until the elevator moves.  This is actually really critical because what if
+                // player arrives at the elevator and the elevator is at location already.  The method would recognize this then quickly try to jump on.
+                // This could create a problem though because what if the elevator was only going to be there a split second more, then player tries to
+                // traverse then ends up missing it.  This just helps avoid that... Long explanation I know.
                 while (position == position2)
                 {
                     position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
@@ -979,6 +1091,7 @@ public class QH
                     position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                     yield return 100;
                 }
+                // Meaning it is moving away from you or it is at least 10 yrds away.
                 if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) 
                 {
                     API.Print("Elevator is Moving...");
@@ -1016,6 +1129,7 @@ public class QH
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
                 API.CTM(unit.Position);
+                // The 4 seconds is added here to account for the stoppage of when you enter the elevator and it is stationary
                 yield return ((elevatorTravelTime + 4) * 1000);
                 while(!API.CTM(destination)) 
                 {
@@ -1032,20 +1146,29 @@ public class QH
         API.DisableCombat = false;
     }
     
-    // Comment Incoming
-    // Quests Using This: (32994)
+    // Method:          ItemsNeededForQuest(int,int,int)
+    // What it Does:    Determines how many items for say, a specific quest objective still need to be collected.
+    // Purpose:         Some quests require you to collect items and then use them in place or on another objet.
+    //                  The objective itself only registers progress on use, so a player could collect more than necessary if it came to it.
+    //                  Also, a script might say, "Collect 5" of these objects and THEN use them on something.  However, what if script is stopped
+    //                  and restarted but player already has half or all of the items collected, it will still attempt to recollect.
+    //                  This just determines how many are still needed to be used, vs how many player has in bags, and then calculates if any more 
+    //                  need to be collected.  For max efficiency.
+    // Quests Using:    (32994)
     public static bool ItemsNeededForQuest(int questID, int objective, int itemID) 
     {      
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
         for (int i = 0; i < progress.Length; i++)
-             {
+        {
+            // verifies this is an "Int" char, not anything else
             if (progress[i] > 47 && progress[i] < 58 )
             {
                 progress = progress.Substring(i,3);
                 break;
             }
         }
+        // Converts parsed string into an int.
         int notNeeded = int.Parse(progress.Substring(0,1));
         int total = int.Parse(progress.Substring(2,3));
         int toLoot = (total - notNeeded);
