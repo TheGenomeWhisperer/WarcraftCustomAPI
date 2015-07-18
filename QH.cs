@@ -520,7 +520,7 @@ public class QH
     //                in often what can occur is an infinite loop.
     public static bool QuestObjectiveProgress(int questID, int objective, int numberToCompleteObjective, string description)
     {
-        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
+        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + " , false); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
         int stringLength = 3;
         int count = -1;
@@ -563,7 +563,7 @@ public class QH
         {
             if (progress[i] > 47 && progress[i] < 58 )
             {
-                progress = progress.Substring(i,stringLength);
+                progress = progress.Substring(i, stringLength);
                 break;
             }
         }
@@ -740,7 +740,8 @@ public class QH
                 count++;
             }
         }
-        if (API.ItemCount(115463) < count) 
+        int itemCount = API.ExecuteLua<int>("local itemCount = GetItemCount(115463, false, false); return itemCount;");
+        if (itemCount < count) 
         {
             return true;
         }
@@ -782,7 +783,7 @@ public class QH
         double num = (100 - (API.Me.Level))*1.4;
         int maxOwn = (int)num;
         int toBuy;
-        int currentPotionCount = API.ExecuteLua<int>("potions = GetItemCount(120182); return potions;");
+        int currentPotionCount = API.ExecuteLua<int>("local potions = GetItemCount(120182, false, false); return potions;");
         API.Print(currentPotionCount + " XP Potions In Your Possession!");
         
         // Algorithm to determine how many potions to buy based on how many they should AND how many they are even 
@@ -843,33 +844,31 @@ public class QH
     {
         // The initial "If" seems redundant, but what it does is force a bag check, as some API
         // methods do not work until server LOOKS into a player bag.
-        if (API.HasItem(120182) == true || API.HasItem(120182) == false) 
+        if (API.Me.Level > 99) 
         {
-            if (API.Me.Level > 99) 
-            {
-                API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
-                yield break;
-            }
-            // If Garrison is not yet established!
-            if (!API.IsQuestCompleted(34378)) 
-            {
-                Random rnd = new Random();
-                int pause = rnd.Next(300000,302000);
-                yield return pause;
-            }
-            if (API.HasItem(120182) && !API.Me.HasAura(178119) && API.Me.Level < 100) 
-            {
-                API.UseItem(120182);
-            }
-            Random rand = new Random();
-            int wait = rand.Next(15000,17000);
-            yield return wait;
-            // Recursive Return
-            var check = new Fiber<int>(XPMacro());
-            while (check.Run()) 
-            {
-                yield return 100;
-            }
+            API.Print("Since You Are Level Capped, We Will Not Use the XP Potion!");
+            yield break;
+        }
+        // If Garrison is not yet established!
+        if (!API.IsQuestCompleted(34378)) 
+        {
+            Random rnd = new Random();
+            int pause = rnd.Next(300000,302000);
+            yield return pause;
+        }
+        int potionCount = API.ExecuteLua<int>("local itemCount = GetItemCount(120182, false, false); return itemCount;");
+        if (potionCount > 0 && !API.Me.HasAura(178119) && API.Me.Level < 100) 
+        {
+            API.UseItem(120182);
+        }
+        Random rand = new Random();
+        int wait = rand.Next(13000,15200);
+        yield return wait;
+        // Recursive Return
+        var check = new Fiber<int>(XPMacro());
+        while (check.Run()) 
+        {
+            yield return 100;
         }
     }
     
@@ -1157,7 +1156,7 @@ public class QH
     // Quests Using:    (32994)
     public static bool ItemsNeededForQuest(int questID, int objective, int itemID) 
     {      
-        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + "); return currentProgress;";
+        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + " , false); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
         for (int i = 0; i < progress.Length; i++)
         {
@@ -1170,12 +1169,13 @@ public class QH
         }
         // Converts parsed string into an int.
         int notNeeded = int.Parse(progress.Substring(0,1));
-        int total = int.Parse(progress.Substring(2,3));
-        int toLoot = (total - notNeeded);
-        API.Print("Player Needs to Loot " +toLoot+ " More Items");
-        
-        if (API.ItemCount(itemID) < toLoot)
+        int total = int.Parse(progress.Substring(2));
+        int toLoot = (total - notNeeded);      
+        int itemCount = API.ExecuteLua<int>("local itemCount = GetItemCount(" + itemID + ", false, false); return itemCount;");
+        int needed = (toLoot - itemCount);
+        if (itemCount < toLoot)
         {
+           API.Print("Player Needs to Loot " + needed + " More Items");
 	       return true;
         }
         return false;
@@ -1240,7 +1240,12 @@ public class QH
          // Smuggler's Run is Not on CoolDown and you are in the right zone, and not on a transport.
         if (RemainingSpellCD(170097) == 0 && API.Me.ZoneId == 6722 && !API.Me.IsOnTransport)
         {
-            if (API.ItemCount(113277) < 1 || API.ItemCount(113276) < 1 || API.ItemCount(113275) < 1 || API.ItemCount(113274) < 1 || API.ItemCount(113273) < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
+            int item1 = API.ExecuteLua<int>("local itemCount =GetItemCount(113277, false, false); return itemCount;");
+            int item2 = API.ExecuteLua<int>("local itemCount =GetItemCount(113276, false, false); return itemCount;");
+            int item3 = API.ExecuteLua<int>("local itemCount =GetItemCount(113275, false, false); return itemCount;");
+            int item4 = API.ExecuteLua<int>("local itemCount =GetItemCount(113274, false, false); return itemCount;");
+            int item5 = API.ExecuteLua<int>("local itemCount =GetItemCount(113273, false, false); return itemCount;");
+            if (item1 < 1 || item2 < 1 || item3 < 1 || item4 < 1 || item5 < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
             {
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 6000;
@@ -1269,7 +1274,7 @@ public class QH
                         yield return 500;
                         API.UseItem(116915);
                     }
-                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276) < 1 or GetItemCount(113275) < 1 or GetItemCount(113273) < 1 or GetItemCount(113277) < 1)) or (price == 54595 and GetItemCount(113274) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
+                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276, false, false) < 1 or GetItemCount(113275, false, false) < 1 or GetItemCount(113273, false, false) < 1 or GetItemCount(113277, false, false) < 1)) or (price == 54595 and GetItemCount(113274, false, false) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
                     yield return 1000;                    
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
@@ -1343,9 +1348,43 @@ public class QH
         }
     }
     
+    // Comment Incoming
+    public static void DisableAddOn(string name, bool reload) 
+    {
+        string luaCall = "DisableAddOn(\"" + name + "\", UnitName(\"player\"))";
+        API.ExecuteLua(luaCall);
+       
+        if (reload)
+        {
+            API.ExecuteLua("ReloadUI()");
+        }
+    }
+   
+    //comment Incoming
+    public static bool HasAddOnEnabled(string name)
+    {
+        string hasAddOn = API.ExecuteLua<string>("_,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return title;");
+        if (hasAddOn != null)
+        {
+            bool enabled = API.ExecuteLua<bool>("return enabled;");
+            bool loadable = API.ExecuteLua<bool>("if loadable ~= \"DISABLED\" then return true else return false end;");
+            if ((enabled == false && loadable == true) || enabled == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+        
+    
  }
- 
-
 
 // Comment Incoming
 //     public static bool hasMount(string mountName) {
