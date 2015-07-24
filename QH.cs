@@ -522,52 +522,26 @@ public class QH
     {
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + " , false); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
-        int stringLength = 3;
-        int count = -1;
-        if (numberToCompleteObjective > 10)
-        {
-            for (int i = 0; i < description.Length; i++)
-            {
-                if (description[i] != 47) // if it does not equal the '/' symbol
-                {
-                    count++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        if (numberToCompleteObjective > 10 && numberToCompleteObjective <= 100) 
-        {
-            // One Extra Character needed because string length going up by 1 (ex... 9/15 = 4 Length, whilst 10/15 = 5 Length)
-            if (numberToCompleteObjective == 100)
-            {
-                count++;
-            }
-            stringLength = 4 + count;
-        }
-        else if (numberToCompleteObjective > 100 && numberToCompleteObjective <= 1000)
-        {
-            // One Extra Character needed because string length going up by 1
-            if (numberToCompleteObjective == 1000)
-            {
-                count++;
-            }
-            stringLength = 5 + count;
-        }
-        // For loop searchest for the first Char that is a NUMBER, indicating the progress we are trying to find.
-        // Warning, this will ultimately fail if quest objective description has a number in it besides progress, but I have yet to find quest
-        // that fits those circumstances.
+        string result = "";
+        string finalResult = "";
+        
         for (int i = 0; i < progress.Length; i++) 
         {
-            if (progress[i] > 47 && progress[i] < 58 )
+            if (progress[i] > 46 && progress[i] < 58)
             {
-                progress = progress.Substring(i, stringLength);
+                result = progress.Substring(i);
+                for (int j = 0; j < result.Length; j++)
+                {
+                     if (progress[j] > 46 && progress[j] < 58)
+                     {
+                         finalResult += result[j];
+                     }
+                }
                 break;
             }
         }
-        if (progress.Equals(description))
+        API.Print(finalResult);
+        if (finalResult.Equals(description))
         {
             return true;
         }
@@ -829,7 +803,7 @@ public class QH
     {
         if (toBuy > 0) 
         {
-            string buy = "BuyMerchantItem(21," + toBuy + ")";  // Building LUA script to paste in string form
+            string buy = "BuyMerchantItem(22," + toBuy + ")";  // Building LUA script to paste in string form
             API.ExecuteLua(buy);
         }
     }
@@ -1382,10 +1356,16 @@ public class QH
             return false;
         }
     }
-        
     
- }
+    // Comment Incoming
+    public static bool IsInScenario()
+    {
+        return API.ExecuteLua<bool>("local name,_,_ = C_Scenario.GetInfo(); if name ~= nil then return true else return false end;");
+    }
 
+ }
+ 
+ 
 // Comment Incoming
 //     public static bool hasMount(string mountName) {
 //         int numMounts = ExecuteLua<int>("local numMounts = C_MountJournal.GetNumMounts(); return numMounts");
