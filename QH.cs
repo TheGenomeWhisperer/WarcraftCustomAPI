@@ -69,7 +69,7 @@ public class QH
             // Checking First if gear item is unequipped, if it is, then no need to cycle through this.
             if (API.ExecuteLua<int>("return GetInventoryItemID(\"player\", 1);") != 0) 
             {
-                API.ExecuteLua("SaveEquipmentSet(\"Questing\",100)");
+                API.ExecuteLua("SaveEquipmentSet(\"TempQuesting\",100)");
                 for (int i = 0; i < 5; i++)
                 {
                     // Checking how many open slots in a bag.
@@ -117,6 +117,8 @@ public class QH
         catch (Exception e)
         {
             API.Print(e + "Opening Vendor to Cleanup Some Bag Slots.");
+            
+            // NOT YET FINISHED!!!!!!!!!!!!!!!!!!!
             // Force Vendor - Todo, need to find API to force vendor.
             // To be Implemented Still...
             // Then... try again
@@ -140,12 +142,13 @@ public class QH
     }
     
 
-    // What it does:  Sets given NPC to the focus target and also targets it.
-    // Purpose:       Useful to have a target set as focus as often it is easy to lose the target.
-    //                This also prevents potential crashing by checking empty objects. You can now do a simple
-    //                If Me.Focus != null and know that you are secure.
+    // What it does:    Sets given NPC to the focus target and also targets it.
+    // Purpose:         Useful to have a target set as focus as often it is easy to lose the target.
+    //                  This also prevents potential crashing by checking empty objects. You can now do a simple
+    //                  If Me.Focus != null and know that you are secure.
     public static void SetFocusUnit(int ID)
     {
+        API.Me.ClearFocus();
         foreach (var unit in API.Units)
         {
             if (unit.EntryID == ID && !unit.IsDead)
@@ -157,12 +160,61 @@ public class QH
         }
     }
 
+    // What it does:    Sets Focus to a unit from the given array of units
+    // Purpose:         This will likely be used minimally, in favor of "SetNearestFocusUnit()" but
+    //                  this allows the player to Set Focus to the first found NPC of an array
+    public static void SetFocusUnit(int[] ID)
+    {
+        API.Me.ClearFocus();
+        foreach (var unit in API.Units)
+        {
+            for (int i = 0; i < ID.Length;  i++)
+            {
+                if (unit.EntryID == ID[i] && !unit.IsDead)
+                {
+                    API.Me.SetFocus(unit);
+                    API.Me.SetTarget(unit);
+                    break;
+                }
+            }
+            if (API.Me.Focus != null)
+            {
+                break;
+            }
+        }
+    }
+    // What it does:  Sets focus to target within the givin range limit. Accepts any number of targets in an array.
+    // Purpise:       Occasionally you only want to target units within a given range.  Typically you could just
+    //                target units that are closest, but occasionally none exist at the moment, but you ALSO don't
+    //                want to be chasing any down.
+    public static void SetFocusUnitMaxDistance(int[] ID, int yards) 
+    {
+        API.Me.ClearFocus();
+        foreach (var unit in API.Units)
+        {
+            for (int i = 0; i < ID.Length;  i++)
+            {
+                if (unit.EntryID == ID[i] && !unit.IsDead && API.Me.Distance2DTo(unit.Position) < yards)
+                {
+                    API.Me.SetFocus(unit);
+                    API.Me.SetTarget(unit);
+                    break;
+                }
+            }
+            if (API.Me.Focus != null)
+            {
+                break;
+            }
+        }
+    }
+    
     // What it does:  Sets focus to target within the givin range limit.
     // Purpise:       Occasionally you only want to target units within a given range.  Typically you could just
     //                target units that are closest, but occasionally none exist at the moment, but you ALSO don't
     //                want to be chasing any down.
     public static void SetFocusUnitMaxDistance(int ID, int yards) 
     {
+        API.Me.ClearFocus();
         foreach (var unit in API.Units)
         {
             if (unit.EntryID == ID && !unit.IsDead && API.Me.Distance2DTo(unit.Position) < yards)
@@ -174,12 +226,62 @@ public class QH
         }
     }
 
+    // What it does:  Targets and sets focus to the closest give unit from an Array of units.
+    // Purpose:       Sometimes when iterating through the list of "Units," the closest does not always come first.
+    //                Often it is more effective to target closest unit first, rather than seemingly any
+    //                random unit within 100 yrds.
+    public static void SetNearestFocusUnit(int[] ID)
+    {
+        API.Me.ClearFocus();
+        var killTarget = API.Me.GUID;
+        float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+
+        // Identifying Closest Desired Unit
+        foreach (var unit in API.Units)
+        {
+            for (int i = 0; i < ID.Length;  i++)
+            {
+                if (unit.EntryID == ID[i] && !unit.IsDead)
+                {
+                    if (unit.Distance < closestUnit)
+                    {
+                        // This stores the distance of the new unit, so when it re-iterates through,
+                        // ultimately the unit with the lowest distance, or the one closest to you is stored
+                        closestUnit = unit.Distance;
+                        // This stores the GUID, which is necessary as ALL units share the same UnitID, but the GUID is a unique identifier.
+                        killTarget = unit.GUID;
+                    }
+                }
+            }
+        }
+        if (closestUnit == 5000)
+        {
+            API.Print("No Units Found Within Targetable Range.");
+        }
+        else
+        {
+            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print.
+            API.Print("Closest target is " + closest + " yards away.");
+            // Setting Focus to closest Unit
+            foreach (var unit in API.Units)
+            {
+                if (unit.GUID == killTarget)
+                {
+                    API.Me.SetFocus(unit);
+                    API.Me.SetTarget(unit);
+                    break;
+                }
+            }
+        }
+    }
+    
     // What it does:  Targets and sets focus to the closest give unit.
     // Purpose:       Sometimes when iterating through the list of "Units," the closest does not always come first.
     //                Often it is more effective to target closest unit first, rather than seemingly any
     //                random unit within 100 yrds.
     public static void SetNearestFocusUnit(int ID)
     {
+        API.Me.ClearFocus();
         var killTarget = API.Me.GUID;
         float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
 
@@ -532,7 +634,7 @@ public class QH
                 result = progress.Substring(i);
                 for (int j = 0; j < result.Length; j++)
                 {
-                     if (progress[j] > 46 && progress[j] < 58)
+                     if (result[j] > 46 && result[j] < 58)
                      {
                          finalResult += result[j];
                      }
@@ -540,7 +642,6 @@ public class QH
                 break;
             }
         }
-        API.Print(finalResult);
         if (finalResult.Equals(description))
         {
             return true;
@@ -669,12 +770,7 @@ public class QH
         }
         if (result == null)
         {
-            // This is kind of a "stop-gap" hack until I find the right API... basically for international, non-English clients,
-            // this clearly will not match correctly, so what it does is it selects the only option that would be available if the player
-            // had abandoned all the garrison quests that add options to the flightmaster.
             API.Print("Unable to Identify Correct Gossip Option.");
-            API.Print("Player using Non-English Client?  Trying Gossip Option 1");
-            API.ExecuteLua("SelectGossipOption(2);");
         }
     }  
     
@@ -870,7 +966,7 @@ public class QH
     // What it Does:    Determines if the player is within 100 yrds of any of the 3 guild banners, thus having its aura.
     // Purpose:         At times it would be unwise to drop a 2nd banner if still in range of another. This adds an additional
     //                  check to avoid wasteful banner use, needlessly putting it on a 15 min cooldown.        
-    public static bool HasGuildBannerAura() 
+    public static bool HasGuildBannerAura()
     {
         if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) 
         {
@@ -896,6 +992,7 @@ public class QH
         return false;
     }
     
+    // NOT CURRENTLY IN USE IN ANY PROFILES
     //  WARNING - Method is only compatible with ENGLISH clients and should probably be made redundant.  Used til universal
     //            method is built.
     // Method:          ProfBuildingID(string)
@@ -959,22 +1056,53 @@ public class QH
     //                  behavior.
     public static IEnumerable<int> HearthToGarrison() 
     {
+        if (API.Me.IsOnTaxi)
+        {
+            var check = new Fiber<int>(WaitUntilOffTaxi());
+            while (check.Run()) 
+            {
+                yield return 100;
+            }
+            yield return 1000;
+        }
+        
         if (!API.IsInGarrison) 
         {
             // Verifying Garrison hearthstone is not on Cooldown.
             if (API.ItemCooldown(110560) == 0) 
             {
-                API.Print("Hearthing to Garrison");
-                API.UseItem(110560);
-                // This keeps the player from attempting the next action until the Garrison hearthstone is successfully used
-                while(API.Me.IsCasting) 
+                if (API.ExecuteLua<bool>("local name = GetMerchantItemInfo(1); if name ~= nil then return true else return false end"))
                 {
-                    yield return 100;
+                    API.Print("Player is Interacting With a Vendor. Closing Window Before Attempting to Hearth, lest the Bot Will Attempt to Sell G-Hearthstone!");
+                    API.ExecuteLua("CloseMerchant()");
+                    yield return 1000;
                 }
-                // Loops until player is in Garrison. Many people's loading screens can take varying lengths of time to complete...
-                while (!API.IsInGarrison) 
+                
+                Vector3 startPos = API.Me.Position;
+                while (API.Me.Distance2DTo(startPos) < 50)
                 {
-                    yield return 100;
+                    API.Print("Hearthing to Garrison");
+                    API.UseItem(110560);
+                    yield return 1000;
+                    // This keeps the player from attempting the next action until the Garrison hearthstone is successfully used
+                    while(API.Me.IsCasting) 
+                    {
+                        yield return 100;
+                    }
+                    yield return 1000;
+                    if (API.Me.Distance2DTo(startPos) >= 50)
+                    {
+				        break;
+                    }
+                    else
+                    {
+                        API.Print("Player Failed to Hearth. Trying Again...");
+                    }
+                }
+                // Waiting for loading screen!
+                while (!API.IsInGarrison)
+                {
+                    yield return 1000;
                 }
                 // Sometimes mesh errors occur by trying to CTM because it tries as soon as loading screen goes away but maybe some assets
                 // are not fully loaded in the world.  This gives a slight delay to ensure no error.  Really depends on player PC and connection.
@@ -1163,9 +1291,11 @@ public class QH
     // 36862 -        "Pinchwhistel Gearworks"
     // 36951, 34653 - "Arrakoa Exodus"
     // 36952, 34794 - "Taking the Flight to Nagrand"
+    // 38568          "We need a shipwright"
+    // 35876          "Garrison Campaign - Darktide Roost"
     public static IEnumerable<int> AbandonGarrisonFlightQuests(int questToKeep) 
     {
-        int[] questArray = {36706,36953,34681,36862,36951,34653,36952,34794};
+        int[] questArray = {36706,36953,34681,36862,36951,34653,36952,34794,38568,35876};
         
         for (int i = 0; i < questArray.Length; i++)
         {
@@ -1224,11 +1354,20 @@ public class QH
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 6000;
                 // Targeting NPC Smuggler
-                while (API.Me.Focus == null) 
+                int count = 0;
+                while (API.Me.Focus == null && count < 3) 
                 {
                     API.Print("Targeting the Smuggler...");
                     SetFocusUnit(84243);
                     yield return 2000;
+                    if (API.Me.Focus == null)
+                    {
+                        count ++;
+                        if (count == 3)
+                        {
+                            API.Print("For Some Reason, Player Was Unable to Locate the Smuggler. Continuing On...");
+                        }
+                    }
                 }
                 while (API.Me.Focus != null && API.Me.Focus.Distance > 5) 
                 {
@@ -1241,12 +1380,18 @@ public class QH
                     yield return 1000;
                     API.ExecuteLua("GossipTitleButton1:Click()");
                     yield return 1000;
-                    if ((NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
+                    bool toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == 58876 and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
+                    if (toBuy && GetPlayerGold() > 400)
                     {
-                        API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
                         API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
-                        yield return 500;
-                        API.UseItem(116915);
+                        yield return 1000;
+                        if (API.HasItem(116915))
+                        {
+                            API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
+                            API.UseItem(116915);
+                            yield return 2000;
+                            API.Print("Yay! Ziri'ak is Now Your Follower!");
+                        }                       
                     }
                     API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276, false, false) < 1 or GetItemCount(113275, false, false) < 1 or GetItemCount(113273, false, false) < 1 or GetItemCount(113277, false, false) < 1)) or (price == 54595 and GetItemCount(113274, false, false) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
                     yield return 1000;                    
@@ -1323,14 +1468,17 @@ public class QH
     }
     
     // Comment Incoming
-    public static void DisableAddOn(string name, bool reload) 
+    public static IEnumerable<int> DisableAddOn(string name, bool reload) 
     {
         string luaCall = "DisableAddOn(\"" + name + "\", UnitName(\"player\"))";
         API.ExecuteLua(luaCall);
        
         if (reload)
         {
+            Vector3 location = API.Me.Position;
             API.ExecuteLua("ReloadUI()");
+            yield return 1500;
+            API.Print("On Loading screen...");
         }
     }
    
@@ -1362,27 +1510,21 @@ public class QH
     {
         return API.ExecuteLua<bool>("local name,_,_ = C_Scenario.GetInfo(); if name ~= nil then return true else return false end;");
     }
-
+    
+    // Comment Incoming
+    public static IEnumerable<int> WaitUntilOffTaxi()
+    {
+        API.Print("Player is Currently on a Taxi, Please Be Patient And Enjoy the Scenery!");
+        int count = 0;
+        while (API.Me.IsOnTaxi)
+        {
+            yield return 1000;
+            count++;
+        }
+        API.Print("Player Exited the Flightpath after " + count + " seconds!");
+    }
+  
  }
- 
- 
-// Comment Incoming
-//     public static bool hasMount(string mountName) {
-//         int numMounts = ExecuteLua<int>("local numMounts = C_MountJournal.GetNumMounts(); return numMounts");
-//         G["azure"] = false;
-//         string name = "";
-//         
-//         for (int i = 0; i < numMounts; i++) {
-//             name = ExecuteLua<string>("local name = C_MountJournal.GetMountInfo(" + i + "); return name;");
-//             if (name.Equals(mountName)) {
-//                 G["azure"] = true;
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
-
- 
 
 //     -- Identifying Primary Professions
 // 
