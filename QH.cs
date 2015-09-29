@@ -39,7 +39,7 @@ public class QH
         {
             if ((questArray[i] != questToKeep) && (API.HasQuest(questArray[i])))
             {
-                API.ExecuteLua("ind = GetQuestLogIndexByID(" + questArray[i] + "); title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+                API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
                 string title = API.ExecuteLua<string>("return title;");
                 API.Print("Removing Quest(temporarily) to Leave One Gossip Option at Flightmaster \"" + title + "\"");
                 yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.q
@@ -54,7 +54,7 @@ public class QH
     //                  a quest.  This will assist the profile creator in expanding their toolbox for quality of life safeguards.
     public static void AbandonQuest(int questID)
     {
-        API.ExecuteLua("ind = GetQuestLogIndexByID(" + questID + "); title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+        API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questID + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
         string title = API.ExecuteLua<string>("return title;");
         API.Print("The Quest \"" + title + "\" Has Been Removed.");
     }
@@ -262,7 +262,7 @@ public class QH
         // capable of purchasing based upon Garrison resources
         if (currentPotionCount < maxOwn) 
         {
-        	int gResources = API.ExecuteLua<int>("_, amount = GetCurrencyInfo(824); return amount;");
+        	int gResources = API.ExecuteLua<int>("local _, amount = GetCurrencyInfo(824); return amount;");
         	int canBuy = gResources / 100;
         
         	if (canBuy > maxOwn)
@@ -362,7 +362,7 @@ public class QH
     {
         // Returns null if the addon is either not installed OR not, but it does not determine if it is "ON" or not.
         // It returns the title of the addon you are asking if it has installed.
-        string hasAddOn = API.ExecuteLua<string>("_,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return title;");
+        string hasAddOn = API.ExecuteLua<string>("local _,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return title;");
         if (hasAddOn != null)
         {
             // Loadable means it can be turned on without a "ReloadUI()" which can be bad, and enabled means just that, it's enabled.
@@ -390,7 +390,7 @@ public class QH
     //                  This can help determine if the player needs to train in the first place or if it can even collect the object.
     public static bool HasArchaeology() 
     {
-       if (API.ExecuteLua<string>("_,_, archaeology = GetProfessions(); return archaeology;") != null)
+       if (API.ExecuteLua<string>("local _,_, archaeology = GetProfessions(); return archaeology;") != null)
        {
            return true;
        }
@@ -624,7 +624,7 @@ public class QH
     //                  Typically, you should avoid using this unless you have no way to match Vector3 proximity positions.
     public static bool MiniMapZoneEquals(string name)
     {
-        string zone = API.ExecuteLua<string>("zone = GetMinimapZoneText(); return zone;");
+        string zone = API.ExecuteLua<string>("local zone = GetMinimapZoneText(); return zone;");
         if (zone.Equals(name))
         {
             return true;
@@ -639,8 +639,8 @@ public class QH
     {
         string followerName = ("\"" + Name + "\"");
         bool toBuy = false;
-        int displayID = API.ExecuteLua<int>("local allFollowers = C_Garrison.GetFollowers(); followerID = 0; for x, y in pairs(allFollowers) do if (y.name == " + followerName + ") then followerID = y.displayID; break; end end; return followerID;");
-        toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + displayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy");
+        int displayID = API.ExecuteLua<int>("local allFollowers = C_Garrison.GetFollowers(); local followerID = 0; for x, y in pairs(allFollowers) do if (y.name == " + followerName + ") then followerID = y.displayID; break; end end; return followerID;");
+        toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + displayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy");
         return toBuy;
     }
     
@@ -1198,7 +1198,7 @@ public class QH
                     yield return 1000;
                     API.ExecuteLua("GossipTitleButton1:Click()");
                     yield return 1000;
-                    bool toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == 58876 and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
+                    bool toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == 58876 and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
                     if (toBuy && GetPlayerGold() > 400)
                     {
                         API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
