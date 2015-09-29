@@ -1,6 +1,6 @@
     
 /* Author:      Sklug a.k.a TheGenomeWhisperer
-|       	The following functions are commonly called to be used as a "help"
+|       	    The following functions are commonly called to be used as a "help"
 |
 | NOTE:         For common scripting events as part of questing profile behaviors.
 | NOTE:     	"ExecuteLua" API function executes "Lua" code language inserted into the C#
@@ -21,16 +21,16 @@ public class QH
     // Empty Constructor
     public QH() { }	
 		
-    // Method:		"AbandonGarrisonFlightQuests(int)"
-    // What it Does:	Acts as a stop-gap in regards to localization, EU/Russian/Asian script is compatible regardless
-    //			of translation by abanding unnecessary quests at the moment to normalize all clients, regardless of languages.
-    // Purpose:		Blizzard does not provide an API to match Gossip to Quest ID, so, the String has to be parsed
-    //			which presents a problem if using a non-English Client. Thus, by temporarily eliminating
-    //			any potential conflicting quests, it leaves the gossip option in the correct position(2)
-    //			for ALL languages.  This will be made redundant with full localization of all clients
-    //			of which right now we are missing the Asian markets (China, korea specifically)
-    //				Method is a work in progrss... still needs to open Quest window then select the quest
-    //			Then abandon.  You cannot abandon a quest unless you have it selected...
+	// Method:			"AbandonGarrisonFlightQuests(int)"
+	// What it Does:	Acts as a stop-gap in regards to localization, EU/Russian/Asian script is compatible regardless
+	//					of translation by abanding unnecessary quests at the moment to normalize all clients, regardless of languages.
+	// Purpose:			Blizzard does not provide an API to match Gossip to Quest ID, so, the String has to be parsed
+	//					which presents a problem if using a non-English Client. Thus, by temporarily eliminating
+	//					any potential conflicting quests, it leaves the gossip option in the correct position(2)
+	//					for ALL languages.  This will be made redundant with full localization of all clients
+	//					of which right now we are missing the Asian markets (China, korea specifically)
+    // 					Method is a work in progrss... still needs to open Quest window then select the quest
+    //					Then abandon.  You cannot abandon a quest unless you have it selected...
     public static IEnumerable<int> AbandonGarrisonFlightQuests(int questToKeep) 
     {
         int[] questArray = {36706,36953,34681,36862,36951,34653,36952,34794,38568,35876};
@@ -646,14 +646,14 @@ public class QH
     
     // Method:          "PlaceGuildBannerAt(float,float,float)"
     // What it does:    Basic check to first, see if one of the 3 banners is available.  If so,
-    //		        it will execute the MoveTo to the given Vector3 location and then use an available banner.
+    //		            it will execute the MoveTo to the given Vector3 location and then use an available banner.
     // Purpose:         The reason why this is separated from the previous function GuildBanners() is because
-    //		        it is necessary to do a check before telling the player to moveTo a destination.
-    //		        It would be time-wasting of the player to move to the destination to use banner if it
-    //		        was not currently available in the first place.
-    //		        The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
-    //		        that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
-    //		        explicit pre-determined location I can, or I can implement give it an object location as well.
+    //		            it is necessary to do a check before telling the player to moveTo a destination.
+    //		            It would be time-wasting of the player to move to the destination to use banner if it
+    //		            was not currently available in the first place.
+    //		            The MAJOR advantage using a Vector3 as an argument and not explicitly listing the argument is
+    //		            that I can call to this whenever I wish to, for whatever reason, and if I wish to pass it an
+    //		            explicit pre-determined location I can, or I can implement give it an object location as well.
     public static IEnumerable<int> PlaceGuildBannerAt(float x, float y, float z)
    {
         if (BannerAvailable())
@@ -678,12 +678,12 @@ public class QH
     //                  This also delays the continuous check if all 3 banners are on CD, and it ONLY does a check
     //                  to be used if in combat.
     // Purpose:         If the banner is not on cooldown, it will use it when called upon so player may level faster.
-    //	                Also, it prioritizes the best of the banners to be used so you are always using best one available.
-    //		        What makes this different from previous UseGuildBanner() function is...
-    //		        ...in effort to conserve from spamming the conditionals, if all 3 banners are on cooldown
-    //		        then it determines the shortest cooldown time then "yield returns" or "waits" to carry on
-    //		        Ideally, this is a feature to be used with a background aura that checks continuously.
-    //		        If you use it in main thread, bot will not continue whilst banners on cooldown.
+    //	                 Also, it prioritizes the best of the banners to be used so you are always using best one available.
+    //		            What makes this different from previous UseGuildBanner() function is...
+    //		            ...in effort to conserve from spamming the conditionals, if all 3 banners are on cooldown
+    //		            then it determines the shortest cooldown time then "yield returns" or "waits" to carry on
+    //		            Ideally, this is a feature to be used with a background aura that checks continuously.
+    //		            If you use it in main thread, bot will not continue whilst banners on cooldown.
     //                  It is recommended to run this in a separate thread.
     public static IEnumerable<int> PlaceGuildBannerOnAuraCheck()
     {
