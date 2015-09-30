@@ -367,9 +367,9 @@ public class QH
         {
             // Loadable means it can be turned on without a "ReloadUI()" which can be bad, and enabled means just that, it's enabled.
             // These are just returning the variables derived from the previous Table in Lua.
-            bool enabled = API.ExecuteLua<bool>("return enabled;");
-            bool loadable = API.ExecuteLua<bool>("if loadable ~= \"DISABLED\" then return true else return false end;");
-            if ((enabled == false && loadable == true) || enabled == true)
+            bool enabled = API.ExecuteLua<bool>("local _,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return enabled;");
+            string loadable = API.ExecuteLua<string>("local _,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return loadable;");
+            if ((enabled == false && !loadable.Equals("DISABLED")) || enabled == true)
             {
                 return true;
             }
