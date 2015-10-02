@@ -136,7 +136,7 @@ public class QH
             API.DisableCombat = true;
             while (API.Me.Focus != null && API.Me.Focus.Distance2D > 10.0) 
             {
-                API.CTM(API.Me.Focus.Position);
+                API.MoveTo(API.Me.Focus.Position);
                 yield return 200;
             }
             // While I wanted to use "/use Garrison Ability" originally, in an ExecuteMacro method, I found that is not viable unless you
@@ -367,9 +367,9 @@ public class QH
         {
             // Loadable means it can be turned on without a "ReloadUI()" which can be bad, and enabled means just that, it's enabled.
             // These are just returning the variables derived from the previous Table in Lua.
-            bool enabled = API.ExecuteLua<bool>("return enabled;");
-            bool loadable = API.ExecuteLua<bool>("if loadable ~= \"DISABLED\" then return true else return false end;");
-            if ((enabled == false && loadable == true) || enabled == true)
+            bool enabled = API.ExecuteLua<bool>("local _,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return enabled;");
+            string loadable = API.ExecuteLua<string>("local _,title,_,enabled,loadable = GetAddOnInfo(\"" + name + "\"); return loadable;");
+            if ((enabled == false && !loadable.Equals("DISABLED")) || enabled == true)
             {
                 return true;
             }
@@ -1523,14 +1523,17 @@ public class QH
     //                  it will pause until the flight is over.
     public static IEnumerable<int> WaitUntilOffTaxi()
     {
-        API.Print("Player is Currently on a Taxi, Please Be Patient And Enjoy the Scenery!");
-        int count = 0;
-        while (API.Me.IsOnTaxi)
+        if (API.Me.IsOnTaxi)
         {
-            yield return 1000;
-            count++;
+            API.Print("Player is Currently on a Taxi, Please Be Patient And Enjoy the Scenery!");
+            int count = 0;
+            while (API.Me.IsOnTaxi)
+            {
+                yield return 1000;
+                count++;
+            }
+            API.Print("Player Exited the Flightpath after " + count + " seconds!");
         }
-        API.Print("Player Exited the Flightpath after " + count + " seconds!");
     }
     
     // Method:          XPMacro()
