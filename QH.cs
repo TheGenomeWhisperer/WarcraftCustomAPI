@@ -970,6 +970,23 @@ public class QH
         }
     }
     
+    // What it does:  Sets focus to target within the givin range limit.
+    // Purpise:       Occasionally you only want to target units within a given range.  Typically you could just
+    //                target units that are closest, but occasionally none exist at the moment, but you ALSO don't
+    //                want to be chasing any down.
+    public static void SetFocusUnitMaxDistance(int ID, int yards) 
+    {
+        foreach (var unit in API.Units)
+        {
+            if (unit.EntryID == ID && !unit.IsDead && API.Me.Distance2DTo(unit.Position) < yards)
+            {
+                API.Me.SetFocus(unit);
+                API.Me.SetTarget(unit);
+                break;
+            }
+        }
+    }
+    
     // Method:          "SetNearestFocusUnit(int[])"
     // What it does:    Targets and sets focus to the closest give unit from an Array of units.
     // Purpose:         Sometimes when iterating through the list of "Units," the closest does not always come first.
