@@ -1554,13 +1554,26 @@ public class QH
     }
     
     // Method:          XPMacro()
+    // What it Does:    Simply checks if player has the XP potion aura, and if not, and player owns a potion
+    //                  it will now use that ppotion.
+    public static IEnumerable<int> XPMacro() 
+    {
+        int potionCount = API.ExecuteLua<int>("local itemCount = GetItemCount(120182, false, false); return itemCount;");
+        if (potionCount > 0 && !API.Me.HasAura(178119) && API.Me.Level < 100) 
+        {
+            API.UseItem(120182);
+            yield return 500;
+        }
+    }
+    
+    // Method:          XPMacroRecursive()
     // What it Does:    Recursively checks if the player HAS used an XP potion, thus having the 20% bonus aura.  If not, then if the player has the
     //                  potion in their bags it will use it.  It also checks player level and will exit the recursive method if player hits lvl 100.
     // Purpose:         Rather than have players configure their own macros, this one will spam slightly more intelligently in the background.
     //                  Also, it gives an escape more intelligently if player hits lvl 100.  ALSO, if say, the macro is activated but it turns out the
     //                  Garrison is not yet established, it impliments a 5 min delay before checking again if it is, to prevent unnecessary spam from this thread.
     //                  It is recommended to run this in a separate thread.
-    public static IEnumerable<int> XPMacro() 
+    public static IEnumerable<int> XPMacroRecursive() 
     {
         // The initial "If" seems redundant, but what it does is force a bag check, as some API
         // methods do not work until server LOOKS into a player bag.
@@ -1591,5 +1604,5 @@ public class QH
             yield return 100;
         }
     }
-    
 }
+
