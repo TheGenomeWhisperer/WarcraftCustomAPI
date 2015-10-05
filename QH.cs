@@ -867,10 +867,10 @@ public class QH
         if (hasGearOn == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
-        	API.ExecuteLua("UseEquipmentSet(\"Questing\")");
+        	API.ExecuteLua("UseEquipmentSet(\"TempQuesting\")");
             API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
-            API.ExecuteLua("DeleteEquipmentSet(\"Questing\")"); // Remove quest fingerprint...
+            API.ExecuteLua("DeleteEquipmentSet(\"TempQuesting\")"); // Remove quest fingerprint...
         }
     }
     

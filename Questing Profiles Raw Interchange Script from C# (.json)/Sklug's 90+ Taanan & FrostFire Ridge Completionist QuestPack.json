@@ -38494,45 +38494,6 @@
                                     "RunTime": 5.0
                                   },
                                   "TimeLimit": 0
-                                },
-                                {
-                                  "$type": "While",
-                                  "IsExtendedInEditor": false,
-                                  "LoopActions": {
-                                    "Children": [
-                                      {
-                                        "$type": "Wait",
-                                        "Delay": 1.0,
-                                        "DelayMax": 1.0
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Do",
-                                    "GroupName": ""
-                                  },
-                                  "Conditions": [
-                                    {
-                                      "Condition": {
-                                        "$type": "PlayerCondition",
-                                        "Property": "IsInGarrison"
-                                      },
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    }
-                                  ],
-                                  "IsNot": true
                                 }
                               ],
                               "IsExtendedInEditor": false,
