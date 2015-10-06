@@ -293,6 +293,16 @@ public class QH
         return toBuy;
     }
     
+    // Method:          "GetGarrisonLevel();
+    // What it Does:    Returns the current rank of the player garrison, 1-3
+    // Purpose:         When dealing with various pathing at the Garrison, it is important to note that object
+    //                  location often varies based on the level and size of the ggarrison. This helps filter it all.
+    public static int GetGarrisonLevel()
+    {
+        return API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
+    }
+
+    
     // Method:          "GetGarrisonResources()"
     // What it Does:    Returns the amount of Garrison Resources the player has at the given moment.
     // Purpose:         Often you can save a lot of processing time/power by ensuring the player has enough resources
@@ -406,6 +416,20 @@ public class QH
         if (API.HasAura(90633) || API.HasAura(90632) || API.HasAura(90631)) 
         {
             return true;
+        }
+        return false;
+    }
+    
+    // Method:          "HasHiddenAura(int)"
+    // What it Does:    Returns a boolean if player currently has the given aura.  Currently, the "API.HasAura()" from the Rebot API
+    //                  only checks on the main active Aura buffs, whilst mine now checks against all potential auras.
+    // Purpose:         To fill in a necessary, but missing gap in the Rebot API.
+    public static bool HasHiddenAura(int spellID)
+    {
+        foreach (var aura in API.Me.Auras) {
+	       if (aura.SpellId == spellID) {
+		      return true;
+           }	
         }
         return false;
     }
@@ -1232,6 +1256,7 @@ public class QH
                     yield return 1000;                    
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
+                    API.Me.ClearFocus();
                 }
             }
         }
