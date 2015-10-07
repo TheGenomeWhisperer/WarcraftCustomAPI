@@ -17,7 +17,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 94) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 94 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Talador\"] = \"false\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 94) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 94 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Talador\"] = \"false\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
           },
           {
             "$type": "Comment",
@@ -87,7 +87,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray =  {34566, 34569, 35102, 34577, 34576, 34579, 34263, 34837, 34683, 34766, 34108, 34107, 34106, 34205, 35162, 36858, 34236, 35237, 33973, 34135, 34290, 33933, 33720, 33754, 35226, 33722, 33735, 33721, 34950, 33724, 33736, 33728, 33729, 33730, 34962, 33731, 34803, 37422, 34859, 33649, 33740, 33734, 34261, 33761, 33578, 34250, 33580, 33581, 33582, 34471, 34167, 34248, 34639, 34101, 33872, 33873, 33874, 34751, 34252, 34185, 35238, 34801, 36518, 34776, 34840, 34855, 34858, 34860, 34929, 34870, 34251, 34971, 34972, 34696, 34253, 34710, 35249, 34418, 33920, 33917, 34351, 33530, 34451, 33970, 33971, 33972, 34239, 34255, 34498, 34276, 34242, 34660, 34668, 34508, 34013, 34234, 33988, 34208, 34256, 33976, 34326, 34092, 34122, 34257, 34140, 34249, 34182, 34144, 34157, 34165, 34163, 34164, 34259, 34148, 34564, 36512, 34706, 34667, 34671, 34254, 33882, 33884, 33944, 34145, 34400, 34399, 34401, 34404, 34414, 34447};\r\n\r\nint[] questArray2 = {35537, 36522};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n        \tcount2++;\r\n    \t}\r\n}\r\n\r\nint count3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif ((count + count2) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Talador\"] = \"true\";\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray =  {34566, 34569, 35102, 34577, 34576, 34579, 34263, 34837, 34683, 34766, 34108, 34107, 34106, 34205, 35162, 36858, 34236, 35237, 33973, 34135, 34290, 33933, 33720, 33754, 35226, 33722, 33735, 33721, 34950, 33724, 33736, 33728, 33729, 33730, 34962, 33731, 34803, 37422, 34859, 33649, 33740, 33734, 34261, 33761, 33578, 34250, 33580, 33581, 33582, 34471, 34167, 34248, 34639, 34101, 33872, 33873, 33874, 34751, 34252, 34185, 35238, 34801, 36518, 34776, 34840, 34855, 34858, 34860, 34929, 34870, 34251, 34971, 34972, 34696, 34253, 34710, 35249, 34418, 33920, 33917, 34351, 33530, 34451, 33970, 33971, 33972, 34239, 34255, 34498, 34276, 34242, 34660, 34668, 34508, 34013, 34234, 33988, 34208, 34256, 33976, 34326, 34092, 34122, 34257, 34140, 34249, 34182, 34144, 34157, 34165, 34163, 34164, 34259, 34148, 34564, 36512, 34706, 34667, 34671, 34254, 33882, 33884, 33944, 34145, 34400, 34399, 34401, 34404, 34414, 34447};\r\n\r\nint[] questArray2 = {35537, 36522};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 35537 || (!IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)))\r\n            {\r\n                count2++;\r\n            }       \t\r\n    \t}\r\n}\r\n\r\nint count3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif ((count3) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Talador\"] = \"true\";\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -330,7 +330,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison) || (Me.ZoneId == 6662 && !IsQuestCompleted(36494)) || (Me.ZoneId == 6722 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)))"
+                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison) || (Me.ZoneId == 6662 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)) || (Me.ZoneId == 6662 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)))"
                       },
                       "IsNot": false
                     },
@@ -412,7 +412,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "Me.ZoneId == 6721 && !IsQuestCompleted(36494)"
+                  "CSharpCode": "Me.ZoneId == 6721 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)"
                 },
                 "IsNot": false
               },
@@ -792,6 +792,11 @@
                               "QuestIds": [
                                 34681
                               ]
+                            },
+                            {
+                              "$type": "Wait",
+                              "Delay": 1.0,
+                              "DelayMax": 0.0
                             }
                           ],
                           "IsExtendedInEditor": false,
@@ -806,6 +811,11 @@
                               "QuestIds": [
                                 36953
                               ]
+                            },
+                            {
+                              "$type": "Wait",
+                              "Delay": 1.0,
+                              "DelayMax": 0.0
                             }
                           ],
                           "IsExtendedInEditor": false,
@@ -881,55 +891,6 @@
                         "Target": "Garrison Return"
                       },
                       {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "Comment",
-                              "Text": "Non-English Client... Attempting to Match Gossip Options...",
-                              "Color": "64, 128, 128"
-                            },
-                            {
-                              "$type": "CSharpAction",
-                              "CSharpCode": "int questID = 0;\r\nif (HasQuest(36953)) {\r\n\tquestID = 36953;\r\n}\r\nelse if (HasQuest(34681)) {\r\n\tquestID = 34681;\r\n}\r\n\r\nQH.Fib = new Fiber<int>(QH.AbandonGarrisonFlightQuests(questID));\r\nwhile(QH.Fib.Run()){\r\n\tyield return 100;\r\n}"
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "LuaCondition",
-                              "LuaCode": "locale = GetLocale()\r\nnonEng = true\r\nif locale == \"enGB\" then\r\n\tnonEng = false\r\nelseif locale == \"enUS\" then\r\n\tnonEng = false\r\nend\r\n\r\nreturn nonEng"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": false
-                      },
-                      {
                         "$type": "Wait",
                         "Delay": 1.0,
                         "DelayMax": 0.0
@@ -953,8 +914,563 @@
                         "Color": "64, 128, 128"
                       },
                       {
-                        "$type": "CSharpAction",
-                        "CSharpCode": "QH.DoGossipOnMatch(\"Take me to my base in Talador.\");"
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [
+                            {
+                              "$type": "If",
+                              "IsExtendedInEditor": false,
+                              "ActionsFalse": {
+                                "Children": [
+                                  {
+                                    "$type": "If",
+                                    "IsExtendedInEditor": false,
+                                    "ActionsFalse": {
+                                      "Children": [
+                                        {
+                                          "$type": "If",
+                                          "IsExtendedInEditor": false,
+                                          "ActionsFalse": {
+                                            "Children": [
+                                              {
+                                                "$type": "If",
+                                                "IsExtendedInEditor": false,
+                                                "ActionsFalse": {
+                                                  "Children": [
+                                                    {
+                                                      "$type": "If",
+                                                      "IsExtendedInEditor": false,
+                                                      "ActionsFalse": {
+                                                        "Children": [
+                                                          {
+                                                            "$type": "If",
+                                                            "IsExtendedInEditor": false,
+                                                            "ActionsFalse": {
+                                                              "Children": [
+                                                                {
+                                                                  "$type": "If",
+                                                                  "IsExtendedInEditor": false,
+                                                                  "ActionsFalse": {
+                                                                    "Children": [
+                                                                      {
+                                                                        "$type": "If",
+                                                                        "IsExtendedInEditor": false,
+                                                                        "ActionsFalse": {
+                                                                          "Children": [
+                                                                            {
+                                                                              "$type": "If",
+                                                                              "IsExtendedInEditor": false,
+                                                                              "ActionsFalse": {
+                                                                                "Children": [
+                                                                                  {
+                                                                                    "$type": "If",
+                                                                                    "IsExtendedInEditor": false,
+                                                                                    "ActionsFalse": {
+                                                                                      "Children": [],
+                                                                                      "IsSpecialElement": true,
+                                                                                      "SpecialElementName": "Else",
+                                                                                      "GroupName": ""
+                                                                                    },
+                                                                                    "ActionsTrue": {
+                                                                                      "Children": [
+                                                                                        {
+                                                                                          "$type": "Comment",
+                                                                                          "Text": "Matching Gossip Text With the Mainland Chinese Client...",
+                                                                                          "Color": "64, 128, 128"
+                                                                                        },
+                                                                                        {
+                                                                                          "$type": "CSharpAction",
+                                                                                          "CSharpCode": "QH.DoGossipOnMatch(\"??????????\");"
+                                                                                        }
+                                                                                      ],
+                                                                                      "IsExtendedInEditor": false,
+                                                                                      "IsSpecialElement": true,
+                                                                                      "SpecialElementName": "Then",
+                                                                                      "GroupName": ""
+                                                                                    },
+                                                                                    "Conditions": [
+                                                                                      {
+                                                                                        "Condition": {
+                                                                                          "$type": "LuaCondition",
+                                                                                          "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"zhCN\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                                                        },
+                                                                                        "IsNot": false
+                                                                                      },
+                                                                                      {
+                                                                                        "Condition": null,
+                                                                                        "IsNot": false
+                                                                                      },
+                                                                                      {
+                                                                                        "Condition": null,
+                                                                                        "IsNot": false
+                                                                                      },
+                                                                                      {
+                                                                                        "Condition": null,
+                                                                                        "IsNot": false
+                                                                                      }
+                                                                                    ],
+                                                                                    "IsNot": false
+                                                                                  }
+                                                                                ],
+                                                                                "IsExtendedInEditor": false,
+                                                                                "IsSpecialElement": true,
+                                                                                "SpecialElementName": "Else",
+                                                                                "GroupName": ""
+                                                                              },
+                                                                              "ActionsTrue": {
+                                                                                "Children": [
+                                                                                  {
+                                                                                    "$type": "Comment",
+                                                                                    "Text": "Matching Gossip Text With the Taiwanese Client...",
+                                                                                    "Color": "64, 128, 128"
+                                                                                  },
+                                                                                  {
+                                                                                    "$type": "CSharpAction",
+                                                                                    "CSharpCode": "QH.DoGossipOnMatch(\"??????????????\");"
+                                                                                  }
+                                                                                ],
+                                                                                "IsExtendedInEditor": false,
+                                                                                "IsSpecialElement": true,
+                                                                                "SpecialElementName": "Then",
+                                                                                "GroupName": ""
+                                                                              },
+                                                                              "Conditions": [
+                                                                                {
+                                                                                  "Condition": {
+                                                                                    "$type": "LuaCondition",
+                                                                                    "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"zhTW\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                                                  },
+                                                                                  "IsNot": false
+                                                                                },
+                                                                                {
+                                                                                  "Condition": null,
+                                                                                  "IsNot": false
+                                                                                },
+                                                                                {
+                                                                                  "Condition": null,
+                                                                                  "IsNot": false
+                                                                                },
+                                                                                {
+                                                                                  "Condition": null,
+                                                                                  "IsNot": false
+                                                                                }
+                                                                              ],
+                                                                              "IsNot": false
+                                                                            }
+                                                                          ],
+                                                                          "IsExtendedInEditor": false,
+                                                                          "IsSpecialElement": true,
+                                                                          "SpecialElementName": "Else",
+                                                                          "GroupName": ""
+                                                                        },
+                                                                        "ActionsTrue": {
+                                                                          "Children": [
+                                                                            {
+                                                                              "$type": "Comment",
+                                                                              "Text": "Matching Gossip Text With the Korean Client...",
+                                                                              "Color": "64, 128, 128"
+                                                                            },
+                                                                            {
+                                                                              "$type": "CSharpAction",
+                                                                              "CSharpCode": "QH.DoGossipOnMatch(\"????? ?? ? ??? ?? ???.\");"
+                                                                            }
+                                                                          ],
+                                                                          "IsExtendedInEditor": false,
+                                                                          "IsSpecialElement": true,
+                                                                          "SpecialElementName": "Then",
+                                                                          "GroupName": ""
+                                                                        },
+                                                                        "Conditions": [
+                                                                          {
+                                                                            "Condition": {
+                                                                              "$type": "LuaCondition",
+                                                                              "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"koKR\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                                            },
+                                                                            "IsNot": false
+                                                                          },
+                                                                          {
+                                                                            "Condition": null,
+                                                                            "IsNot": false
+                                                                          },
+                                                                          {
+                                                                            "Condition": null,
+                                                                            "IsNot": false
+                                                                          },
+                                                                          {
+                                                                            "Condition": null,
+                                                                            "IsNot": false
+                                                                          }
+                                                                        ],
+                                                                        "IsNot": false
+                                                                      }
+                                                                    ],
+                                                                    "IsExtendedInEditor": false,
+                                                                    "IsSpecialElement": true,
+                                                                    "SpecialElementName": "Else",
+                                                                    "GroupName": ""
+                                                                  },
+                                                                  "ActionsTrue": {
+                                                                    "Children": [
+                                                                      {
+                                                                        "$type": "Comment",
+                                                                        "Text": "Matching Gossip Text With Spanish(AL) Client...",
+                                                                        "Color": "64, 128, 128"
+                                                                      },
+                                                                      {
+                                                                        "$type": "CSharpAction",
+                                                                        "CSharpCode": "QH.DoGossipOnMatch(\"Llévame a mi base en Talador.\");"
+                                                                      }
+                                                                    ],
+                                                                    "IsExtendedInEditor": false,
+                                                                    "IsSpecialElement": true,
+                                                                    "SpecialElementName": "Then",
+                                                                    "GroupName": ""
+                                                                  },
+                                                                  "Conditions": [
+                                                                    {
+                                                                      "Condition": {
+                                                                        "$type": "LuaCondition",
+                                                                        "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"esMX\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                                      },
+                                                                      "IsNot": false
+                                                                    },
+                                                                    {
+                                                                      "Condition": null,
+                                                                      "IsNot": false
+                                                                    },
+                                                                    {
+                                                                      "Condition": null,
+                                                                      "IsNot": false
+                                                                    },
+                                                                    {
+                                                                      "Condition": null,
+                                                                      "IsNot": false
+                                                                    }
+                                                                  ],
+                                                                  "IsNot": false
+                                                                }
+                                                              ],
+                                                              "IsExtendedInEditor": false,
+                                                              "IsSpecialElement": true,
+                                                              "SpecialElementName": "Else",
+                                                              "GroupName": ""
+                                                            },
+                                                            "ActionsTrue": {
+                                                              "Children": [
+                                                                {
+                                                                  "$type": "Comment",
+                                                                  "Text": "Matching Gossip Text With Spanish(EU) Client...",
+                                                                  "Color": "64, 128, 128"
+                                                                },
+                                                                {
+                                                                  "$type": "CSharpAction",
+                                                                  "CSharpCode": "QH.DoGossipOnMatch(\"Llévame a mi base de Talador.\");"
+                                                                }
+                                                              ],
+                                                              "IsExtendedInEditor": false,
+                                                              "IsSpecialElement": true,
+                                                              "SpecialElementName": "Then",
+                                                              "GroupName": ""
+                                                            },
+                                                            "Conditions": [
+                                                              {
+                                                                "Condition": {
+                                                                  "$type": "LuaCondition",
+                                                                  "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"esES\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                                },
+                                                                "IsNot": false
+                                                              },
+                                                              {
+                                                                "Condition": null,
+                                                                "IsNot": false
+                                                              },
+                                                              {
+                                                                "Condition": null,
+                                                                "IsNot": false
+                                                              },
+                                                              {
+                                                                "Condition": null,
+                                                                "IsNot": false
+                                                              }
+                                                            ],
+                                                            "IsNot": false
+                                                          }
+                                                        ],
+                                                        "IsExtendedInEditor": false,
+                                                        "IsSpecialElement": true,
+                                                        "SpecialElementName": "Else",
+                                                        "GroupName": ""
+                                                      },
+                                                      "ActionsTrue": {
+                                                        "Children": [
+                                                          {
+                                                            "$type": "Comment",
+                                                            "Text": "Matching Gossip Text With Italian Client...",
+                                                            "Color": "64, 128, 128"
+                                                          },
+                                                          {
+                                                            "$type": "CSharpAction",
+                                                            "CSharpCode": "QH.DoGossipOnMatch(\"Portami alla mia base a Talador.\");"
+                                                          }
+                                                        ],
+                                                        "IsExtendedInEditor": false,
+                                                        "IsSpecialElement": true,
+                                                        "SpecialElementName": "Then",
+                                                        "GroupName": ""
+                                                      },
+                                                      "Conditions": [
+                                                        {
+                                                          "Condition": {
+                                                            "$type": "LuaCondition",
+                                                            "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"itIT\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                          },
+                                                          "IsNot": false
+                                                        },
+                                                        {
+                                                          "Condition": null,
+                                                          "IsNot": false
+                                                        },
+                                                        {
+                                                          "Condition": null,
+                                                          "IsNot": false
+                                                        },
+                                                        {
+                                                          "Condition": null,
+                                                          "IsNot": false
+                                                        }
+                                                      ],
+                                                      "IsNot": false
+                                                    }
+                                                  ],
+                                                  "IsExtendedInEditor": false,
+                                                  "IsSpecialElement": true,
+                                                  "SpecialElementName": "Else",
+                                                  "GroupName": ""
+                                                },
+                                                "ActionsTrue": {
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Comment",
+                                                      "Text": "Matching Gossip Text With Portuguese Client...",
+                                                      "Color": "64, 128, 128"
+                                                    },
+                                                    {
+                                                      "$type": "CSharpAction",
+                                                      "CSharpCode": "QH.DoGossipOnMatch(\"Me leve para a minha base em Talador.\");"
+                                                    }
+                                                  ],
+                                                  "IsExtendedInEditor": false,
+                                                  "IsSpecialElement": true,
+                                                  "SpecialElementName": "Then",
+                                                  "GroupName": ""
+                                                },
+                                                "Conditions": [
+                                                  {
+                                                    "Condition": {
+                                                      "$type": "LuaCondition",
+                                                      "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"ptBR\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                                    },
+                                                    "IsNot": false
+                                                  },
+                                                  {
+                                                    "Condition": null,
+                                                    "IsNot": false
+                                                  },
+                                                  {
+                                                    "Condition": null,
+                                                    "IsNot": false
+                                                  },
+                                                  {
+                                                    "Condition": null,
+                                                    "IsNot": false
+                                                  }
+                                                ],
+                                                "IsNot": false
+                                              }
+                                            ],
+                                            "IsExtendedInEditor": false,
+                                            "IsSpecialElement": true,
+                                            "SpecialElementName": "Else",
+                                            "GroupName": ""
+                                          },
+                                          "ActionsTrue": {
+                                            "Children": [
+                                              {
+                                                "$type": "Comment",
+                                                "Text": "Matching Gossip Text With Russian Client...",
+                                                "Color": "64, 128, 128"
+                                              },
+                                              {
+                                                "$type": "CSharpAction",
+                                                "CSharpCode": "QH.DoGossipOnMatch(\"?????? ???? ? ??? ?????? ? ????????.\");"
+                                              }
+                                            ],
+                                            "IsExtendedInEditor": false,
+                                            "IsSpecialElement": true,
+                                            "SpecialElementName": "Then",
+                                            "GroupName": ""
+                                          },
+                                          "Conditions": [
+                                            {
+                                              "Condition": {
+                                                "$type": "LuaCondition",
+                                                "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"ruRU\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                              },
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            }
+                                          ],
+                                          "IsNot": false
+                                        }
+                                      ],
+                                      "IsExtendedInEditor": false,
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Else",
+                                      "GroupName": ""
+                                    },
+                                    "ActionsTrue": {
+                                      "Children": [
+                                        {
+                                          "$type": "Comment",
+                                          "Text": "Matching Gossip Text With French Client...",
+                                          "Color": "64, 128, 128"
+                                        },
+                                        {
+                                          "$type": "CSharpAction",
+                                          "CSharpCode": "QH.DoGossipOnMatch(\"Ramenez-moi à ma base de Talador.\");\r\n"
+                                        }
+                                      ],
+                                      "IsExtendedInEditor": false,
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Then",
+                                      "GroupName": ""
+                                    },
+                                    "Conditions": [
+                                      {
+                                        "Condition": {
+                                          "$type": "LuaCondition",
+                                          "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"frFR\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                        },
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      }
+                                    ],
+                                    "IsNot": false
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Else",
+                                "GroupName": ""
+                              },
+                              "ActionsTrue": {
+                                "Children": [
+                                  {
+                                    "$type": "Comment",
+                                    "Text": "Matching Gossip Text With German Client...",
+                                    "Color": "64, 128, 128"
+                                  },
+                                  {
+                                    "$type": "CSharpAction",
+                                    "CSharpCode": "QH.DoGossipOnMatch(\"Bringt mich zu meiner Basis in Talador.\");"
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Then",
+                                "GroupName": ""
+                              },
+                              "Conditions": [
+                                {
+                                  "Condition": {
+                                    "$type": "LuaCondition",
+                                    "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"deDE\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                                  },
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                }
+                              ],
+                              "IsNot": false
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "Comment",
+                              "Text": "Matching Gossip Text With English Client...",
+                              "Color": "64, 128, 128"
+                            },
+                            {
+                              "$type": "CSharpAction",
+                              "CSharpCode": "QH.DoGossipOnMatch(\"Take me to my base in Talador.\");"
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "LuaCondition",
+                              "LuaCode": "local locale = GetLocale()\r\n\r\nif locale == \"enGB\" or locale == \"enUS\" then\r\n\treturn true\r\nelse\r\n\treturn false\r\nend"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
                       },
                       {
                         "$type": "Wait",
@@ -1043,6 +1559,10 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
                 },
                 {
                   "$type": "CSharpAction",
@@ -2007,10 +2527,61 @@
                   "Target": "VP North Exit"
                 },
                 {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "3725.14 1078.884 107.6735",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(3840.3f, 1167.6f, 109.2f,20)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "3844.547 1165.672 109.2374",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "3844.547 1165.672 108.9947",
                     "IsGroundPosition": false,
                     "IsIndoors": true,
                     "ContinentId": 1116
@@ -4983,6 +5554,38 @@
                     "IsLoot": true,
                     "OpeningCast": false,
                     "NoMovement": false,
+                    "GameObjectiveIndex": 1,
+                    "RunTime": 5.0
+                  },
+                  "TimeLimit": 0
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "UseItemTemplateScriptAction",
+                  "Template": {
+                    "$type": "UseItemTemplate",
+                    "UseMethod": 0,
+                    "OverrideCooldown": 0.0,
+                    "OverrideCastTime": 0.0,
+                    "StayMounted": false,
+                    "MinCastRange": 4.5,
+                    "DontFilterDeadUnits": false,
+                    "UseCount": 1,
+                    "TargetUnits": [],
+                    "HotspotsX": [],
+                    "Blackspots": [],
+                    "Item": [
+                      {
+                        "Name": "Deceptia's Smoldering Boots",
+                        "EntryId": 108743
+                      }
+                    ],
+                    "BanTime": 120.0,
+                    "BanMobCombatAfterUse": false,
                     "GameObjectiveIndex": 1,
                     "RunTime": 5.0
                   },
@@ -15959,6 +16562,16 @@
                         "CSharpCode": "DisableCombat = true;"
                       },
                       {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "1788.39 2429.082 128.5617",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
                         "$type": "AcceptQuestCommand",
                         "QuestIds": [
                           33917
@@ -15967,7 +16580,7 @@
                       {
                         "$type": "MoveTo",
                         "Hotspot": {
-                          "Position": "1788.39 2429.082 128.5617",
+                          "Position": "1868.429 2485.181 123.7401",
                           "GroundPosition": "0 0 0",
                           "IsGroundPosition": false,
                           "ContinentId": 1116
@@ -17480,7 +18093,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!QH.IsClose(1126.0f, 2257.7f, 143.6f, 215)"
+                        "CSharpCode": "!QH.IsClose(1126.0f, 2257.7f, 143.6f, 215) && !QH.IsClose(1010.9f, 1969f, 117.8f,100)"
                       },
                       "IsNot": false
                     },
@@ -17683,6 +18296,57 @@
                   "$type": "Comment",
                   "Text": "\"RARE: Let's Go Find Klikixx!",
                   "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "901.2725 1919.968 141.4599",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(1006.8f, 1838.1f, 143.4f, 25)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "MoveTo",
@@ -18116,6 +18780,38 @@
                     "IsLoot": true,
                     "OpeningCast": false,
                     "NoMovement": false,
+                    "GameObjectiveIndex": 1,
+                    "RunTime": 5.0
+                  },
+                  "TimeLimit": 0
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "UseItemTemplateScriptAction",
+                  "Template": {
+                    "$type": "UseItemTemplate",
+                    "UseMethod": 0,
+                    "OverrideCooldown": 0.0,
+                    "OverrideCastTime": 0.0,
+                    "StayMounted": false,
+                    "MinCastRange": 4.5,
+                    "DontFilterDeadUnits": false,
+                    "UseCount": 1,
+                    "TargetUnits": [],
+                    "HotspotsX": [],
+                    "Blackspots": [],
+                    "Item": [
+                      {
+                        "Name": "Giant Deathweb Egg",
+                        "EntryId": 117569
+                      }
+                    ],
+                    "BanTime": 120.0,
+                    "BanMobCombatAfterUse": false,
                     "GameObjectiveIndex": 1,
                     "RunTime": 5.0
                   },
@@ -19212,6 +19908,26 @@
             "ActionsTrue": {
               "Children": [
                 {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "973.7865 2829.17 136.6196",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "959.1245 2829.935 137.0441",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
                   "$type": "TurnInQuestsCommand",
                   "QuestIds": [
                     34242
@@ -19870,6 +20586,11 @@
                           "ContinentId": 1116
                         },
                         "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 3.0,
+                        "DelayMax": 4.0
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -19899,6 +20620,15 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "DisableCombat = true;"
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 2.0
                 },
                 {
                   "$type": "CSharpAction",
@@ -23186,10 +23916,107 @@
                   "CSharpCode": "Me.ClearFocus();\r\n"
                 },
                 {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2032.617 3358.14 121.3329",
+                          "GroundPosition": "2032.617 3358.14 121.6813",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 3.0,
+                        "DelayMax": 4.0
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2032.617 3358.14 121.3329",
+                          "GroundPosition": "2032.617 3358.14 121.6813",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2040.086 3365.051 121.6233",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2071.632 3394.336 104.5082",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2120.091 3440.227 74.384",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(2260.4f, 3289.6f, 49.3f,30) && !QH.IsClose(2231.4f, 3472.9f, 64.3f,20)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "2235.538 3317.986 51.39042",
-                    "GroundPosition": "0 0 0",
+                    "Position": "2254.51 3295.323 50.65744",
+                    "GroundPosition": "2235.538 3317.986 51.11532",
                     "IsGroundPosition": false,
                     "IsIndoors": true,
                     "ContinentId": 1116
@@ -23423,6 +24250,103 @@
                   "$type": "Comment",
                   "Text": "\"Treasure: Soulbinder's Reliquary\"",
                   "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2032.617 3358.14 121.3329",
+                          "GroundPosition": "2032.617 3358.14 121.6813",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 3.0,
+                        "DelayMax": 4.0
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2032.617 3358.14 121.3329",
+                          "GroundPosition": "2032.617 3358.14 121.6813",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2040.086 3365.051 121.6233",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2071.632 3394.336 104.5082",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "2120.091 3440.227 74.384",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(2260.4f, 3289.6f, 49.3f,30) && !QH.IsClose(2231.4f, 3472.9f, 64.3f,20)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "MoveTo",
@@ -25855,7 +26779,7 @@
           },
           {
             "$type": "LoadScript",
-            "FileName": "Sklug's 96+ Scrapyard Questpack"
+            "FileName": "Sklug's 97+ Scrapyard Questpack"
           },
           {
             "$type": "EndScript"
@@ -27071,6 +27995,75 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
               },
@@ -27550,9 +28543,159 @@
                           "Color": "64, 128, 128"
                         },
                         {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "MoveTo",
+                                "Hotspot": {
+                                  "Position": "3316.167 950.4016 17.35625",
+                                  "GroundPosition": "0 0 0",
+                                  "IsGroundPosition": false,
+                                  "ContinentId": 1116
+                                },
+                                "Method": "Navi"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.Position.Z < 17"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        },
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "MoveTo",
+                                "Hotspot": {
+                                  "Position": "3286.916 1013.372 38.09146",
+                                  "GroundPosition": "0 0 0",
+                                  "IsGroundPosition": false,
+                                  "ContinentId": 1116
+                                },
+                                "Method": "Navi"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.Position.Z < 32"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        },
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "MoveTo",
+                                "Hotspot": {
+                                  "Position": "3206.137 918.8013 42.1542",
+                                  "GroundPosition": "0 0 0",
+                                  "IsGroundPosition": false,
+                                  "ContinentId": 1116
+                                },
+                                "Method": "Navi"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.Position.Z < 44"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        },
+                        {
                           "$type": "MoveTo",
                           "Hotspot": {
-                            "Position": "3198.71 846.1184 84.57842",
+                            "Position": "3198.793 836.9446 83.19234",
                             "GroundPosition": "0 0 0",
                             "IsGroundPosition": false,
                             "ContinentId": 1116
@@ -27561,46 +28704,80 @@
                         },
                         {
                           "$type": "Wait",
-                          "Delay": 1.0,
-                          "DelayMax": 1.0
+                          "Delay": 2.0,
+                          "DelayMax": 3.0
                         },
                         {
-                          "$type": "CollectObjectsTemplateScriptAction",
-                          "Template": {
-                            "$type": "CollectObjectsTemplate",
-                            "TargetObjects": [
+                          "$type": "While",
+                          "IsExtendedInEditor": false,
+                          "LoopActions": {
+                            "Children": [
                               {
-                                "Hotspot": {
-                                  "Position": "3200.052 850.0764 84.78045",
-                                  "GroundPosition": "0 0 0",
-                                  "IsGroundPosition": false,
-                                  "ContinentId": 1116
+                                "$type": "CollectObjectsTemplateScriptAction",
+                                "Template": {
+                                  "$type": "CollectObjectsTemplate",
+                                  "TargetObjects": [
+                                    {
+                                      "Hotspot": {
+                                        "Position": "3200.052 850.0764 84.78045",
+                                        "GroundPosition": "0 0 0",
+                                        "IsGroundPosition": false,
+                                        "ContinentId": 1116
+                                      },
+                                      "Name": "Khadgar's Portal",
+                                      "EntryId": 230874
+                                    }
+                                  ],
+                                  "HotspotsX": [
+                                    {
+                                      "Position": "3199.371 847.8013 84.57842",
+                                      "GroundPosition": "0 0 0",
+                                      "IsGroundPosition": false,
+                                      "ContinentId": 1116
+                                    }
+                                  ],
+                                  "Blackspots": [],
+                                  "IsLoot": true,
+                                  "OpeningCast": false,
+                                  "NoMovement": false,
+                                  "GameObjectiveIndex": 1,
+                                  "RunTime": 5.0
                                 },
-                                "Name": "Khadgar's Portal",
-                                "EntryId": 230874
-                              }
-                            ],
-                            "HotspotsX": [
+                                "TimeLimit": 0
+                              },
                               {
-                                "Position": "3199.371 847.8013 84.57842",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1116
+                                "$type": "Wait",
+                                "Delay": 10.0,
+                                "DelayMax": 10.0
                               }
                             ],
-                            "Blackspots": [],
-                            "IsLoot": true,
-                            "OpeningCast": false,
-                            "NoMovement": false,
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Do",
+                            "GroupName": ""
                           },
-                          "TimeLimit": 0
-                        },
-                        {
-                          "$type": "Wait",
-                          "Delay": 10.0,
-                          "DelayMax": 10.0
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Vector3 location = new Vector3(3199.5f, 843.6f, 84.3f);\r\n\r\nif (Me.Distance2DTo(location) < 30) {\r\n\treturn true;\r\n}\r\nelse {\r\n\treturn false;\r\n}"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
                         },
                         {
                           "$type": "UseTaxiTemplateScriptAction",
@@ -28046,21 +29223,6 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "Travel"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "EndThread",
-                "ThreadName": null
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
           },
           {
             "$type": "ActionSequence",
@@ -28862,7 +30024,71 @@
                                                                       "$type": "If",
                                                                       "IsExtendedInEditor": false,
                                                                       "ActionsFalse": {
-                                                                        "Children": [],
+                                                                        "Children": [
+                                                                          {
+                                                                            "$type": "If",
+                                                                            "IsExtendedInEditor": false,
+                                                                            "ActionsFalse": {
+                                                                              "Children": [],
+                                                                              "IsSpecialElement": true,
+                                                                              "SpecialElementName": "Else",
+                                                                              "GroupName": ""
+                                                                            },
+                                                                            "ActionsTrue": {
+                                                                              "Children": [
+                                                                                {
+                                                                                  "$type": "Comment",
+                                                                                  "Text": "Where Are YOU!? lol Please Report Back Location So I can Fix Location Logic!!!! ",
+                                                                                  "Color": "Red"
+                                                                                },
+                                                                                {
+                                                                                  "$type": "Comment",
+                                                                                  "Text": "Attempting to Head to Orgrimmar to Take Ashran Port",
+                                                                                  "Color": "64, 128, 128"
+                                                                                },
+                                                                                {
+                                                                                  "$type": "MoveTo",
+                                                                                  "Hotspot": {
+                                                                                    "Position": "1649.625 -4336.4 27.04423",
+                                                                                    "GroundPosition": "1649.625 -4336.4 26.94177",
+                                                                                    "IsGroundPosition": false,
+                                                                                    "IsIndoors": true,
+                                                                                    "ContinentId": 1
+                                                                                  },
+                                                                                  "Method": "Navi"
+                                                                                }
+                                                                              ],
+                                                                              "IsExtendedInEditor": false,
+                                                                              "IsSpecialElement": true,
+                                                                              "SpecialElementName": "Then",
+                                                                              "GroupName": ""
+                                                                            },
+                                                                            "Conditions": [
+                                                                              {
+                                                                                "Condition": {
+                                                                                  "$type": "PlayerCondition",
+                                                                                  "Property": "IsInZone",
+                                                                                  "Parameter": "1637"
+                                                                                },
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              }
+                                                                            ],
+                                                                            "IsNot": true
+                                                                          }
+                                                                        ],
+                                                                        "IsExtendedInEditor": false,
                                                                         "IsSpecialElement": true,
                                                                         "SpecialElementName": "Else",
                                                                         "GroupName": ""
@@ -28871,24 +30097,8 @@
                                                                         "Children": [
                                                                           {
                                                                             "$type": "Comment",
-                                                                            "Text": "Where Are YOU!? lol Please Report Back Location So I can Fix Location Logic!!!!",
-                                                                            "Color": "Red"
-                                                                          },
-                                                                          {
-                                                                            "$type": "Comment",
-                                                                            "Text": "Attempting to Head to Orgrimmar to Take Ashran Port",
+                                                                            "Text": "Excellent! You Are Already In WarSpear!",
                                                                             "Color": "64, 128, 128"
-                                                                          },
-                                                                          {
-                                                                            "$type": "MoveTo",
-                                                                            "Hotspot": {
-                                                                              "Position": "1649.625 -4336.4 27.04423",
-                                                                              "GroundPosition": "1649.625 -4336.4 26.94177",
-                                                                              "IsGroundPosition": false,
-                                                                              "IsIndoors": true,
-                                                                              "ContinentId": 1
-                                                                            },
-                                                                            "Method": "Navi"
                                                                           }
                                                                         ],
                                                                         "IsExtendedInEditor": false,
@@ -28899,9 +30109,8 @@
                                                                       "Conditions": [
                                                                         {
                                                                           "Condition": {
-                                                                            "$type": "PlayerCondition",
-                                                                            "Property": "IsInZone",
-                                                                            "Parameter": "1637"
+                                                                            "$type": "CSharpCondition",
+                                                                            "CSharpCode": "Me.ZoneId == 7333"
                                                                           },
                                                                           "IsNot": false
                                                                         },
@@ -28918,7 +30127,7 @@
                                                                           "IsNot": false
                                                                         }
                                                                       ],
-                                                                      "IsNot": true
+                                                                      "IsNot": false
                                                                     }
                                                                   ],
                                                                   "IsExtendedInEditor": false,
@@ -31194,100 +32403,7 @@
                             "$type": "If",
                             "IsExtendedInEditor": false,
                             "ActionsFalse": {
-                              "Children": [
-                                {
-                                  "$type": "If",
-                                  "IsExtendedInEditor": false,
-                                  "ActionsFalse": {
-                                    "Children": [],
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Else",
-                                    "GroupName": ""
-                                  },
-                                  "ActionsTrue": {
-                                    "Children": [
-                                      {
-                                        "$type": "MoveTo",
-                                        "Hotspot": {
-                                          "Position": "5300.31 -4002.206 14.72277",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        "Method": "Navi"
-                                      },
-                                      {
-                                        "$type": "MoveTo",
-                                        "Hotspot": {
-                                          "Position": "5325.339 -3978.532 21.01698",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        "Method": "Navi"
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Then",
-                                    "GroupName": ""
-                                  },
-                                  "Conditions": [
-                                    {
-                                      "Condition": {
-                                        "$type": "CSharpCondition",
-                                        "CSharpCode": "!QH.IsClose(5361.1f, -3942.9f, 32.7f,25)"
-                                      },
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    }
-                                  ],
-                                  "IsNot": false
-                                },
-                                {
-                                  "$type": "UseTaxiTemplateScriptAction",
-                                  "Template": {
-                                    "$type": "UseTaxiTemplate",
-                                    "Hotspots": [
-                                      {
-                                        "Position": "5358.211 -3945.266 32.73372",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      }
-                                    ],
-                                    "Target": {
-                                      "Hotspot": {
-                                        "Position": "5361.05 -3942.934 32.73376",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      },
-                                      "Name": "Ilalu",
-                                      "EntryId": 86049
-                                    },
-                                    "TaxiTarget": {
-                                      "Item1": "Frostwall Garrison, Frostfire Ridge",
-                                      "Item2": "0.3387086391449",
-                                      "Item3": "0.63124781847"
-                                    },
-                                    "GameObjectiveIndex": 1,
-                                    "RunTime": 5.0
-                                  },
-                                  "TimeLimit": 0
-                                }
-                              ],
+                              "Children": [],
                               "IsExtendedInEditor": false,
                               "IsSpecialElement": true,
                               "SpecialElementName": "Else",
@@ -31296,11 +32412,6 @@
                             "ActionsTrue": {
                               "Children": [
                                 {
-                                  "$type": "Comment",
-                                  "Text": "Flying to Vol'jin's Pride in Talador",
-                                  "Color": "64, 128, 128"
-                                },
-                                {
                                   "$type": "If",
                                   "IsExtendedInEditor": false,
                                   "ActionsFalse": {
@@ -31361,36 +32472,120 @@
                                   "IsNot": false
                                 },
                                 {
-                                  "$type": "UseTaxiTemplateScriptAction",
-                                  "Template": {
-                                    "$type": "UseTaxiTemplate",
-                                    "Hotspots": [
+                                  "$type": "If",
+                                  "IsExtendedInEditor": false,
+                                  "ActionsFalse": {
+                                    "Children": [
                                       {
-                                        "Position": "5357.141 -3942.751 32.7331",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
+                                        "$type": "Comment",
+                                        "Text": "Flying to Your Garrison...",
+                                        "Color": "64, 128, 128"
+                                      },
+                                      {
+                                        "$type": "UseTaxiTemplateScriptAction",
+                                        "Template": {
+                                          "$type": "UseTaxiTemplate",
+                                          "Hotspots": [
+                                            {
+                                              "Position": "5358.211 -3945.266 32.73372",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            }
+                                          ],
+                                          "Target": {
+                                            "Hotspot": {
+                                              "Position": "5361.05 -3942.934 32.73376",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            },
+                                            "Name": "Ilalu",
+                                            "EntryId": 86049
+                                          },
+                                          "TaxiTarget": {
+                                            "Item1": "Frostwall Garrison, Frostfire Ridge",
+                                            "Item2": "0.3387086391449",
+                                            "Item3": "0.63124781847"
+                                          },
+                                          "GameObjectiveIndex": 1,
+                                          "RunTime": 5.0
+                                        },
+                                        "TimeLimit": 0
                                       }
                                     ],
-                                    "Target": {
-                                      "Hotspot": {
-                                        "Position": "5361.05 -3942.934 32.73329",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      },
-                                      "Name": "Ilalu",
-                                      "EntryId": 86049
-                                    },
-                                    "TaxiTarget": {
-                                      "Item1": "Vol'jin's Pride, Talador",
-                                      "Item2": "0.51891535520554",
-                                      "Item3": "0.48974323272705"
-                                    },
-                                    "GameObjectiveIndex": 1,
-                                    "RunTime": 5.0
+                                    "IsExtendedInEditor": false,
+                                    "IsSpecialElement": true,
+                                    "SpecialElementName": "Else",
+                                    "GroupName": ""
                                   },
-                                  "TimeLimit": 0
+                                  "ActionsTrue": {
+                                    "Children": [
+                                      {
+                                        "$type": "Comment",
+                                        "Text": "Flying to Vol'jin's Pride in Talador",
+                                        "Color": "64, 128, 128"
+                                      },
+                                      {
+                                        "$type": "UseTaxiTemplateScriptAction",
+                                        "Template": {
+                                          "$type": "UseTaxiTemplate",
+                                          "Hotspots": [
+                                            {
+                                              "Position": "5357.141 -3942.751 32.7331",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            }
+                                          ],
+                                          "Target": {
+                                            "Hotspot": {
+                                              "Position": "5361.05 -3942.934 32.73329",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            },
+                                            "Name": "Ilalu",
+                                            "EntryId": 86049
+                                          },
+                                          "TaxiTarget": {
+                                            "Item1": "Vol'jin's Pride, Talador",
+                                            "Item2": "0.51891535520554",
+                                            "Item3": "0.48974323272705"
+                                          },
+                                          "GameObjectiveIndex": 1,
+                                          "RunTime": 5.0
+                                        },
+                                        "TimeLimit": 0
+                                      }
+                                    ],
+                                    "IsExtendedInEditor": false,
+                                    "IsSpecialElement": true,
+                                    "SpecialElementName": "Then",
+                                    "GroupName": ""
+                                  },
+                                  "Conditions": [
+                                    {
+                                      "Condition": {
+                                        "$type": "CSharpCondition",
+                                        "CSharpCode": "(IsQuestCompleted(36953) || IsQuestCompleted(34681))"
+                                      },
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    }
+                                  ],
+                                  "IsNot": false
                                 }
                               ],
                               "IsExtendedInEditor": false,
@@ -31402,7 +32597,7 @@
                               {
                                 "Condition": {
                                   "$type": "CSharpCondition",
-                                  "CSharpCode": "Me.ZoneId == 7333 && (IsQuestCompleted(36953) || IsQuestCompleted(34681))"
+                                  "CSharpCode": "Me.ZoneId == 7333"
                                 },
                                 "IsNot": false
                               },

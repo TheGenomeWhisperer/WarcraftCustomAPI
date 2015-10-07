@@ -293,6 +293,16 @@ public class QH
         return toBuy;
     }
     
+    // Method:          "GetGarrisonLevel();
+    // What it Does:    Returns the current rank of the player garrison, 1-3
+    // Purpose:         When dealing with various pathing at the Garrison, it is important to note that object
+    //                  location often varies based on the level and size of the ggarrison. This helps filter it all.
+    public static int GetGarrisonLevel()
+    {
+        return API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
+    }
+
+    
     // Method:          "GetGarrisonResources()"
     // What it Does:    Returns the amount of Garrison Resources the player has at the given moment.
     // Purpose:         Often you can save a lot of processing time/power by ensuring the player has enough resources
@@ -410,6 +420,20 @@ public class QH
         return false;
     }
     
+    // Method:          "HasHiddenAura(int)"
+    // What it Does:    Returns a boolean if player currently has the given aura.  Currently, the "API.HasAura()" from the Rebot API
+    //                  only checks on the main active Aura buffs, whilst mine now checks against all potential auras.
+    // Purpose:         To fill in a necessary, but missing gap in the Rebot API.
+    public static bool HasHiddenAura(int spellID)
+    {
+        foreach (var aura in API.Me.Auras) {
+	       if (aura.SpellId == spellID) {
+		      return true;
+           }	
+        }
+        return false;
+    }
+    
     // Method:          "Hasprofession()"
     // What it Does:    Returns a boolean on whether the player has any primary profession or not.
     // Purpose:         There are a few instances with the Garrison where I match professions to their buildings, that first
@@ -496,6 +520,7 @@ public class QH
             {
                 // Assumedly, in instances like this, a 2ndary logic route is given as backup, either the mesh or by Flightpath.
                 API.Print("Player Wanted to Hearth to Garrison, but it is on Cooldown...");
+                // Apply Flight Logic soon...
                 yield break;
             }
         }
@@ -867,10 +892,10 @@ public class QH
         if (hasGearOn == 0)
         {
             // Returning Global Variable from server side -- will not work if you reloaded or relogged.
-        	API.ExecuteLua("UseEquipmentSet(\"Questing\")");
+        	API.ExecuteLua("UseEquipmentSet(\"TempQuesting\")");
             API.Print("Re-Equipping Your Gear");
             API.AutoEquipSettings.EquipItems = true;
-            API.ExecuteLua("DeleteEquipmentSet(\"Questing\")"); // Remove quest fingerprint...
+            API.ExecuteLua("DeleteEquipmentSet(\"TempQuesting\")"); // Remove quest fingerprint...
         }
     }
     
@@ -1232,6 +1257,7 @@ public class QH
                     yield return 1000;                    
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
+                    API.Me.ClearFocus();
                 }
             }
         }
@@ -1554,13 +1580,26 @@ public class QH
     }
     
     // Method:          XPMacro()
+    // What it Does:    Simply checks if player has the XP potion aura, and if not, and player owns a potion
+    //                  it will now use that ppotion.
+    public static IEnumerable<int> XPMacro() 
+    {
+        int potionCount = API.ExecuteLua<int>("local itemCount = GetItemCount(120182, false, false); return itemCount;");
+        if (potionCount > 0 && !API.Me.HasAura(178119) && API.Me.Level < 100) 
+        {
+            API.UseItem(120182);
+            yield return 500;
+        }
+    }
+    
+    // Method:          XPMacroRecursive()
     // What it Does:    Recursively checks if the player HAS used an XP potion, thus having the 20% bonus aura.  If not, then if the player has the
     //                  potion in their bags it will use it.  It also checks player level and will exit the recursive method if player hits lvl 100.
     // Purpose:         Rather than have players configure their own macros, this one will spam slightly more intelligently in the background.
     //                  Also, it gives an escape more intelligently if player hits lvl 100.  ALSO, if say, the macro is activated but it turns out the
     //                  Garrison is not yet established, it impliments a 5 min delay before checking again if it is, to prevent unnecessary spam from this thread.
     //                  It is recommended to run this in a separate thread.
-    public static IEnumerable<int> XPMacro() 
+    public static IEnumerable<int> XPMacroRecursive() 
     {
         // The initial "If" seems redundant, but what it does is force a bag check, as some API
         // methods do not work until server LOOKS into a player bag.
@@ -1591,5 +1630,4 @@ public class QH
             yield return 100;
         }
     }
-    
 }

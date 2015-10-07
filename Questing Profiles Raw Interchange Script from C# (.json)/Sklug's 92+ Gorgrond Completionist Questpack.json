@@ -17,7 +17,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 92) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 92 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Gorgrond\"] = \"false\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\n"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 92) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 92 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Gorgrond\"] = \"false\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\n"
           },
           {
             "$type": "Comment",
@@ -87,7 +87,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {34066, 34069, 34067, 34070, 34072, 34073, 34102, 34075, 33543, 33544, 33548, 36170, 33563, 33593, 36434, 35709, 36118, 36460, 35151, 36474, 35667, 33694, 35707, 35971, 35980, 36621, 36597, 35400, 35399, 35402, 35406, 35429, 35430, 35432, 35981, 36482, 35487, 36625, 35536, 35982, 35433, 35434, 35335, 36488, 34241, 36520, 36019, 35975, 35509, 35507, 35501, 35510, 35416, 35511, 35881, 34726, 34940, 36713, 34724, 36714, 36654, 35967, 35908, 36837, 35506, 35505, 35508, 35527, 35524, 36015, 36387, 35814, 36812, 36574, 36715, 36563, 36509, 35819, 35016, 35017, 35021, 35027, 35029, 35030, 35031, 35040, 35965, 36430, 36571, 36503, 33694, 36473, 35818, 35966, 35984, 36178, 36476, 36718, 35815, 36610, 36204, 36651, 35056, 36391, 36720, 36480, 36203, 33689, 33685, 33663, 33661, 35701, 33660, 33695, 33706, 35503, 35807, 36596, 36717, 36393, 36521, 36634, 36186, 36001, 36618, 36506, 36003, 35810, 36603, 36716, 36394, 35910, 35979, 36566, 35811, 36037};\r\n\r\nint[] questArray2 = {34209, 34216, 34227, 34228, 34647, 34648, 34229, 34230, 34278, 34277, 34280, 34291, 34292, 34295, 34642, 36494};\r\n\r\nint count = QH.RemainingQuests(questArray);\r\nint count2 = 0;\r\n\r\nfor (int i = 0; i < questArray2.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]))\r\n        {\r\n        \tcount2++;\r\n        }\r\n}\r\n\r\nif ((count + count2) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Gorgrond\"] = \"true\";\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {34066, 34069, 34067, 34070, 34072, 34073, 34102, 34075, 33543, 33544, 33548, 36170, 33563, 33593, 36434, 35709, 36118, 36460, 35151, 36474, 35667, 33694, 35707, 35971, 35980, 36621, 36597, 35400, 35399, 35402, 35406, 35429, 35430, 35432, 35981, 36482, 35487, 36625, 35536, 35982, 35433, 35434, 35335, 36488, 34241, 36520, 36019, 35975, 35509, 35507, 35501, 35510, 35416, 35511, 35881, 34726, 34940, 36713, 34724, 36714, 36654, 35967, 35908, 36837, 35506, 35505, 35508, 35527, 35524, 36015, 36387, 35814, 36812, 36574, 36715, 36563, 36509, 35819, 35016, 35017, 35021, 35027, 35029, 35030, 35031, 35040, 35965, 36430, 36571, 36503, 33694, 36473, 35818, 35966, 35984, 36178, 36476, 36718, 35815, 36610, 36204, 36651, 35056, 36391, 36720, 36480, 36203, 33689, 33685, 33663, 33661, 35701, 33660, 33695, 33706, 35503, 35807, 36596, 36717, 36393, 36521, 36634, 36186, 36001, 36618, 36506, 36003, 35810, 36603, 36716, 36394, 35910, 35979, 36566, 35811, 36037};\r\n\r\nint[] questArray2 = {34209, 34216, 34227, 34228, 34647, 34648, 34229, 34230, 34278, 34277, 34280, 34291, 34292, 34295, 34642, 36494};\r\n\r\nint count = 0;;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 36494 || (!IsQuestCompleted(36953) && !IsQuestCompleted(34681) && !HasQuest(36953) && !HasQuest(34681)))\r\n            {\r\n                count2++;\r\n            }\r\n    \t}\r\n}\r\ncount3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif ((count3) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Gorgrond\"] = \"true\";\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -32315,6 +32315,75 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
               },
@@ -32843,21 +32912,6 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "Travel"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "EndThread",
-                "ThreadName": null
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
           },
           {
             "$type": "ActionSequence",
@@ -33670,7 +33724,71 @@
                                                                       "$type": "If",
                                                                       "IsExtendedInEditor": false,
                                                                       "ActionsFalse": {
-                                                                        "Children": [],
+                                                                        "Children": [
+                                                                          {
+                                                                            "$type": "If",
+                                                                            "IsExtendedInEditor": false,
+                                                                            "ActionsFalse": {
+                                                                              "Children": [],
+                                                                              "IsSpecialElement": true,
+                                                                              "SpecialElementName": "Else",
+                                                                              "GroupName": ""
+                                                                            },
+                                                                            "ActionsTrue": {
+                                                                              "Children": [
+                                                                                {
+                                                                                  "$type": "Comment",
+                                                                                  "Text": "Where Are YOU!? lol Please Report Back Location So I can Fix Location Logic!!!! ",
+                                                                                  "Color": "Red"
+                                                                                },
+                                                                                {
+                                                                                  "$type": "Comment",
+                                                                                  "Text": "Attempting to Head to Orgrimmar to Take Ashran Port",
+                                                                                  "Color": "64, 128, 128"
+                                                                                },
+                                                                                {
+                                                                                  "$type": "MoveTo",
+                                                                                  "Hotspot": {
+                                                                                    "Position": "1649.625 -4336.4 27.04423",
+                                                                                    "GroundPosition": "1649.625 -4336.4 26.94177",
+                                                                                    "IsGroundPosition": false,
+                                                                                    "IsIndoors": true,
+                                                                                    "ContinentId": 1
+                                                                                  },
+                                                                                  "Method": "Navi"
+                                                                                }
+                                                                              ],
+                                                                              "IsExtendedInEditor": false,
+                                                                              "IsSpecialElement": true,
+                                                                              "SpecialElementName": "Then",
+                                                                              "GroupName": ""
+                                                                            },
+                                                                            "Conditions": [
+                                                                              {
+                                                                                "Condition": {
+                                                                                  "$type": "PlayerCondition",
+                                                                                  "Property": "IsInZone",
+                                                                                  "Parameter": "1637"
+                                                                                },
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              },
+                                                                              {
+                                                                                "Condition": null,
+                                                                                "IsNot": false
+                                                                              }
+                                                                            ],
+                                                                            "IsNot": true
+                                                                          }
+                                                                        ],
+                                                                        "IsExtendedInEditor": false,
                                                                         "IsSpecialElement": true,
                                                                         "SpecialElementName": "Else",
                                                                         "GroupName": ""
@@ -33679,24 +33797,8 @@
                                                                         "Children": [
                                                                           {
                                                                             "$type": "Comment",
-                                                                            "Text": "Where Are YOU!? lol Please Report Back Location So I can Fix Location Logic!!!!",
-                                                                            "Color": "Red"
-                                                                          },
-                                                                          {
-                                                                            "$type": "Comment",
-                                                                            "Text": "Attempting to Head to Orgrimmar to Take Ashran Port",
+                                                                            "Text": "Excellent! You Are Already In WarSpear!",
                                                                             "Color": "64, 128, 128"
-                                                                          },
-                                                                          {
-                                                                            "$type": "MoveTo",
-                                                                            "Hotspot": {
-                                                                              "Position": "1649.625 -4336.4 27.04423",
-                                                                              "GroundPosition": "1649.625 -4336.4 26.94177",
-                                                                              "IsGroundPosition": false,
-                                                                              "IsIndoors": true,
-                                                                              "ContinentId": 1
-                                                                            },
-                                                                            "Method": "Navi"
                                                                           }
                                                                         ],
                                                                         "IsExtendedInEditor": false,
@@ -33707,9 +33809,8 @@
                                                                       "Conditions": [
                                                                         {
                                                                           "Condition": {
-                                                                            "$type": "PlayerCondition",
-                                                                            "Property": "IsInZone",
-                                                                            "Parameter": "1637"
+                                                                            "$type": "CSharpCondition",
+                                                                            "CSharpCode": "Me.ZoneId == 7333"
                                                                           },
                                                                           "IsNot": false
                                                                         },
@@ -33726,7 +33827,7 @@
                                                                           "IsNot": false
                                                                         }
                                                                       ],
-                                                                      "IsNot": true
+                                                                      "IsNot": false
                                                                     }
                                                                   ],
                                                                   "IsExtendedInEditor": false,
@@ -36001,234 +36102,7 @@
                             "$type": "If",
                             "IsExtendedInEditor": false,
                             "ActionsFalse": {
-                              "Children": [
-                                {
-                                  "$type": "If",
-                                  "IsExtendedInEditor": false,
-                                  "ActionsFalse": {
-                                    "Children": [
-                                      {
-                                        "$type": "If",
-                                        "IsExtendedInEditor": false,
-                                        "ActionsFalse": {
-                                          "Children": [],
-                                          "IsSpecialElement": true,
-                                          "SpecialElementName": "Else",
-                                          "GroupName": ""
-                                        },
-                                        "ActionsTrue": {
-                                          "Children": [
-                                            {
-                                              "$type": "MoveTo",
-                                              "Hotspot": {
-                                                "Position": "5300.31 -4002.206 14.72277",
-                                                "GroundPosition": "0 0 0",
-                                                "IsGroundPosition": false,
-                                                "ContinentId": 1116
-                                              },
-                                              "Method": "Navi"
-                                            },
-                                            {
-                                              "$type": "MoveTo",
-                                              "Hotspot": {
-                                                "Position": "5325.339 -3978.532 21.01698",
-                                                "GroundPosition": "0 0 0",
-                                                "IsGroundPosition": false,
-                                                "ContinentId": 1116
-                                              },
-                                              "Method": "Navi"
-                                            }
-                                          ],
-                                          "IsExtendedInEditor": false,
-                                          "IsSpecialElement": true,
-                                          "SpecialElementName": "Then",
-                                          "GroupName": ""
-                                        },
-                                        "Conditions": [
-                                          {
-                                            "Condition": {
-                                              "$type": "CSharpCondition",
-                                              "CSharpCode": "!QH.IsClose(5361.1f, -3942.9f, 32.7f,25)"
-                                            },
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          }
-                                        ],
-                                        "IsNot": false
-                                      },
-                                      {
-                                        "$type": "UseTaxiTemplateScriptAction",
-                                        "Template": {
-                                          "$type": "UseTaxiTemplate",
-                                          "Hotspots": [
-                                            {
-                                              "Position": "5358.211 -3945.266 32.73372",
-                                              "GroundPosition": "0 0 0",
-                                              "IsGroundPosition": false,
-                                              "ContinentId": 1116
-                                            }
-                                          ],
-                                          "Target": {
-                                            "Hotspot": {
-                                              "Position": "5361.05 -3942.934 32.73376",
-                                              "GroundPosition": "0 0 0",
-                                              "IsGroundPosition": false,
-                                              "ContinentId": 1116
-                                            },
-                                            "Name": "Ilalu",
-                                            "EntryId": 86049
-                                          },
-                                          "TaxiTarget": {
-                                            "Item1": "Frostwall Garrison, Frostfire Ridge",
-                                            "Item2": "0.3387086391449",
-                                            "Item3": "0.63124781847"
-                                          },
-                                          "GameObjectiveIndex": 1,
-                                          "RunTime": 5.0
-                                        },
-                                        "TimeLimit": 0
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Else",
-                                    "GroupName": ""
-                                  },
-                                  "ActionsTrue": {
-                                    "Children": [
-                                      {
-                                        "$type": "If",
-                                        "IsExtendedInEditor": false,
-                                        "ActionsFalse": {
-                                          "Children": [],
-                                          "IsSpecialElement": true,
-                                          "SpecialElementName": "Else",
-                                          "GroupName": ""
-                                        },
-                                        "ActionsTrue": {
-                                          "Children": [
-                                            {
-                                              "$type": "MoveTo",
-                                              "Hotspot": {
-                                                "Position": "5300.31 -4002.206 14.72277",
-                                                "GroundPosition": "0 0 0",
-                                                "IsGroundPosition": false,
-                                                "ContinentId": 1116
-                                              },
-                                              "Method": "Navi"
-                                            },
-                                            {
-                                              "$type": "MoveTo",
-                                              "Hotspot": {
-                                                "Position": "5325.339 -3978.532 21.01698",
-                                                "GroundPosition": "0 0 0",
-                                                "IsGroundPosition": false,
-                                                "ContinentId": 1116
-                                              },
-                                              "Method": "Navi"
-                                            }
-                                          ],
-                                          "IsExtendedInEditor": false,
-                                          "IsSpecialElement": true,
-                                          "SpecialElementName": "Then",
-                                          "GroupName": ""
-                                        },
-                                        "Conditions": [
-                                          {
-                                            "Condition": {
-                                              "$type": "CSharpCondition",
-                                              "CSharpCode": "!QH.IsClose(5361.1f, -3942.9f, 32.7f,25)"
-                                            },
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          },
-                                          {
-                                            "Condition": null,
-                                            "IsNot": false
-                                          }
-                                        ],
-                                        "IsNot": false
-                                      },
-                                      {
-                                        "$type": "UseTaxiTemplateScriptAction",
-                                        "Template": {
-                                          "$type": "UseTaxiTemplate",
-                                          "Hotspots": [
-                                            {
-                                              "Position": "5357.287 -3943.483 32.7331",
-                                              "GroundPosition": "0 0 0",
-                                              "IsGroundPosition": false,
-                                              "ContinentId": 1116
-                                            }
-                                          ],
-                                          "Target": {
-                                            "Hotspot": {
-                                              "Position": "5361.05 -3942.934 32.73385",
-                                              "GroundPosition": "0 0 0",
-                                              "IsGroundPosition": false,
-                                              "ContinentId": 1116
-                                            },
-                                            "Name": "Ilalu",
-                                            "EntryId": 86049
-                                          },
-                                          "TaxiTarget": {
-                                            "Item1": "Thunder Pass, Frostfire Ridge",
-                                            "Item2": "0.47101458907127",
-                                            "Item3": "0.64409428834915"
-                                          },
-                                          "GameObjectiveIndex": 1,
-                                          "RunTime": 5.0
-                                        },
-                                        "TimeLimit": 0
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Then",
-                                    "GroupName": ""
-                                  },
-                                  "Conditions": [
-                                    {
-                                      "Condition": {
-                                        "$type": "CSharpCondition",
-                                        "CSharpCode": "Me.ZoneId == 7333 && (IsQuestCompleted(34069) || IsQuestCompleted(34066) || IsQuestCompleted(34067))"
-                                      },
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    }
-                                  ],
-                                  "IsNot": false
-                                }
-                              ],
+                              "Children": [],
                               "IsExtendedInEditor": false,
                               "IsSpecialElement": true,
                               "SpecialElementName": "Else",
@@ -36236,11 +36110,6 @@
                             },
                             "ActionsTrue": {
                               "Children": [
-                                {
-                                  "$type": "Comment",
-                                  "Text": "Flying to Beastwatch in Gorgrond!",
-                                  "Color": "64, 128, 128"
-                                },
                                 {
                                   "$type": "If",
                                   "IsExtendedInEditor": false,
@@ -36302,36 +36171,189 @@
                                   "IsNot": false
                                 },
                                 {
-                                  "$type": "UseTaxiTemplateScriptAction",
-                                  "Template": {
-                                    "$type": "UseTaxiTemplate",
-                                    "Hotspots": [
+                                  "$type": "If",
+                                  "IsExtendedInEditor": false,
+                                  "ActionsFalse": {
+                                    "Children": [
                                       {
-                                        "Position": "5360.219 -3944.595 32.7331",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
+                                        "$type": "If",
+                                        "IsExtendedInEditor": false,
+                                        "ActionsFalse": {
+                                          "Children": [
+                                            {
+                                              "$type": "UseTaxiTemplateScriptAction",
+                                              "Template": {
+                                                "$type": "UseTaxiTemplate",
+                                                "Hotspots": [
+                                                  {
+                                                    "Position": "5358.211 -3945.266 32.73372",
+                                                    "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
+                                                    "ContinentId": 1116
+                                                  }
+                                                ],
+                                                "Target": {
+                                                  "Hotspot": {
+                                                    "Position": "5361.05 -3942.934 32.73376",
+                                                    "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
+                                                    "ContinentId": 1116
+                                                  },
+                                                  "Name": "Ilalu",
+                                                  "EntryId": 86049
+                                                },
+                                                "TaxiTarget": {
+                                                  "Item1": "Frostwall Garrison, Frostfire Ridge",
+                                                  "Item2": "0.3387086391449",
+                                                  "Item3": "0.63124781847"
+                                                },
+                                                "GameObjectiveIndex": 1,
+                                                "RunTime": 5.0
+                                              },
+                                              "TimeLimit": 0
+                                            }
+                                          ],
+                                          "IsExtendedInEditor": false,
+                                          "IsSpecialElement": true,
+                                          "SpecialElementName": "Else",
+                                          "GroupName": ""
+                                        },
+                                        "ActionsTrue": {
+                                          "Children": [
+                                            {
+                                              "$type": "UseTaxiTemplateScriptAction",
+                                              "Template": {
+                                                "$type": "UseTaxiTemplate",
+                                                "Hotspots": [
+                                                  {
+                                                    "Position": "5357.287 -3943.483 32.7331",
+                                                    "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
+                                                    "ContinentId": 1116
+                                                  }
+                                                ],
+                                                "Target": {
+                                                  "Hotspot": {
+                                                    "Position": "5361.05 -3942.934 32.73385",
+                                                    "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
+                                                    "ContinentId": 1116
+                                                  },
+                                                  "Name": "Ilalu",
+                                                  "EntryId": 86049
+                                                },
+                                                "TaxiTarget": {
+                                                  "Item1": "Thunder Pass, Frostfire Ridge",
+                                                  "Item2": "0.47101458907127",
+                                                  "Item3": "0.64409428834915"
+                                                },
+                                                "GameObjectiveIndex": 1,
+                                                "RunTime": 5.0
+                                              },
+                                              "TimeLimit": 0
+                                            }
+                                          ],
+                                          "IsExtendedInEditor": false,
+                                          "IsSpecialElement": true,
+                                          "SpecialElementName": "Then",
+                                          "GroupName": ""
+                                        },
+                                        "Conditions": [
+                                          {
+                                            "Condition": {
+                                              "$type": "CSharpCondition",
+                                              "CSharpCode": "(IsQuestCompleted(34069) || IsQuestCompleted(34066) || IsQuestCompleted(34067))"
+                                            },
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          }
+                                        ],
+                                        "IsNot": false
                                       }
                                     ],
-                                    "Target": {
-                                      "Hotspot": {
-                                        "Position": "5361.05 -3942.934 32.73307",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      },
-                                      "Name": "Ilalu",
-                                      "EntryId": 86049
-                                    },
-                                    "TaxiTarget": {
-                                      "Item1": "Beastwatch, Gorgrond",
-                                      "Item2": "0.53750747442245",
-                                      "Item3": "0.64567637443542"
-                                    },
-                                    "GameObjectiveIndex": 1,
-                                    "RunTime": 5.0
+                                    "IsExtendedInEditor": false,
+                                    "IsSpecialElement": true,
+                                    "SpecialElementName": "Else",
+                                    "GroupName": ""
                                   },
-                                  "TimeLimit": 0
+                                  "ActionsTrue": {
+                                    "Children": [
+                                      {
+                                        "$type": "Comment",
+                                        "Text": "Flying to Beastwatch in Gorgrond!",
+                                        "Color": "64, 128, 128"
+                                      },
+                                      {
+                                        "$type": "UseTaxiTemplateScriptAction",
+                                        "Template": {
+                                          "$type": "UseTaxiTemplate",
+                                          "Hotspots": [
+                                            {
+                                              "Position": "5360.219 -3944.595 32.7331",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            }
+                                          ],
+                                          "Target": {
+                                            "Hotspot": {
+                                              "Position": "5361.05 -3942.934 32.73307",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            },
+                                            "Name": "Ilalu",
+                                            "EntryId": 86049
+                                          },
+                                          "TaxiTarget": {
+                                            "Item1": "Beastwatch, Gorgrond",
+                                            "Item2": "0.53750747442245",
+                                            "Item3": "0.64567637443542"
+                                          },
+                                          "GameObjectiveIndex": 1,
+                                          "RunTime": 5.0
+                                        },
+                                        "TimeLimit": 0
+                                      }
+                                    ],
+                                    "IsExtendedInEditor": false,
+                                    "IsSpecialElement": true,
+                                    "SpecialElementName": "Then",
+                                    "GroupName": ""
+                                  },
+                                  "Conditions": [
+                                    {
+                                      "Condition": {
+                                        "$type": "CSharpCondition",
+                                        "CSharpCode": "IsQuestCompleted(35151)"
+                                      },
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    },
+                                    {
+                                      "Condition": null,
+                                      "IsNot": false
+                                    }
+                                  ],
+                                  "IsNot": false
                                 }
                               ],
                               "IsExtendedInEditor": false,
@@ -36343,7 +36365,7 @@
                               {
                                 "Condition": {
                                   "$type": "CSharpCondition",
-                                  "CSharpCode": "Me.ZoneId == 7333 && IsQuestCompleted(35151)"
+                                  "CSharpCode": "Me.ZoneId == 7333"
                                 },
                                 "IsNot": false
                               },

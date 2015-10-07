@@ -12,7 +12,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 90) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 90 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\n"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 90) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 90 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\n"
           },
           {
             "$type": "Comment",
@@ -33061,6 +33061,120 @@
                   "Children": [
                     {
                       "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 45.0,
+                      "DelayMax": 60.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "!IsQuestCompleted(34378)"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
                       "Text": "\"Ashran Appearance\"",
                       "Color": "0, 128, 255"
                     },
@@ -38494,45 +38608,6 @@
                                     "RunTime": 5.0
                                   },
                                   "TimeLimit": 0
-                                },
-                                {
-                                  "$type": "While",
-                                  "IsExtendedInEditor": false,
-                                  "LoopActions": {
-                                    "Children": [
-                                      {
-                                        "$type": "Wait",
-                                        "Delay": 1.0,
-                                        "DelayMax": 1.0
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Do",
-                                    "GroupName": ""
-                                  },
-                                  "Conditions": [
-                                    {
-                                      "Condition": {
-                                        "$type": "PlayerCondition",
-                                        "Property": "IsInGarrison"
-                                      },
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    }
-                                  ],
-                                  "IsNot": true
                                 }
                               ],
                               "IsExtendedInEditor": false,
