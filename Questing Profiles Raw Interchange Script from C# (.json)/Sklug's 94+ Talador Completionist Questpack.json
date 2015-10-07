@@ -17,7 +17,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 94) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 94 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Talador\"] = \"false\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 94) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 94 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Talador\"] = \"false\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
           },
           {
             "$type": "Comment",
@@ -87,7 +87,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray =  {34566, 34569, 35102, 34577, 34576, 34579, 34263, 34837, 34683, 34766, 34108, 34107, 34106, 34205, 35162, 36858, 34236, 35237, 33973, 34135, 34290, 33933, 33720, 33754, 35226, 33722, 33735, 33721, 34950, 33724, 33736, 33728, 33729, 33730, 34962, 33731, 34803, 37422, 34859, 33649, 33740, 33734, 34261, 33761, 33578, 34250, 33580, 33581, 33582, 34471, 34167, 34248, 34639, 34101, 33872, 33873, 33874, 34751, 34252, 34185, 35238, 34801, 36518, 34776, 34840, 34855, 34858, 34860, 34929, 34870, 34251, 34971, 34972, 34696, 34253, 34710, 35249, 34418, 33920, 33917, 34351, 33530, 34451, 33970, 33971, 33972, 34239, 34255, 34498, 34276, 34242, 34660, 34668, 34508, 34013, 34234, 33988, 34208, 34256, 33976, 34326, 34092, 34122, 34257, 34140, 34249, 34182, 34144, 34157, 34165, 34163, 34164, 34259, 34148, 34564, 36512, 34706, 34667, 34671, 34254, 33882, 33884, 33944, 34145, 34400, 34399, 34401, 34404, 34414, 34447};\r\n\r\nint[] questArray2 = {35537, 36522};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 35537 || (!IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)))\r\n            {\r\n                count2++;\r\n            }       \t\r\n    \t}\r\n}\r\n\r\nint count3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif ((count + count2) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Talador\"] = \"true\";\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray =  {34566, 34569, 35102, 34577, 34576, 34579, 34263, 34837, 34683, 34766, 34108, 34107, 34106, 34205, 35162, 36858, 34236, 35237, 33973, 34135, 34290, 33933, 33720, 33754, 35226, 33722, 33735, 33721, 34950, 33724, 33736, 33728, 33729, 33730, 34962, 33731, 34803, 37422, 34859, 33649, 33740, 33734, 34261, 33761, 33578, 34250, 33580, 33581, 33582, 34471, 34167, 34248, 34639, 34101, 33872, 33873, 33874, 34751, 34252, 34185, 35238, 34801, 36518, 34776, 34840, 34855, 34858, 34860, 34929, 34870, 34251, 34971, 34972, 34696, 34253, 34710, 35249, 34418, 33920, 33917, 34351, 33530, 34451, 33970, 33971, 33972, 34239, 34255, 34498, 34276, 34242, 34660, 34668, 34508, 34013, 34234, 33988, 34208, 34256, 33976, 34326, 34092, 34122, 34257, 34140, 34249, 34182, 34144, 34157, 34165, 34163, 34164, 34259, 34148, 34564, 36512, 34706, 34667, 34671, 34254, 33882, 33884, 33944, 34145, 34400, 34399, 34401, 34404, 34414, 34447};\r\n\r\nint[] questArray2 = {35537, 36522};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 35537 || (!IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)))\r\n            {\r\n                count2++;\r\n            }       \t\r\n    \t}\r\n}\r\n\r\nint count3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif ((count3) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Talador\"] = \"true\";\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -330,7 +330,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison) || (Me.ZoneId == 6662 && !IsQuestCompleted(36494)) || (Me.ZoneId == 6722 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)))"
+                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison) || (Me.ZoneId == 6662 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)) || (Me.ZoneId == 6662 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)))"
                       },
                       "IsNot": false
                     },
@@ -412,7 +412,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "Me.ZoneId == 6721 && !IsQuestCompleted(36494)"
+                  "CSharpCode": "Me.ZoneId == 6721 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)"
                 },
                 "IsNot": false
               },
@@ -27995,6 +27995,75 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
               },
@@ -29154,21 +29223,6 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "Travel"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "EndThread",
-                "ThreadName": null
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
           },
           {
             "$type": "ActionSequence",

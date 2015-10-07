@@ -17,7 +17,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
           },
           {
             "$type": "Comment",
@@ -87,7 +87,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35669,35670,35672,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35334,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35670,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tPrint(questArray[i]);\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -209,7 +209,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6722 && !IsInGarrison) || (Me.ZoneId == 6722 && !IsQuestCompleted(35537)) || (Me.ZoneId == 6722 && IsQuestCompleted(35537) && !HasQuest(34653) && !IsQuestCompleted(34653) && !HasQuest(36951) && !IsQuestCompleted(36951)))"
+                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6722 && !IsInGarrison) || \r\n(Me.ZoneId == 6722 && !IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)) || \r\n(Me.ZoneId == 6722 && IsQuestCompleted(35537) && !HasQuest(34653) && !IsQuestCompleted(34653) && !HasQuest(36951) && !IsQuestCompleted(36951)))"
                       },
                       "IsNot": false
                     },
@@ -291,7 +291,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "Me.ZoneId == 6662 && !IsQuestCompleted(35537) "
+                  "CSharpCode": "Me.ZoneId == 6662 && !IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)"
                 },
                 "IsNot": false
               },
@@ -6585,11 +6585,6 @@
             "ActionsTrue": {
               "Children": [
                 {
-                  "$type": "Comment",
-                  "Text": "\"Wanted: Keeho's Severed Paw\"",
-                  "Color": "0, 128, 255"
-                },
-                {
                   "$type": "If",
                   "IsExtendedInEditor": false,
                   "ActionsFalse": {
@@ -6600,6 +6595,16 @@
                   },
                   "ActionsTrue": {
                     "Children": [
+                      {
+                        "$type": "Comment",
+                        "Text": "\"Wanted: Keeho's Severed Paw\"",
+                        "Color": "0, 128, 255"
+                      },
+                      {
+                        "$type": "Comment",
+                        "Text": "\"Player Will Only Complete this Quest if in a Party of 2 or More. NPC hits very hard...\"",
+                        "Color": "0, 128, 255"
+                      },
                       {
                         "$type": "AcceptQuestCommand",
                         "QuestIds": [
@@ -6767,11 +6772,6 @@
             "ActionsTrue": {
               "Children": [
                 {
-                  "$type": "Comment",
-                  "Text": "\"Wanted: Venombarb\"",
-                  "Color": "0, 128, 255"
-                },
-                {
                   "$type": "If",
                   "IsExtendedInEditor": false,
                   "ActionsFalse": {
@@ -6782,6 +6782,16 @@
                   },
                   "ActionsTrue": {
                     "Children": [
+                      {
+                        "$type": "Comment",
+                        "Text": "\"Wanted: Venombarb\"",
+                        "Color": "0, 128, 255"
+                      },
+                      {
+                        "$type": "Comment",
+                        "Text": "\"Player Will Only Complete this Quest if in a Party of 2 or More. NPC hits very hard...\"",
+                        "Color": "0, 128, 255"
+                      },
                       {
                         "$type": "AcceptQuestCommand",
                         "QuestIds": [
@@ -9678,7 +9688,7 @@
               "Children": [
                 {
                   "$type": "Comment",
-                  "Text": "\"Treasure: Elixir of Shadowsight\"",
+                  "Text": "\"Treasure: Elixir of Shadowsight - Veil Akro\"",
                   "Color": "0, 128, 255"
                 },
                 {
@@ -11043,6 +11053,33 @@
                   ],
                   "IsNot": false,
                   "CheckFrequently": true
+                },
+                {
+                  "$type": "UseItemTemplateScriptAction",
+                  "Template": {
+                    "$type": "UseItemTemplate",
+                    "UseMethod": 0,
+                    "OverrideCooldown": 0.0,
+                    "OverrideCastTime": 0.0,
+                    "StayMounted": false,
+                    "MinCastRange": 4.5,
+                    "DontFilterDeadUnits": false,
+                    "UseCount": 1,
+                    "TargetUnits": [],
+                    "HotspotsX": [],
+                    "Blackspots": [],
+                    "Item": [
+                      {
+                        "Name": "Brilliant Spore",
+                        "EntryId": 118107
+                      }
+                    ],
+                    "BanTime": 120.0,
+                    "BanMobCombatAfterUse": false,
+                    "GameObjectiveIndex": 1,
+                    "RunTime": 5.0
+                  },
+                  "TimeLimit": 0
                 },
                 {
                   "$type": "Wait",
@@ -13075,8 +13112,30 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "-673.2886 2405.31 27.41414",
+                    "Position": "-668.7625 2416.237 34.28733",
                     "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-662.6578 2409.59 30.13852",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-673.2886 2405.31 27.41414",
+                    "GroundPosition": "-673.2886 2405.31 27.63483",
                     "IsGroundPosition": false,
                     "IsIndoors": true,
                     "ContinentId": 1116
@@ -14147,6 +14206,16 @@
                   "$type": "Comment",
                   "Text": "\"Treasure: An Old Key\"",
                   "Color": "0, 128, 255"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-892.0746 2415.044 39.3258",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  }
                 },
                 {
                   "$type": "MoveTo",
@@ -16401,7 +16470,7 @@
                       },
                       {
                         "$type": "CSharpAction",
-                        "CSharpCode": "QH.SetFocusUnit(84821);\r\nyield return 1000;\r\nQH.SetFocusUnit(84833);\r\n"
+                        "CSharpCode": "QH.SetFocusUnit(84821);\r\nyield return 1000;\r\n\r\nint ID = 84833;\r\nforeach (var unit in Units)\r\n{\r\n\tif (unit.EntryID == ID && !unit.IsDead)\r\n        {\r\n        \tMe.SetFocus(unit);\r\n        \tMe.SetTarget(unit);\r\n                break;\r\n        }\r\n}"
                       },
                       {
                         "$type": "Wait",
@@ -17642,12 +17711,44 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "-167.3729 572.3535 87.17979",
+                    "Position": "-171.9766 563.9342 89.34254",
                     "GroundPosition": "0 0 0",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
                   "Method": "Navi"
+                },
+                {
+                  "$type": "KillMobsTemplateScriptAction",
+                  "Template": {
+                    "$type": "KillMobsTemplate",
+                    "TargetObjects": [
+                      {
+                        "Hotspot": {
+                          "Position": "-187.0799 551.6614 92.8031",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Name": "Sethekk Initiate",
+                        "EntryId": 81169
+                      }
+                    ],
+                    "HotspotsX": [
+                      {
+                        "Position": "-171.9766 563.9342 89.34254",
+                        "GroundPosition": "0 0 0",
+                        "IsGroundPosition": false,
+                        "ContinentId": 1116
+                      }
+                    ],
+                    "Blackspots": [],
+                    "ForceLoot": false,
+                    "ForcePullMobs": false,
+                    "GameObjectiveIndex": 1,
+                    "RunTime": 5.0
+                  },
+                  "TimeLimit": 10
                 },
                 {
                   "$type": "CollectObjectsTemplateScriptAction",
@@ -19127,7 +19228,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-198.078 1319.64 -0.3447594",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-197.9793 1319.655 -0.0952298",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
@@ -19183,36 +19284,129 @@
                   "IsNot": false
                 },
                 {
-                  "$type": "KillMobsTemplateScriptAction",
-                  "Template": {
-                    "$type": "KillMobsTemplate",
-                    "TargetObjects": [
+                  "$type": "While",
+                  "IsExtendedInEditor": false,
+                  "LoopActions": {
+                    "Children": [
                       {
-                        "Hotspot": {
-                          "Position": "-218.2604 1360.668 -0.3448746",
-                          "GroundPosition": "0 0 0",
-                          "IsGroundPosition": false,
-                          "ContinentId": 1116
-                        },
-                        "Name": "Festerbloom",
-                        "EntryId": 84890
+                        "$type": "Comment",
+                        "Text": "Waiting For Festerbloom...",
+                        "Color": "64, 128, 128"
+                      },
+                      {
+                        "$type": "CSharpAction",
+                        "CSharpCode": "QH.SetFocusUnit(84890)"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 2.0,
+                        "DelayMax": 3.0
                       }
                     ],
-                    "HotspotsX": [
-                      {
-                        "Position": "-209.0342 1337.175 -0.3453287",
-                        "GroundPosition": "0 0 0",
-                        "IsGroundPosition": false,
-                        "ContinentId": 1116
-                      }
-                    ],
-                    "Blackspots": [],
-                    "ForceLoot": true,
-                    "ForcePullMobs": false,
-                    "GameObjectiveIndex": 1,
-                    "RunTime": 5.0
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Do",
+                    "GroupName": ""
                   },
-                  "TimeLimit": 0
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.Focus == null && !IsQuestCompleted(36297)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "Comment",
+                  "Text": "\"Festerbloom Has Been Found!\"",
+                  "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "While",
+                  "IsExtendedInEditor": false,
+                  "LoopActions": {
+                    "Children": [
+                      {
+                        "$type": "KillMobsTemplateScriptAction",
+                        "Template": {
+                          "$type": "KillMobsTemplate",
+                          "TargetObjects": [
+                            {
+                              "Hotspot": {
+                                "Position": "-218.2604 1360.668 -0.3448746",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Festerbloom",
+                              "EntryId": 84890
+                            }
+                          ],
+                          "HotspotsX": [
+                            {
+                              "Position": "-209.0342 1337.175 -0.3453287",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            }
+                          ],
+                          "Blackspots": [],
+                          "ForceLoot": true,
+                          "ForcePullMobs": false,
+                          "GameObjectiveIndex": 1,
+                          "RunTime": 5.0
+                        },
+                        "TimeLimit": 15
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Do",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.Focus != null && !IsQuestCompleted(36297)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false,
+                  "CheckFrequently": true
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 0.0
                 }
               ],
               "IsExtendedInEditor": false,
@@ -19378,6 +19572,16 @@
                         "QuestIds": [
                           35718
                         ]
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-264.371 1272.577 20.94305",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -20885,6 +21089,16 @@
                   "IsNot": false
                 },
                 {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-783.6577 1046.617 3.074497",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
                   "$type": "TurnInQuestsCommand",
                   "QuestIds": [
                     35797
@@ -21979,7 +22193,7 @@
               "Children": [
                 {
                   "$type": "Comment",
-                  "Text": "\"Treasure: Elixir of Shadow Sight\"",
+                  "Text": "\"Treasure: Elixir of Shadow Sight- Bloodmane Valley\"",
                   "Color": "0, 128, 255"
                 },
                 {
@@ -22716,52 +22930,6 @@
             "ActionsTrue": {
               "Children": [
                 {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    35669
-                  ]
-                }
-              ],
-              "IsExtendedInEditor": false,
-              "IsSpecialElement": true,
-              "SpecialElementName": "Then",
-              "GroupName": ""
-            },
-            "Conditions": [
-              {
-                "Condition": {
-                  "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35669) &&  !IsQuestInLogAndComplete(35669)"
-                },
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              }
-            ],
-            "IsNot": false
-          },
-          {
-            "$type": "If",
-            "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
-              "Children": [
-                {
                   "$type": "Comment",
                   "Text": "\"Bonus Objective: Bloodmane Pridelands\"",
                   "Color": "0, 128, 255"
@@ -22781,7 +22949,7 @@
                         "$type": "MoveTo",
                         "Hotspot": {
                           "Position": "-1107.332 1907.397 17.12995",
-                          "GroundPosition": "0 0 0",
+                          "GroundPosition": "-1107.332 1907.397 17.62751",
                           "IsGroundPosition": false,
                           "ContinentId": 1116
                         },
@@ -22870,7 +23038,58 @@
               "Children": [
                 {
                   "$type": "Comment",
-                  "Text": "\"Treasure: Elixir of Shadow Sight\"",
+                  "Text": "You Are in a Party! This Quest Is Normally Skipped Otherwise as NPC is too Strong.",
+                  "Color": "64, 128, 128"
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    35669
+                  ]
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "HasQuest(35669) &&  !IsQuestInLogAndComplete(35669) && Group.GetNumGroupMembers() > 0"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Treasure: Elixir of Shadow Sight - The South Sea\"",
                   "Color": "0, 128, 255"
                 },
                 {
@@ -25094,7 +25313,14 @@
                               "EntryId": 77857
                             }
                           ],
-                          "HotspotsX": [],
+                          "HotspotsX": [
+                            {
+                              "Position": "-650.9572 1575.237 36.57354",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            }
+                          ],
                           "GossipIndex": 1,
                           "Dismount": false,
                           "GameObjectiveIndex": 1,
@@ -25156,7 +25382,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!QH.IsClose(-782.2f, 1903.7f, 472.2f,100)"
+                        "CSharpCode": "!QH.IsClose(-782.2f, 1903.7f, 472.2f,125)"
                       },
                       "IsNot": false
                     },
@@ -26236,6 +26462,11 @@
             "ActionsTrue": {
               "Children": [
                 {
+                  "$type": "Comment",
+                  "Text": "You Are in a Party! This Quest Is Normally Skipped Otherwise as NPC is too Strong.",
+                  "Color": "64, 128, 128"
+                },
+                {
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "517.1567 944.3575 83.7788",
@@ -26305,7 +26536,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35672) && !IsQuestInLogAndComplete(35672)"
+                  "CSharpCode": "HasQuest(35672) && !IsQuestInLogAndComplete(35672) && Group.GetNumGroupMembers() > 0"
                 },
                 "IsNot": false
               },
@@ -26511,12 +26742,142 @@
                   "IsNot": false
                 },
                 {
-                  "$type": "TurnInQuestsCommand",
-                  "QuestIds": [
-                    35669,
-                    35670,
-                    35672
-                  ]
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "TurnInQuestsCommand",
+                        "QuestIds": [
+                          35669
+                        ]
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "IsQuestInLogAndComplete(35669)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "TurnInQuestsCommand",
+                        "QuestIds": [
+                          35670
+                        ]
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "IsQuestInLogAndComplete(35670)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "TurnInQuestsCommand",
+                        "QuestIds": [
+                          35672
+                        ]
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "IsQuestInLogAndComplete(35672)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 }
               ],
               "IsExtendedInEditor": false,
@@ -26875,7 +27236,15 @@
           },
           {
             "$type": "EndThread",
+            "ThreadName": "Garrison Ability Macro"
+          },
+          {
+            "$type": "EndThread",
             "ThreadName": "XP Macro"
+          },
+          {
+            "$type": "LoadScript",
+            "FileName": "Sklug's 98+ Nagrand Completionist Questpack"
           },
           {
             "$type": "EndScript"
@@ -27362,17 +27731,66 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
               },
               {
-                "$type": "Comment",
-                "Text": "No Longer Checking for XP Potions...",
-                "Color": "64, 128, 128"
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
               },
               {
-                "$type": "EndThread",
-                "ThreadName": null
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
               }
             ],
             "IsExtendedInEditor": false,
@@ -30693,6 +31111,7 @@
                                                   {
                                                     "Position": "5358.757 -3943.541 32.7331",
                                                     "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
                                                     "ContinentId": 1116
                                                   }
                                                 ],
@@ -30700,6 +31119,7 @@
                                                   "Hotspot": {
                                                     "Position": "5361.05 -3942.934 32.73305",
                                                     "GroundPosition": "0 0 0",
+                                                    "IsGroundPosition": false,
                                                     "ContinentId": 1116
                                                   },
                                                   "Name": "Ilalu",
@@ -30773,6 +31193,7 @@
                                             "Hotspot": {
                                               "Position": "5361.05 -3942.934 32.73305",
                                               "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
                                               "ContinentId": 1116
                                             },
                                             "Name": "Ilalu",

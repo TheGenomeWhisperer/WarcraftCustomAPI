@@ -520,6 +520,7 @@ public class QH
             {
                 // Assumedly, in instances like this, a 2ndary logic route is given as backup, either the mesh or by Flightpath.
                 API.Print("Player Wanted to Hearth to Garrison, but it is on Cooldown...");
+                // Apply Flight Logic soon...
                 yield break;
             }
         }
@@ -1630,4 +1631,3 @@ public class QH
         }
     }
 }
-

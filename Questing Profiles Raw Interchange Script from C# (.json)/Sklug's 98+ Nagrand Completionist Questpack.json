@@ -17,7 +17,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 98) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_NAGRAND\"] = \"false\";\r\n\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 98) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_NAGRAND\"] = \"false\";\r\n\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;"
           },
           {
             "$type": "Comment",
@@ -159,7 +159,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6755 && !IsInGarrison) || (Me.ZoneId == 6755 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607)) || (Me.ZoneId == 6755 && (IsQuestCompleted(36602) || IsQuestCompleted(36607)) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)))"
+                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6755 && !IsInGarrison) || \r\n(Me.ZoneId == 6755 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)) || \r\n(Me.ZoneId == 6755 && (IsQuestCompleted(36602) || IsQuestCompleted(36607)) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)))"
                       },
                       "IsNot": false
                     },
@@ -241,7 +241,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "Me.ZoneId == 6722 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607)"
+                  "CSharpCode": "Me.ZoneId == 6722 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)"
                 },
                 "IsNot": false
               },
@@ -773,7 +773,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(36607) && !IsQuestCompleted(36952) && !HasQuest(36952) && !IsQuestCompleted(34794) && !HasQuest(34794) && Me.Level > 97"
+                  "CSharpCode": "!IsQuestCompleted(36607) && !IsQuestCompleted(36602) && !IsQuestCompleted(36952) && !HasQuest(36952) && !IsQuestCompleted(34794) && !HasQuest(34794) && Me.Level > 97"
                 },
                 "IsNot": false
               },
@@ -835,7 +835,6 @@
                         "DelayMax": 0.0
                       }
                     ],
-                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -1378,7 +1377,7 @@
                             },
                             {
                               "$type": "CSharpAction",
-                              "CSharpCode": "QH.DoGossipOnMatch(\"Take me to my base in Talador.\");"
+                              "CSharpCode": "QH.DoGossipOnMatch(\"I need a flight to the border of Nagrand.\");"
                             }
                           ],
                           "IsExtendedInEditor": false,
@@ -1508,7 +1507,6 @@
                   "IsNot": false
                 }
               ],
-              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -4782,6 +4780,75 @@
         "Children": [
           {
             "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
             "Children": [],
             "GroupName": "Travel"
           },
@@ -4812,21 +4879,6 @@
             "$type": "ActionSequence",
             "Children": [],
             "GroupName": "Garrison Ability Macro"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "EndThread",
-                "ThreadName": null
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
           },
           {
             "$type": "ActionSequence",
