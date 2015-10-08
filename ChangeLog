@@ -1,0 +1,1181 @@
+To Do:  Additional Garrison Bonus buffs
+To Do:  Add a Flightmap to take closest FP, depending on the zone player is in, for when hearth is down.
+	Do a Food Check
+
+Version 1.30 - October 7th Release!
+
+MISC Changes:
+-MAJOR SECURIT OVERHAUL!!!
+-Removal of all Global Lua variables from every script and quest... Security reasons to be more stealthy. I even wrote a script to help automate the process.
+-Full compatibility made for all 11 Clients, including the follow: English(American and British), Deutsch, Français, Italiano, Spanish(EU), Spanish(AL), Portuguese, Русский(Russian), Korean, Taiwan, China
+-Automatic enabling of "AutoLoot" now built into all profiles.
+-Automatic enablig of "Zigzag" pathing, as it definitely improves the movement to be more human like, and no known errors with it.
+-Automatic Disabling of ASP movement optimization as I have noticed some errors with my profiles in pathing that could get you stuck. Zigzag optimation is still ok to be enabled.
+-Added some pathing to Warspear as it seemed to be seriously lacking, for compatibility with newly included quests.
+-Fixed issue where it would Disable MasterPlan addon and reload UI even if it was already disabled in FFR questpack.
+-Fixed issue where XP Macro to use XP potions was not always running recursively in a separate thread as intended.
+-Fixed an erroneous "Return to Draenor from anywhere" logic flaw that did not take into consideration already being in Warspear.
+
+API:
+-Added API: SetFocusUnitMaxDistance(int ID, int maxYards)
+-Added API:	GetGarrisonLevel() - Just added a "Me.ClearFocus" at the end to ensure target is dropped and doesn't conflict with any immediate focus quests.
+-Added API: HasHiddenAura(int spellID) - The current "HasAura()" Rebot API method only seems to verify against active "buff/debuff" auras, but not the hidden ones. This checks against all.
+-Fixed API: ReEquipGear() - Accidentally tagged equipment set as "TempQuesting" in Unequip method, but in Equip method had it merely "questing"
+	so what would happen is the script would fail to re-equip gear.  FIXED!!!
+-Fixed API:	SmugglingRunMacro()
+
+FROSTFIRE RIDGE:
+-Fixed a pathing issue to Bloodmaul Flightpath.
+-Included the Intro to Warspear Questchain into this questpack (just 4 more quests, but it gets you Warspear FP and another follower)
+Quest: 	"Azeroth's Last Stand" (35933) - There was a looting issue with the mob, auto blacklisting for some reason.  I
+	just manually scripted in interact and looting.
+Quest: 	"Establish Your Garrison" (34378) - Blizz seems to have updated this quest properly now so you actually need to interact with the surveyor.
+	previously, you just needed to move to the spot. UPDATED!
+Quest: 	"Treasure: Lade Sena's Other Materials" - First Hotspot seems to be problematic on the mesh so I fixed it.
+Quest: 	"What We Got" (34824) - Had an erroneous "hearth  back to garrison" even if quest wasn't done on accident.
+Quest: 	"We Need an Army" (34861) - NPC can be in two positions, so bot would skip this quest if it didn't find it at first location. Now it checks both.
+Quest: 	"Moving In" - Tweaked some wait-timers whilst RP is happening. Saves about 10 seconds. Perfectionist here! ;)
+Quest: 	"Free Our Brothers and Sisters" (33807) - Blacklisted an NPC that seems to be inside the wall... possibly plant bait target.
+Quest: 	"Time-Warped Tower Event" - Sometimes pathing doesn't work well in previous setup... this fixes the one in 10 fail chance.
+
+GORGROND: 
+Quest:  "Treasure: Okbar's Backpack" - For some reason pathing would not allow player to loot item. This could be annoying as if you ever had to restart
+	it would keep running back from far away, anywhere in the zone to go try again. FIXED 
+Quest: "Bonus Objective: The Forgotten Caves" - To pickup the quest it should have been set to an "Area Trigger" Fixed
+	This would not have been noticeable unless returning to this bonus objective.
+	ALSO!!! Major revamp of objective 1,2. I really hate this cave, so I incorporated Shredder Garrison ability use to plow
+	through this hallucinating cave faster.
+Quest: "Strike While the Iron Is Hot" (36574) - Massive rewrite, incorporating better API methodology, removal of global Lua variable
+	use, and more efficient timing, as well as built-in "star" bomb dodging too.
+Quest:	"Bonus Objective: Iyun Weald" (36571) - Fixed pathing issue that could cause you to run into the Elite biolante unintendedly.
+"Bonus Objective: South Gronn Canyon" (36476) - Added a couple of blackspot sites that do not have a good mesh to get to
+"Treasure:"Ancient Titan Chest" - Interact with the vines before player was in range of the chest, causing it to choose another set of vines near Elder Doomwing
+	instead, causing player to unnecessarilly move away.
+"Treasure: Mysterious Petrified Pod 4" - Fixed Pathing issue that could appear un-humanlike on way to this treasure.
+"Treasure: Warm Goren Egg" - If player got delayed and into too much combat on the way, it could end up skipping this treasure. Added an extra moveTo to avoid scenario
+"Treasure: Ancient Titan Chest 2" - For some odd reason, collectObject did not work on this chest so player would fail in looting it
+	and everytime script was restarted, it would run anywhere across the map back to this objective, annoyingly.
+
+Khadgar's Side Quest Chain:
+Quest: "The Sleeper Has Awaked" (34229) - Rescripted the whole thing as some classes can be easier to die.
+
+TALADOR:
+Quest:	"Treasure: Pure Crystal Dust" - Slight pathing issue due to the mesh, now with a conditional to go around it. Typically not an issue, but can be.
+- Pathing out of Zangarra was a little wonky, not very smooth at some tight corners. FIXED! Double checked portal actions too.
+Quest:	"Vile Defilers" (33972) - Fixed an interact issue, as well as pathing, as if player was already in Deathweb hollow and you stop and started quest, it would
+	path outside then back inside.
+Quest	"Book Burning" (34164) - Tweaked some pathing to the fire, as it would run in a loop oddly.
+Rare: 	"Klikixx" - Pathing issue in the cave on a sharp turn. Position conditional added to prevent mesh error.
+Rare:	"Shirzir" - Pathing issue
+Quest: "Frenzied Manafeeders" (34400) - As soon as item is successfully used, no longer targets NPC and moves on to the next one.
+
+
+SCRAPYARD:
+Rare:	"Betsi Boombasket" - Fixed an issue where you'd probably die if attacking this NPC whilst having aggro
+	from other mobs.
+Rare:	"Jiasska"	- Found a bug which would cause player to kill this NPC twice. FIXED!
+
+
+SPIRES OF ARAK:
+- Fixed Major logic issue that would cause player to repeat hearth back to garrison if ever a stop and start on zone.
+- When profile is done, player will now exit the "Smuggler's Run" macro thread I forgot to include an exit on.  
+Rare:	"Sangrikass" = Fixed an error where it would not target and kill the surrounding NPCs to summon this rare to battle.
+Rare:	"Festerbloom" - Fixed error that could cause player to waste time killing more than once.
+Treasure"Sethokk Idol" - Added some logic to kill some NPCs before trying to collect as 6 are guarding it and you will easily die if you just rush in.
+Quest:	"A Piece of the Puzzle" - Some pathing issues which would cause player to run into a wall.
+Quest:	"The Ebon Hunter" (35797) - Extra unnecessary pathing removed, also potential wall-run-in issue when turning in quest. FIXED
+Quest: 	"Bonus Objective: Bloodmane Pridelands" (36660) - Fixed some of the positioning in it as you can grab too much aggro and get killed
+	when attacking the main boss.
+Quest: 	"Wanted: Keeho's Severed Paw" - Changed this quest to ONLY attempt completion if you are in a party size of 2 or more.
+	as this NPC is very hard to kill.  I tried solo on 6 different lvl 100 classes and failed on all except a medium geared
+	hunter with a pet to tank, and I still almost died.
+Quest: "Wanted: Venombarb" (35672) - Evasion Behaviors Added... Guy hits brutally hard. Also, limited to parties of 2 or more players, no solo.
+Quest: "Call of the Raven Mother" (35009) - Was not properly identifying the aura and item to interact with. It should work fine now. FIXED!
+Quest: "On Ebon Wings" (36085) - Player would not return to platform if player died in the middle of a quest up there. FIXED!
+Quest: "When All Is Aligned" (35704) - Would crash everytime as the built-in cannon function would try to target NPCs behind
+	the targeting area and cause a memory error in WOW and crash.  Rebot devs should include angle limits on Cannon firing.
+	In the meantime, I wrote my own custom C# firing script.  It's a bit complex, but it works... quest takes about 5 min to complete
+	instead of manually doing it it'd take 2.5 min. I will come back to eventually.
+Quest: "Bonus: The Howling Crag" - Could get stuck in a loop trying to kill an NPC. FIXED!
+
+
+
+Version 1.25 - Aug. 19th (1:00 am PST)
+
+* - Further enhanced Garrison hearth method with some safeguards
+
+* - Created new C# method to use: "WaitUntilOffTaxi()"
+
+* - Rewrote the script and method for the user to Disable XP potion use (if less than lvl 100)
+
+* - Rewrote the script and method for the user to Disable the killing of the specific Rares I include in my profiles
+
+* - You generally don't need to, but let's say you are just in really crap greens still and you start Nagrand
+
+* - right at lvl 98. You may struggle with some rares, so I include an easy way to toggle the hunting off.
+
+* - It was easy before, I just made it make more sense (before you "enabled" to toggle off, now you disable lol).
+
+
+
+Version 1.25 - Aug. 19th (1:00 am PST)
+
+* - Further enhanced Garrison hearth method with some safeguards
+
+* - Created new C# method to use: "WaitUntilOffTaxi()"
+
+* - Rewrote the script and method for the user to Disable XP potion use (if less than lvl 100)
+
+* - Rewrote the script and method for the user to Disable the killing of the specific Rares I include in my profiles
+
+* - You generally don't need to, but let's say you are just in really crap greens still and you start Nagrand
+
+* - right at lvl 98. You may struggle with some rares, so I include an easy way to toggle the hunting off.
+
+* - It was easy before, I just made it make more sense (before you "enabled" to toggle off, now you disable lol).
+
+
+
+Version 1.24 - Aug. 18th (11:45pm PST)
+
+* Misc:
+
+* - Modified Hearthing logic in the C# script a little bit as there was a problem where if casting was interrupted, the bot would not attempt to hearth again. This solves that issue for the rare circumstance it might happen.
+
+* -Some other misc. things I won't mention here, but some minor scripting stuff was written a little differently.
+
+* -New method in custom C# script to accept an array of targets, and then set the nearest target of that array as a focus target.
+
+* Talador:
+
+* "Bonus objective: Court of Souls" - Cast time on the cannon set to 3 seconds instead of 1 so it spams less needlessly. Also
+
+* realized in some circumstances the bot might fail to exit the vehicle, so this does an extra verification check to push it if needed.
+
+* "The Purge of Veil Shada" - Enhanced the targeting system a bit as the player is unable to interact with an NPC if it is in combat, so if it now finds and NPC in-combat, it will now run to it and defend it properly.
+
+* Removed a quest ID from a treasure in the pre-zone completion check that I forgot to remove, which was causing players to fly to Talador, or hearth back to the Garrison and THEN fly, even though the zone was already complete. FIXED
+
+
+
+Version 1.23 - August 16th (4:15pm PST)
+
+* Miscellaneous:
+
+* No longer using "MEGA" as file host, as founder says he is no longer with the company, also the change in their attempt to trick you into downloading their software now, so I am using Mediafire. I don't use Rebot hosting here as my files compressed are about 700kb, but Rebot does not allow me to upload a file larger than 500kb.
+
+* Re-wrote a lot of Quality of Life logic on zone behavior for hearthing to locations and/or taking flightpaths for efficiency.
+
+* There were some situational deficiencies here.
+
+* Re-wrote zone intro-quests, and am currently in the process of writing Gossip matching of the flightmaster.
+
+* Unfortunately Blizz does not have any API to match a quest ID to a gossip option on NPC, so if you are a quest collector, you can go to that Garrison flightmaster and there might be 5 or 6 or 7+ gossip options in various orders. For efficiency on zone intro quests, I need to be able to know which one to take, so I have some logic to do it, however I can only parse the string, thus if
+
+you have a client of a foreign language other than English, it will not work. SO!!! My solution, I downloaded the client packs for every language lol and am in the process of using the gossip options for any language. The logic is currently in place, but the translations are as of yet not, aside from my working Nagrand prototype. I need to level another toon to gather the Talador, Spires, and Scrapyard intro quests and then collect the translations... I WISH they could just match IDs, but again, not existing API. No biggie. Next update will have it fully working, but for now, they will work with English flawlessly, and any language that has it as the first gossip option lol.
+
+* FFR:
+
+* Quest ID in pre-zone completion check should not have been included, resulting in needless hearthing.
+
+* Gorgrond:
+
+* Treasure: Petrified Egg 2 had an erroneous CTM instead of a MoveTo. Would not have been noticeable unless you came back to complete treasures. FIXED
+
+* Scrapyard:
+
+* Also, a quest ID in pre-zone completion check should not have been included.
+
+* Fixed some issues where it would try to re-equip gear whilst in-combat, now it delays until out of combat.
+
+* SPIRES:
+
+* Note, there is a quest that is not working I just learned that I have not yet fixed, so you will need to manual until I can get a toon there.
+
+* This quest is the one where you need to choose one of the 3 items to use in random but correct sequence 6 times. I wrote the logic without testing and completely forgot about it til someone pointed it out.
+
+* Nagrand:
+
+* PM me if you'd like to test some early Nagrand stuff, but be warned a lot of Quality of Life features will not be included as of yet...
+
+
+
+Version 1.221 - August 10th (12:15pm PST)
+
+* Removed a problematic treasure in Gorgrond that seems to have serious pathing issues to get to (even CTM next to it does not register it).
+
+* Fixed the Surveyor quest to establish your garrison.
+
+* Last update I introduced a typo on accident when cleaning some templates.
+
+* Profile would not even attempt objective and skip it due to double neg. boolean error. FIXED!
+
+* Also, noticed XP potion buying/use was disabled by default on accident for Spires profile.
+
+* Player can always turnoff XP potion buying manually, but I keep it on for all profiles by default.
+
+
+
+Version 1.22 - Aug 10th, 2015
+
+* Noticed many quests were getting overrided by built-in ones due to having been built earlier.
+
+* Not all built-in quest templates are better, some of mine are very custom to this script.
+
+* I went in and went through ALL quests from every profile to disable built-in quests from overriding new ones.
+
+* This was problematic as when I compiled the profiles, it wouldn't compile the ones I wrote myself if the built-in ones
+
+* had newer update times (I prefer to not have my quest templates built into Rebot as it takes control from me in updating).
+
+* (34824) "What we Got" and (34070) "At the End of Your Rope" I noticed they were templates that would not be universally
+
+* compatible across any language, so I re-wrote the templates from the ground up.
+
+* Some other misc. changes. Re-ordered some of the Spires quest ordering I felt was a little more efficient.
+
+* SIDE NOTE: I began preliminary work on Nagrand. Yay! Outpost choice will be the wolf, not the demo. It seems much more OP.
+
+
+
+CHANGES - Version 1.92 - July 25th, 2015 I fist just wanted to give a shoutout of THANK YOU to all of you that have reported
+
+issues. These have been very helpful and the profiles would not be what they are without the continued effort you guys have shown bringing them to me here. As such, I leveled a new toon and not only went in and fixed everything for 6.2, but made some massive updates to all profiles for things I found that ranged from minor to serious problems. The changelog below is just a snippet of many of the changes made, but I do not include all of them here, just I'd say the most-notable. Minor positional and conditional fixes and changes I tend to leave unmentioned. THANK YOU AGAIN!!! 6.2 LOTS OF BUGS FIXED!!! MISC
+
+* - XP Potion Macro had an error in which it was not pulling data from the server correctly if player owned the item. as such I needed to implement a new API call or else player would only use it once then never again.
+
+* - Tons of new C# code written in custom API to improve questing and ease of building (like auto disabling addons with known conflicts).
+
+* - Blizzard changed the Garrison Vendor NPC a little -- Fixed it for XP potion buying.
+
+* - Blizz made some misc. continent ID changes (particularly in regards to phased scenario quests that used to have specific IDs)
+
+* - Had to rewrite some conditionals for these (like at the battle of thunder pass). This actually took a lot of work because I had built a lot of positional checks based on continent IDs and Blizz changed a bunch of phasing cont. IDs on those larger zone quest scenarios, so it messed up quite a bit... Quality of life stuff really.
+
+* -- Rebuilt all Command board quests to accept from the new Adventure Journal instead when available.
+
+TANAAN JUNGLE INTRO
+
+* Quest: "Azeroth's Last Stand" (35933) - in 6.2 the enemies on the stairs are LOS unkillable for some reason, even if standing next to them... Just changed kill target location.
+
+* Quest: "Onslaught's End" (34392) - Fixed an "interact" bug that seems to have been introduced in 6.2
+
+* Quest: "The Portal's POwer (34393) - Interaction bugs again!!!
+
+FROSTFIRE RIDGE
+
+* Quest: "Mission Probable" (34775) - Noticed an addon conflict with the updated 6.2 "MasterPlan" addon so I will force the player to disable the addon and reload UI if they currently have it on (for those of you that didn't follow suggested instructions to disable all addons lol).
+
+* Quest: "These Colors Don't Run" (33526) - Found a bug where if you stop and start on this quest, far away, the first move is a CTM which could cause stucks if you are not near. FIXED to MoveTo.
+
+* Quest: "Shivertail's Den" (33929) - Quest would be skipped due to a C# conditional bug (used "HasQuest()" instead if "IsQuestCompleted()" on accident).
+
+* Quest: "Bonus Objective: Forbidden Glacier" (34505) - Found one frozen NPC that if trying to free player could stuck... blacklisted it.
+
+* Treasure: "Time-Warped Tower Event" - Some CTM pathing issues on the beam in the tower... Not always flawed, but this removes any risk.
+
+* Quest: "Mulverick's Offer of Service" (34732) - For some reason if NPC does not close before picking up, it errors. Now, I force it to close NPC and then reopen to finish this quest and obtain new follower.
+
+* Quest: "The Cure" (33454) - I had always wanted to rewrite this one, so I finally did, which sent me off into several tangeants and I ended up re-writing a C# method and building 2 more from scratch lol, and I ended up sitting at my PC coding unrelated things for the next 3 hrs all because I wanted to rewrite this quest... lol
+
+* Quest: "Grondo's Bounty" (33918) - It no longer is given at the command board, but is an area trigger. Updated!
+
+* Quest: "They Who Held Fast (32990) - Removed a pathing issue that could result in a stuck due to poor mesh.
+
+* Quest: "Spare Parts" (36594) - This Engineering quest I called to my custom API but did not load C# script lol. FIXED!
+
+* Quest: "Bypassing Security" (36457) - Inscription quest was missing objective 1 and "DO Quest" so would error.
+
+* Quest: "Enfilade" (32994) - Encountered another interact bug that seems to have been introduced in 6.2 - FIXED
+
+GORGROND
+
+* Quest: "Tar Get" (34072) - Noticed some pathing issues that could occur if attacking 2 NPCs, so blacklisted them.
+
+* Quest: "The Secrets of Gorgrond" - Noticed potential pathing issue when leaving Thunder Pass on the way to turn this in. FIXED.
+
+* Treasure: "Ockbar's Backpack" - found an issue where it would struggle to interact with the object to loot it. Fixed!
+
+* Quest: "Iyu" (35510) - Rewrote the whole quest template as it would retrack old areas in. Made stop/start friendly! FIXED
+
+* Treasure: "Forgotten Ogre Cache" - For some reason it wouldn't interact with the vines here until told otherwise how to.
+
+* Quest: "Strike While the Iron is Hot" (36574) - Disabled use of Shredder in this quest (it was disabled previously but for some odd reason it still uses it, so just deleted code rather than "disabled" in editor). This is because the Shredder was merely a slight bonus use here, but it is actually needed on a zone Elite within minutes of completing quest.
+
+* Treasure: "Remains of Baldir Deeprock" - I completely removed this treasure as interact changes in 6.2 for some reaosn made this guy unclickable, and I'd need to implement some mouse trickery to get it working. Not worth it atm.
+
+* Quest: "Bonus Objective: Valley of Destruction" - Fixed and Re-enabled... some pathing on crushing eggs was broken on the mesh. FIXED.
+
+* Treasure: "Ancient Titan Chest" - Interact was broken in 6.2 with this object. Had to rescript new logic. FIXED
+
+* Quest: "To Capture Gul'dan" (34295) - Found a problem where it could get stuck in combat and never execute next step. FIXED
+
+TALADOR
+
+* Quest: "Gas Guzzlers" (34579) - Found a mob that could cause pathing issues to loot, so blacklisted.
+
+* SPIRES OF ARAK
+
+* Quest: Smuggler's Run Macro Updated, Tweaked and Fixed (Some Rebot API was not pulling data efficiently so rebuilt it using Lua).
+
+* Quest: "Bonus Objective - Mor'gran Logworks" (35237) - Blacklisted an area that can lead to a stuck... or bot-like behavior.
+
+* Quest: "Treasure: Aruna Mining Cart" (34260) - had to remove as 6.2 changed pathing a little which made the necessary hopping worse and more potential to get player stuck or at least look very bot-like. Not worth it so removed.
+
+* Quest: "What the Draenai Found" (33579) - For some reason the pickup of this quest had been deleted, so bot would skip. I might have accidentally a key in some previous version and never noticed til now. THis messed up a LOT. FIXED now.
+
+* Quest: "The Purge of Veil Shadar" (33580) - Complete massivew (and fun!) rewrite of quest template. Massive improvement. Will also target and kill NPCs if the ones we need to interact with are in combat. Thus saving time and not appearing bot-like.
+
+* Quest: "Cure of Aruunem" (33873) - Found a spot that could potentially make you run into a wall, so blacklisted lootable items within area.
+
+* Quest: "A Pilgrimage Gone Awry" (34801) - Found a spot where if you are a large player, like a Tauren, you can stuck on a lamp post. FIXED! - Also found bug with this quest where it would ignore the Fronds to loot until all NPCs were killed first. Inefficient, so fixed.
+
+* Quest: "The Lord of Gordunni" (34870) - Noticed he would knock you back when you first encounter him and this could mess up the arsenal shot positions to where you miss him. Added slight delay, also widened an evasion behavior that was not accurate, so you'd still get hit.
+
+* Quest: "Vile Defilers" (33972) - I had rebuilt this quest template but forgot to inject my custom API into it to get it to work FIXED! Oh and also I found it struggled to interact with the 3rd pylon for some mesh reasons so I had to re-script the interact logic.
+
+* REARRANGED a bunch of quests in the spider area of Talador for better efficiency.
+
+* Treasure: "Webbed Sac" - Made a conditional on some of the pathing to prevent unnecessary backtracking, but still allow optimal pathing if you are returning to the area just for the treasure.
+
+* Quest: "Book Burning" (34164) - Rescripted this one as it can end up in an infinite loop if you obtain more than 3 books to burn.
+
+* Quest: "Destination Unknown" (34564) - Wow, I don't know how my mental state was when I wrote this quest template, but it was some ugly spaghetti code. FIXED
+
+* Quest: "Frenzied Manafeeders" (34400) - Was previously disabled for a minor reason. This is resolved now.
+
+SCRAPYARD
+
+* Treasure: "Spray-0-matic 5000" - Disabled this treasure as not only is pathing sometimes wonky that can lead to bot-like behavior, but I encountered a super weird bug where it would loot trash 2 times on interact and THEN on 3rd loot would loot treasure. Might be some kind of a tell to Blizz... not sure, so disabled it.
+
+* Rare: "Betsi Boombasket" - Now that evasion behaviors are back. I re-enabled this NPC as you will die without them.
+
+* Quest: "Curing With Force" (36428) - Rewrote the whole template here. Massvie issues with killing too fast even with minimal gear on.
+
+* Quest: "Preventing the Worst" (35211) - 6.2 API change I missed in previous update. FIXED!
+
+SPIRES OF ARAK
+
+* - OFFICIAL SPIRES BETA RELEASE!!!
+
+* NOTE - This only includes 110 quests/treasures, and I have finished the whole thing, but the other 30ish items were not yet polished, so I will release those subsequently, but I said I'd get some stuff out tonight, so here it is!
+
+* - Added Lots of quality of life features that were absent in the alpha release that I won't go into here.
+
+* - Modified some behaviors with all Rare mobs. Just quality of Life Stuff.
+
+* - Tons of modifications from my previous unnoficial beta release of the zone that I won't mention here, but lots of parallelizations and compatibility with 6.2 changes, and overall better, high quality template
+
+farming. Macro fixes, More treasures, more stop and go modifications, Rearranged some quest ordering for efficiency, etc...
+
+* Quest: "Syth's Secret" (35668) - Mesh is non-existant in the cave... so rebuilt template with CTM. Ty @SoLor; for pointing that out.
+
+* Quest: "A Feast of Shadows" (34883) - Needed additional hotposts
+
+* Quest: "Hardly Working" (35260) - Fixed and updated for 6.2
+
+* Quest: "Hot Seat" (35273) - Vehicle quest that I significantly rescripted due to some potential wonky targeting... MUCH better now.
+
+* Quest: "The Talon King" - Vehicle Quest needed to be reworked a little as it failed to exit at the end. Also blacklisted a couple of mobs unreachable it would target.
+
+* Quest: "A Parting Favor" (35339) - Some mobs needed to be blacklisted to avoid potential bot-like behavior to path to em.
+
+* Rare: "Varasha" - Disabled because even with boss logic can be very challenging for some classes to kill without dying, especially with weak self-heals.
+
+* Quest: "Bonus Objective: Bladefist Hold" - Fixed a pathing issue in one of the towers to a mini boss...
+
+* And tons of other stuff.... I am too tired to finish writing lol...
+
+
+
+Release 1.193 on July 6th at 4:45am (EST)
+
+* API fixes for patch 6.2
+
+* Disabled a couple of quests that are erroring and have changed in 6.2
+
+* Will fix them soon...
+
+
+
+Release 1.191 on June 10th at 1:45am (EST)
+
+* TY @mk-21; for pointing out a critical bug in Gorgrond!
+
+* - "Unknown petrified Egg 2" had a CTM directional instead of MoveTO
+
+* - Not an issue if questing along, but for those coming back around, you would "click to move" from anywhere lol
+
+* Talador
+
+* "Born to Shred" had a bug where bot could crash if lots of activity from others due to targeting object
+
+* - that does not exist. Often your target may die in less than 0.1 seconds of targeting. This just does an en extra
+
+* - if (Me.Focus != null) before casting...
+
+* "Invasion of the soul eaters" had a C# typo that would make the quest undoable.
+
+* Found a spot were combat is disabled but mistakenly never re-enabled, making subsequent quest undoable! lol
+
+* "Frenzied Manafeeders" - found another spot that needed to be blacklisted due to mesh issues,
+
+* - also, updated remove gear scripting to NOT write new EM profile if your gear was already off...
+
+* - this is an important stop/start mechanic that use to exist, but forgot to update when I changed it
+
+* - so the script no longer removes main hand weapon.
+
+* A few other misc. bugs I found here and there not needing mention. UPDATED!
+
+
+
+Release 1.19 on June 9th at 7:13pm (EST)
+
+* MAJOR ISSUE FIXED - Macroing removed from all scripts and replaced with Lua code execution to avoid language client issues
+
+* Yes guys, that means all of you German/French or wherever client users will now have a better experience, SIGNIFICANTLY! lol
+
+* Gorgrond
+
+* Re-wrote Bonus Objective "Iyun Weald" to be a bit more tuned and efficient
+
+* Re-wrote Bonus Objective "Affliction Ridge" to likewise be tuned better and efficient. Also..
+
+* - affliction ridge would fail if it wandered outside of Bonus objective questing zone. However, for whatever reason
+
+* - a couple of the targets are outside the region and bot would end up doing half the quest then abandoning it
+
+* - My total re-write solves that issue.
+
+* Re-Wrote Bone Objective "StoneMaul Arena" to make it more efficient and overall perform objectives
+
+* - more logically..
+
+* Pathing to the 3rd objective in Bonus Objective "Forgotten Caves" could potentiall stuck if player aggro'd.
+
+* - re-wrote that. ALSO, quest was undoable due to C#typo.
+
+* "Valley of Destruction" bonus objective also was undoable due to C# typo. Furthermore, pathing over the eggs sometimes
+
+* - resulted in odd mesh errors so solved that.
+
+* Treasure: "Aged stone container" was being skipped due to a boolean error. FIXED!
+
+* TALADOR
+
+* "Gas Guzzlers" quest was erroneously targeting Irriduym Geodes for gas extraction. FIXED!
+
+* MISC
+
+* Lots of unmentioned changes, some here and there mesh fixes. A few quest tweaks.
+
+* Wrote several new C# methods in my custom API script
+
+* Noticed occasionally bot would get to the next objective and ELITE so quickly that the Shredder ability
+
+* - would not yet be ready (by like usually a min or so). So, I just wrote a script that
+
+* - would cause the bot to wait for the spell to be ready (ONLY ON ELITES), lest you die lol.
+
+* - It communicates to the player well as to what is happening too...
+
+
+
+Release 1.18 on June 8th at 5:00am (EST)
+
+* Fixed a critical bug that would affect about 20 different quests for non-English users (something I thought I had previously solved)
+
+* Improved the killing of Biolante in Gorgrond to be a bit more efficient and faster
+
+* Fixed quest (34102) in beginning of Gorgrond profile... C# Typo error would make quest undoable.
+
+* Fixed Quest(33917) "Disrupting the flow" in Talador - C# type made quest undoable.
+
+* Fixed quest(34724) "Bonus Objective: Forgotten Caves" in Gorgrond - Another C# typo (double negative error) FIXED!
+
+
+
+Release 1.17 - Released June 6th (5:45am EST)
+
+* Made it so the quests where you "Use item on Low HP NPC," you now will still remove gear
+
+* But you do not unequip your weapon, just an extra gear slot. Some classes lose too many abilities
+
+* with no weapon attached (like warr/rogue).
+
+* Bug pointed out that sometimes bot would hang in the Town Hall after hearthing.
+
+* Made a simple fix... looked like when it tried to CTM to the given pathing I included since mesh was
+
+* problematic, I had to change it to while (CTM(Me.Distance2DTo(Vector3 position) > 5))
+
+* instead of while (!CTM(Vector3 position)), as often it wouldn't register as being close-enough.
+
+* Fixed scrapyard "Preventing the worst" bomb quest at end... What a mess. Finally! Ran 2 toons just now
+
+* to verify and it works much better now lol. Taurens are HUGE and barely fit in the doors though. Had to use
+
+* careful CTM steps.
+
+* THANK YOU EVERYONE FOR CONTINUAL REPORTING. SPECIAL SHOUT TO @Theminatar;
+
+
+
+Version 1.16 - Released June 5th at 3:15am (EST)
+
+* Minor update in C# script... behind the scenes. Not gonna explain here
+
+
+
+Version 1.15 - Released June 5th at 12:15am (EST)
+
+* Oops! In major updates, I broke the escape in many bonus objectives. You'd end up in an indefinite loop trying to complete even though already finished. Completed now!
+
+* "Born to Shred" - Realized a couple spots could end up in a stuck, so I blaclisted mobs targetable in that area, as well as I noticed shredder at times would not face target when firing, so fixed that too. Re-wrote whole targeting system.
+
+* Quest "Never Forget" (34013) was a little clunky.. would try to enter buildings mounted and often be "bot-like" Fixed this.
+
+* Yes, I am working on Spires!!!!!!!!
+
+
+
+Version 1.14 - Released June 2nd at 8:45pm (EST)
+
+* Some minor fixes I found... broke a couple of things... Won't note it here.
+
+
+
+Version 1.13 - Released June 2nd at 7:45pm (EST)
+
+* Implementation of my custom API into Talador and Scrapyard questiong profiles. Yay!
+
+* Localized all quests and profiles to be friendly to all users, regardless of language client they use.
+
+* This was a problem because I often did "string" checks which could create issues for non-English users
+
+* Massive number of quest full re-writes and tweaking.
+
+* The major thing was parallelizing many quest objectives. You see, even if you set the quest objectives to be "Geometric,"
+
+* and even if you have the "Do Quest" to do multiple quests, it seems to just bounce back and forth, rather than
+
+* lump all objectives into the same pool of things to do. I basically just manually scripted it all myself...
+
+* Lots and lots of work, but you'll be doing lots more completing of multiple quest objectives, across multiple quests at the same time.
+
+* Disabled the buying of food and water. Too many complaints, and often the bot just spazzes out like crazy
+
+* and tries to fly to far away places to buy food and fails and loops back and forth useless. JUST BUY YOUR OWN FOOD!
+
+* Players now have the option to DISABLE killing of RARE mobs with my profiles (in itialization blocks)
+
+* Follower Aeda Brightdawn in Talador has now been included.
+
+* FIXES
+
+* All the Wanted quests in Talador now use the Garrison Ability much better. Makes em so easy!
+
+* Frenzied manafeeders further tweaked. Please let me know how it goes now.
+
+* Fixed a MAJOR bug where bot would skip the archmage quests at end of Gorgrond zone on restart lol. OOPS!
+
+* Removed Breath checks on quest "Clear!" in Talador since I learned the bot already has drowning protection
+
+* Umm tons of other stuff I haven't mentioned here... lol
+
+
+
+Version 1.12 - Released May 27th at 4:15am
+
+* Fixed a dumb typo mistake with Shredder ability on Charl Doomwing in Gorgrond
+
+* Fixed "Valley of Destruction" pathing to crush eggs. Previous template broke that. Oops!
+
+* Fixed "Brimstone Springs" quest in Gorgrond... Accidentally broke the quest template to cause weird targeting
+
+* behavior last update...
+
+* Fixed Mesh area pathing from Biolante area in Gorgond
+
+* TY @Networkz for point this error out!
+
+* A few other misc. changes not worth mentioning, but decent enough I'd recommend updating!
+
+
+
+Version 1.11 - May 26th (11:00AM PST)
+
+* Fixed pathing to the NPC in objective 3 of the quest "The Forgotten Caves" in Gorgrond
+
+* Fixed a typo bug with the quest "Strike while the Iron is Hot" I introduced last patch when updating
+
+* Fixed typo bug with Charl Doomwing rare elite...
+
+* Improved "Valley of Destruction" quest in Gorgrond.
+
+* Fixed a bunch of misc. positional statements for better navigation (like interacting with the mole machine when in range)
+
+* Added the use of the Garrison Shredder ability much more frequently on Rares throughout the zone to speed the process up.
+
+* Slight tweaks to the QH.cs custom API script so you will want to update.
+
+* Misc. Quest Template updates so you'll want to copy the new over the old.
+
+
+
+Version 1.10 - May 15th (11:45PM PST)
+
+* WARNING! All Major changes updated for FFR/Gorgrond, with very little in Talador. Working on it, but didn't want to release that zone unfinished
+
+* Added a way for the player to easily Disable XP potion buying within the "initialization" block of each profile.
+
+* Fixed Dessicus eternal loop... player would try to kill over and over lol( double negative typo oops!)
+
+* Fixed an issue at the Cannon in Tanaan Jungle at the end:
+
+* Basically the mini-boss at bottom of it had VERY fast respawn timer, so rather than attack then rest,
+
+* I temporarily disable resting after the fight so you path up the cannon rapidly.
+
+* I found this useful on the quest "Great Balls of Fire" so disabled resting for that template temporarily.
+
+* Mulverick issue should NOW finally be fixed (Had a wait between 2 and 305 seconds lol)
+
+* Implemented Garrison Ability Much more frequently in FFR (Call to Arms)
+
+* Likewise with Gorgrond and the Shredder (though will be updating that further on more rares).
+
+* Added an additional forced XP potion buying check at end of FFR as well as at end of Gorgrond
+
+* Fixed issue with Decommisioned Mission quest in Talador
+
+* TONS and TONS of re-writes, parallelizations, fixes and mesh change tweaks to quest templates.
+
+* Fixed Localization issues in FFR and Gorgrond (working on Talador/Spires)
+
+* In other words... I had like 150+ places I did "string" checks on information without consideration
+
+* to non-English client users, so if you were using say, the German client, not only would you be getting a much
+
+* poorer user experience, some profiles might not even work. FIXED this. This was extraordinarily time-consuming.
+
+* TONS of behind the scenes changes that I won't go into, but for the better. I mean TONS AND TONS
+
+* Too many that I stopped caring to keep track of and report here lol...
+
+* Implementation of my own custom API into a lot of common questing conditions (still working on updating Talador/Scrapyard).
+
+* YES! Spires is a work in progress guys, I just got distracted with updating and fixing all this other stuff first.
+
+
+
+Version 1.09 - May 15th (11:45PM PST)
+
+* Fixed the Issue in Tanaan jungle navigating up the tank. It should do it now without issue. Yay! TY @error
+
+* Since I was there, I decided to tweak the cannon quest on top and make it faster/better at hitting larger clumps of targers
+
+* Removed the previous *hack* fix to the "Destination not Reachable" taxi bug, as it is no longer necessary.
+
+* Scrapyard is actually lvl 96+ not 97+. Oops! lol -- I thought it was a lvl 97+ limitation.
+
+* Re-named the profiles slightly to make a bit more sense, as some players hit 2-4 lvls per zone depending on BOA/Banner/Potion use.
+
+
+
+Version 1.08 - May 1st (4:00AM PST)
+
+* @frantax Reported Issues - I fixed em! Here they are:
+
+* Player should aggro Charl Doomwing better now (particularly stealth)
+
+* Player will more speedily leave Dessicus' area after looting him due to fast respawn time
+
+* Quest "Frenzied Manafeeders" in Talador should be better now.
+
+* Fixed Scrapyard critical issue where stopping/restarting bot whilst in Spires would cause mesh and the
+
+* bot would fly back to base needlessly lol... Oops!
+
+* Tweaked XP potion buying behavior to reflect player level now:
+
+* Calculation = Levels left til 100 x 1.4 = numToBuy(rounding down)
+
+* other Fixes
+
+* "Iron horde Munitions" would sometimes bug due to pathing to it, so I re-mapped it.
+
+* Initialization Check in FFR profile had 2x quest IDs in it accidentally that didn't need to be there
+
+* Double negative error on "The Secrets of Gorgrond" (35557) which would cause bot to fly/hearth back
+
+* to Garrison and pickup base needlessly. I think I introduced this last patch on accident lol
+
+* Fixed pathing issue on heading towards the Rare "Berthora" in Gorgrond that could result in stuck
+
+* Fixed pathing issue that on occasion could get player stuck near Tormmock in Gorgrond
+
+* Fixed Critical bug where bot ALWAYS wanted to fly to Beastwatch, even if Gorgrond was over,
+
+* and player was on the Khadgar missions.
+
+* Likewise "News From Spires of Arak" would have same issue, fly to Talador, even if you were in base ready to turn in.
+
+* Updated Scrapyard quest "Curing with Force" to unequip more gear than just weapon...
+
+* Added the Follower Ahm to the end of the Talador Profile
+
+* Lots of other minor changes... no need to mention all of em.
+
+
+
+Version 1.07 - May 1st (1:00AM PST)
+
+* MASSIVE AMOUNT OF UPDATES!!!
+
+* REQUESTED FIXES
+
+* @kallekulle && @eltiger - Mentioned trouble with Gormaul Tower - I was missing a couple NPCs for some reason. TY!
+
+* @scrambler && @eltiger - First brought to light my lack of the quest 34775 "Mission Probable" in FFR. ADDED working Template! TY!
+
+* @McFly - You will now use the Garrison Ability for the quest 34414 "An'dure the Giant" on the crystal giant! TY!
+
+* @McFly - Fixed Pathing to treasure in scrapyard questpack, and also weapon re-equip issue :) TY!
+
+* @eltiger - Yes, the quest 33484 "The Slavemaster's Demise" was broken and it is fixed now! TY! And TY for reporting back so much!
+
+* @eltiger - The last JC quest in FFR prob had a slight pathing issue to the NPC and maybe gave up on it? I modified it...TY!
+
+* @CarpeDiem87- You inspired me to push Gustmash in FFR to be a little further to the end of the zone. Good Idea!
+
+* @Audigger - Completely re-wrote the scripting for quest 34766 "Logistical Nightmare." Much better now. TY!
+
+* OTHER MISC. UPDATES NOT MENTIONED
+
+* Taanan Jungle Fixes
+
+* Boosted a new Tauren toon to cleanup any issues a "large" character might encounter. Fixed MANY mesh issues since lol
+
+* Cleaned up Quest Template "The Portal's Power" (34393) a little bit.
+
+* Re-wrote Tanaana Jungle Quest "Onslaught's End" (34392) to cleanup aggro issues.
+
+* FFR Fixes
+
+* Added the "Mission Probable" (34775) Quest Template for the very first follower mission.
+
+* Cleaned up Quest "Den of Wolves" (34379) with a little cleaner code.
+
+* Added Quest (34731) "Oath of Shadow Hunter Rala"
+
+* Rescripted Quest(33410) "The Butcher of Bladespire" to use Garrison Ability
+
+* Rescripted maybe half a dozen other quests to include the Garrison Ability I won't spam here...
+
+* Finally got around to rescripting "The Iron Wolf" (33010) to a much higher quality quest template.
+
+* Completely revamped Quest (34124) "The Battle of Thunder Pass" quest to be even better...
+
+* Disabled XP potion Buying if you are on the Thunderlord Invasion quest (since NPC is hiding).
+
+* Fixed a bug with script for plotting Garrison buildings to match your professions (was plotting enchanting no matter what lol).
+
+* Lots of other minor quality of life fixes I won't mention here.
+
+* Gorgrond Fixes
+
+* The entire Archmage Quest Chain at the end now has Garrison mesh conditionals on exiting if necessary
+
+* Talador Fixes
+
+* Fixed minor issues with Talador quest "It's a Matter of Strategy"
+
+* Added Talador Quest (34400) "Frenzied Manafeeders" finally!
+
+* General Fixes
+
+* Added conditional pathing check if player ever starts bot or hearths and finds themselves in Garrison Town Hall.
+
+* The town hall mesh screws up badly if you ever try to go anywhere outside the Garrison. This solves that...
+
+* In case of failure to load next script, added a failsafe end script.
+
+* Added a bunch of new Evasion behaviors.
+
+* Now the HUGE change... is something most may never realize is working behind the scenes for them...
+
+* I wrote a garrison conditional for every single possible quest/treasure/rare to navigate out of garrison efficiently regardless
+
+* of what profile you are on or what quest you are on when you start bot in the garrison, or the bot hearths you.
+
+* Seriously, say goodbye to all of the Mesh spam when you start bot in your garrison! This was NOT an easy task and I sunk at least
+
+* 20+ hrs of my life just on this one feature alone with my profiles.
+
+* Garrison navigation conditionals are now baked into every single zone profile included here.
+
+
+
+Version 1.06 - April 23rd (3:50AM PST)
+
+* SCRAPYARD Questpack Profile Added!
+
+* Massive Re-Write of Pathing behavior and Garrison Ability use on all the Elites of Gorgrond - Streamlined it
+
+* Fixed Serious pathing issues due to lack of Mesh on Tier 2 and Tier 3 Garrison when starting bot
+
+* whilst in the "Town Hall" and also after use of hearthing. This was a HUGE behind the scenes change.
+
+* Shorted XP potion aura check in the background from 1 min to 15-17 seconds.
+
+* Fixed a zone-check error on "It's a Matter of Strategy" for Talador Questpack.
+
+* Automated the restriction of FlightPathDiscovery to 40 yards now instead of default 200.
+
+* This profile easily finds all FPs within that range, but was getting stuck chasing things 200 yrds away.
+
+* Still working on my QuestHelper.CS script for my own Custom API. Very deep in it now, published on GIT for any that check.
+
+* Some behind the scenes coding modifications for the better. Removal of some redundancy.
+
+* To-do still: Fix Quest 34775 "Mission Probably" and added Arsenal use on crystal giant in cave in Talador...
+
+
+
+Version 1.05 - April 15th (1:25PM PST)
+
+* Added some Logic to avoid Acid slime pools at Rare Dessicus in Gorgrond Profile
+
+* Fixed an issue where it would try to collect Taldor quest. This quest is not available if player has already
+
+* completed "It's a matter of strategy," so I added a conditional. TY @error for pointing these out!
+
+* Almost finished with the Scrapyard quest chain... sorry taking so long, end of semester business!
+
+* Once I finish, I am gonna go hardcore into Spires of Arak.
+
+
+
+Version 1.04 - April 11th (8:20PM PST)
+
+* Fixed some pathing in the cave for the quest "To Capture Gul'dan" (very last quest of Gorgrond)
+
+* Basically just fixing some minor mesh issues
+
+* When heading to StoneFang for the first time in FFR, it would attempt to take Flightpath and hang.
+
+* This now forces the player manually out of the garrison and to travel to Stonefang
+
+* This is because normally players would not have learned that flightpath at this point of questing.
+
+
+
+Version 1.03 - April 6th (9:20PM PST)
+
+* Fixed an issue @Kalos72 showed in regards to the side Khargath quest chain at the end of the Gorrond 92-97ish profile
+
+* Basically, mesh errors to find where to go, so I helped them along. Should be no issue now.
+
+* Fixed pathing issue to mole machine in Gorgrond for more efficient travel back to Beastwatch
+
+* Fixed pathing issues when traveling from Zangarra in Talador. Bot likes to run into too much on this path.
+
+* Fixed accidental Quest ID typo that can send bot into infinite loop if you have quested into Talador
+
+* Rescripted completely several quests, notable ones are 34855 "Punching through
+
+* and 34277 "Stop the Flow" - They will be SO much better now, plus other misc quest template adjustments.
+
+
+
+Version 1.02 - April 3rd (1:30PM PST)
+
+* Fixed a Bug where the XP Macro loop replaced the main thread in Gorgrond Profile
+
+* Accidentally a word here :) TY for @frantax for pointing that out.
+
+* Identified a new locational bug with the Gorgrond profile that would have been a non-issue
+
+* before but with some quality of life changes I forgot to make a change here too.
+
+* Basically it centers around pathing for the tunnel in thunder pass sine mesh doesn't take it into consideration.
+
+* It determines where you are, your progress in questing, and if you need to take the tunnel or can take FP.
+
+* Fixed several misc. quests
+
+* Notable quest template re-write was 35487 "We Burn the Dead" - much better now :)
+
+
+
+Version 1.01 - April 2nd (10:45AM PST)
+
+* Fixed an accidental zone check issue at the very very beginning of Talador questpack.
+
+* Silly mistake on something I modified last minute.
+
+* WORKS now lol! Thank you @Meromenfc for pointing it out!
+
+
+
+Version 1.0 - April 1st (6:05PM PST)
+
+* HUGE UPDATE!
+
+* Resetting Version back to 1.0, since that makes more sense now that this is 90-100
+
+* Addition of full Talador Profile
+
+* Automatic Loading of the next zone script when all objectives are complete
+
+* Initializing full quest scan that reports remaining progress left to complete in that zone when you start
+
+* Removed the need to configure XP macro, as I fork the script to run macro in parallel
+
+* Macro also will disable itself if you reach level 100, as no more need to waste potions
+
+* Removed the need to disable the killing of Rares, since API is now unlocked, I automate it.
+
+* Lots of Script streamlining and cleaning
+
+* Introduction of a lot of important combat evasion behaviors to be added separately if you choose.
+
+* Due to Flightpath bug introduced in patch 6.1, work around implemented and auto loads.
+
+* LOTS and LOTS of scripting for sake of efficiency. Conditional checking, zone checking, mesh issues... etc.
+
+* Khadgar Tower conditionals, Gordal Fortress conditionals for positional checks if you need to take port to come and go...
+
+* Lots of behind the scenes changes I won't go in to here
+
+
+
+Version 1.4 - March 7th (1:10AM PST)
+
+* Added a Large "optional" questchain to the end of Gorgrond Profile
+
+* This is a critical lore/story quest chain involving Khadgar and Gul'dan
+
+* lvl 94+ and it starts in Garrison and flows seamlessly from Golgrond zone.
+
+* Several treasures added along with these new 15 or so quests
+
+* Talador still plugging away... again, don't expect release until Spring break (March 14th - 22).
+
+
+
+Version 1.31 - March 4th (5:28PM PST)
+
+* Added Mini-event in Gorgrond to Obtain the follower Tormmock
+
+* A little more annoying to script than I had anticipated ;)
+
+* News announcement that work on Talador is under-way!
+
+* Other news that I am in the middle of prep for mid-terms for my students and soon to be grading a ton...
+
+* Release prob will not be til during Spring Break as I want to push out the grades before vacation (Mar. 14th+)
+
+
+
+Version 1.3 - March 2nd (6:45PM PST)
+
+* Fixed a pathing issue with Gruuk. Was placed within a Cooldown conditional which made no sense...
+
+* Should path correctly to target now and then drop guild banner, if in posession, and then target the NPC
+
+* Forgotten Skull Cache in Gorgrond was interacting with nearby Vines, so I tightened move directions to prevent this
+
+* Added some misc. evasion behaviours around Dessicus in Gorgrond... the acid slime pools are brutal. Now you will move out.
+
+* Re-added Gutmash into profile and if you are lvl 92 or higher you will engage. By adding the use of the garrison ability,
+
+* I found that Gutsmash is beatable with all classes. As such, I scripted it to only engage Gutsmash when Garrison ability CD is ready.
+
+* Fixed a new NPC issue from patch 6.1 -- It was fixed in FFR profile but not Gorgrond. Both are fixed now.
+
+
+
+Version 1.2 - March 2nd (12:15PM PST)
+
+* Removed the necessity of the Vrykul Drinking Horn or Elixir of Giant Growth to kill Carl Doomwing Elite
+
+* He was quite challenging to script due to him being an airborne Elite and difficult to aggro, especially high levels.
+
+* My technique should work sufficiently as I ran it through 3 of my toons to verify, both melee and range classes.
+
+* What a relief!!!
+
+
+
+Version 1.13 - March 2nd (4:35AM PST)
+
+* Fixed a bug with "The Beater" Rare in Frostfire Ridge. TY @Kalos72 for pointing that out :)
+
+* Accidentally had it set to "CollectObject" instead to "Kill" lol
+
+* Would perpetually loop
+
+* Tightened the timings a little on some Rares.
+
+* Added a couple addition "MoveTo's" on some treasure locations in Gorgrond to assist with obstacles
+
+
+
+Version 1.12 - March 2nd (2:05AM PST)
+
+* Sometimes Bot would kill a rare and not register it, then wait for it to respawn needlessly.
+
+* Basically just added additional checks on killing rares to prevent needlessly waiting
+
+* Every rare has been fully updated with this.
+
+
+
+Version 1.10 - March 1st (4:10PM PST)
+
+* Fixed issue with Femur of Responsibility treasure to path to it easier
+
+* Fixed issue so bot runs around zone elites Tog and Ulna
+
+* Tweaked Gormaul Tower Quest due to potential zone phasing errors... if it doesn't find NPC, it runs out of phasing then runs back in.
+
+* "We be Needin Supplies" Quest has been blacklisted if you get too far in zone due to it being no longer attainable if you had already cleared the zone.
+
+* Mad a tweak to "Battle of Thunder Pass" to ensure it goes from phase 6 to 7 scenario in all situations.
+
+
+
+Version 1.00 - Feb. 28th (6:00AM PST)
+
+* Sizeable Update!
+
+* Compatibility with Patch 6.1 - Several Garrison NPC changes and API changes.
+
+* 6.1 changed the way some Toybox API returns a value, from 0 or 1 to a boolean, which I needed to fix for Gorgrond profile
+
+* 6.1 fixed the "Gormaul Tower" (33784) quest and as such template needed rebuild.
+
+* Added Treasures and Rares to FFR profile! FASTER XP!!!
+
+* Auto Loads Next Script when finished.
+
+* Fixed bug in Tanaan Jungle Quest (had banner placement BEFORE talking to NPC) - which caused bot to waste time.
+
+* Fixed bug in "Last Steps" quest where it accidentally was set to follow a script when no script written.
+
+* Several tweaks to attempt to manage the still problematic Garrison Mesh issues.
+
+* Some locational conditionals included on some of my "MoveTo" commands used to avoid mesh issues to save time.
+
+
+
+Version 0.99 - Feb. 23rd (10:45AM PST)
+
+* MASSIVE UPDATE!!!!
+
+* Gorgrond Zone Released!
+
+* Massive re-write of dozens of quest templates from scratch.
+
+* Also, Rearranged some ordering of the FFR quests for efficiency.
+
+* Plans laid out for next zone, and treasure hunting/rare finding
+
+* Some Boss Logic added to a couple of quests you could die easy.
+
+
+
+Version 0.981 - Feb. 21st (11:35AM PST)
+
+* Fixed a Bug if you try to start bot in Tanaan Jungle zone it wouldn't let you.
+
+* Silly bug, accidentally a code... Thank you for @ilovesushi for pointing it out!
+
+
+
+Version 0.98 - Feb. 15th (11:58PM PST)
+
+* Fairly sizable "under the hood" tweaks and modifications that only the devs might appreciate.
+
+* Re-wrote some of my "Methods" which are just Blocks in the script, but they can be treated like functions and called to.
+
+* This is much preferable then just copying and pasting large chunks of code.
+
+* Found a bug in the "return to Draenor from anywhere" block. FIXED
+
+* Re-wrote much of that block as it was lacking a couple of conditionals and also had some unnecessary redundancy.
+
+
+
+Version 0.979 - Feb. 15th (11:35AM PST)
+
+* Quest: "Wanted: Gorgrond's Bounty" would not skip the mini-boss if he wasn't there for too long. Mandated bot to wait til he spawns.
+
+* Removes some Quality of Life quest filtering as some people who had already completed some of the zone noticed this skipping quests.
+
+* Cleaned up some text spam.
+
+
+
+Version 0.97 - Feb. 9th (12:05pm PST)
+
+* HUGE UPDATE!
+
+* Introduced the use of all 3 Guild Banners as you quest
+
+* XP potion Buying and Use
+
+* Lots of tweaking of quests, I will not include all here, but some more notable ones I will list:
+
+* Quest: (33119) “Slavery and Strife” issue slightly corrected due to unfixed mesh issues.
+
+* Quest:(36567) – “Bigger is Better” – Fixed a slight issue with interacting with architect table. Should work everytime now… Previously sometimes it would accidentally target Gazlow.
+
+* Quest: (35104) “The Apprentice” – Verified Alchemy quest chain worked, and while doing so noticed a pathing issue where player should dismount when trying to enter the hut but it was not.
+
+* Quest: (34348) “The Real Prey” - Added Garrison Ability use to boss fight since there seemed to often be a lot of deaths. Also tweaked the script to make it faster. Essentially it was a huge Script re-write for a very minor fix ;)
+
+* Quest: (35341) “Defection of Gronnstalker Rokash” – Had it to “Complete” quest instead of "Accept" quest, so it would skip. FIXED
+
+* Quest: (36594) Engineering Quest: “”Spare” Parts” – Not enough items set to be looted. Also included looting of the Garrison Resource cache in the vicinity. There was also some blackspots that needed to be included due to bad mesh. Just fixing and verifying Engineering Quest Chain.
+
+* Quest: (34124) “The Battle of Thunder Pass” – Tweaked the script a little to use garrison ability on Stage 3 boss as he does a lot of damage to melee. Also added some combat disabling so I don't get in perpetual loops when pathing to kill the next required target.
+
+
+
+Version 0.93 - Feb. 2nd (12:05pm PST)
+
+* Added Profession Quest "Building Your Professions(37669)" - Places Profession buildings to plots to match your profession you have.
+
+* Also places storehouse if lacking 1 profession. Defaults to Enchanting and storehouse if you have no professions.
+
+
+
+Version 0.92 - Jan 31st (2:01 PST)
+
+* (34501) “Bonus Objective: Frostbite Hollow” – minor change from Sequential to Geometric order of objectives.
+
+* Added additional logic to Deepholm location on “Return to Draenor from Anywhere”
+
+* Gutsmash profile included but restricted to lvl 93+ players. So most of you will skip.
+
+* Added check that stops the bot from returning you to draenor if you have already completed it. - Previously it would return you to draenor and THEN check quest completion.
+
+
+
+Version 0.91 - Jan 31st (9:28am PST)
+
+* Fixed Pathing Issue that could result in stuck doing quest (32981)"Only the Winner"
+
+* Minor fix with quest (32994)"Enfilde" that caused it to stop pathing to next tank to kill too soon.
+
+* Rearranged turn-in order of "Enfilde" and "Karg Unchained"
+
+
+
+Version 0.9 - Jan 31st (2:45am PST)
+
+* First official Release.
