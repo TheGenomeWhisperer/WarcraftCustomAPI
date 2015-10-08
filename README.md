@@ -1,4 +1,4 @@
-WarcraftQuestingHelpsCustomAPI
+WarcraftCustomAPI
 =======
 
 Author: TheGenomeWhisperer. (aka Sklug)
