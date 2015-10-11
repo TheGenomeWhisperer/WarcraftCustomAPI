@@ -87,7 +87,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {34066, 34069, 34067, 34070, 34072, 34073, 34102, 34075, 33543, 33544, 33548, 36170, 33563, 33593, 36434, 35709, 36118, 36460, 35151, 36474, 35667, 33694, 35707, 35971, 35980, 36621, 36597, 35400, 35399, 35402, 35406, 35429, 35430, 35432, 35981, 36482, 35487, 36625, 35536, 35982, 35433, 35434, 35335, 36488, 34241, 36520, 36019, 35975, 35509, 35507, 35501, 35510, 35416, 35511, 35881, 34726, 34940, 36713, 34724, 36714, 36654, 35967, 35908, 36837, 35506, 35505, 35508, 35527, 35524, 36015, 36387, 35814, 36812, 36574, 36715, 36563, 36509, 35819, 35016, 35017, 35021, 35027, 35029, 35030, 35031, 35040, 35965, 36430, 36571, 36503, 33694, 36473, 35818, 35966, 35984, 36178, 36476, 36718, 35815, 36610, 36204, 36651, 35056, 36391, 36720, 36480, 36203, 33689, 33685, 33663, 33661, 35701, 33660, 33695, 33706, 35503, 35807, 36596, 36717, 36393, 36521, 36634, 36186, 36001, 36618, 36506, 36003, 35810, 36603, 36716, 36394, 35910, 35979, 36566, 35811, 36037};\r\n\r\nint[] questArray2 = {34209, 34216, 34227, 34228, 34647, 34648, 34229, 34230, 34278, 34277, 34280, 34291, 34292, 34295, 34642, 36494};\r\n\r\nint count = 0;;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 36494 || (!IsQuestCompleted(36953) && !IsQuestCompleted(34681) && !HasQuest(36953) && !HasQuest(34681)))\r\n            {\r\n                count2++;\r\n            }\r\n    \t}\r\n}\r\ncount3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif ((count3) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Gorgrond\"] = \"true\";\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {34066, 34069, 34067, 34070, 34072, 34073, 34102, 34075, 33543, 33544, 33548, 36170, 33563, 33593, 36434, 35709, 36118, 36460, 35151, 36474, 35667, 33694, 35707, 35971, 35980, 36621, 36597, 35400, 35399, 35402, 35406, 35429, 35430, 35432, 35981, 36482, 35487, 36625, 35536, 35982, 35433, 35434, 35335, 36488, 34241, 36520, 36019, 35975, 35509, 35507, 35501, 35510, 35416, 35511, 35881, 34726, 34940, 36713, 34724, 36714, 36654, 35967, 35908, 36837, 35506, 35505, 35508, 35527, 35524, 36015, 36387, 35814, 36812, 36574, 36715, 36563, 36509, 35819, 35016, 35017, 35021, 35027, 35029, 35030, 35031, 35040, 35965, 36430, 36571, 36503, 33694, 36473, 35818, 35966, 35984, 36178, 36476, 36718, 35815, 36610, 36204, 36651, 35056, 36391, 36720, 36480, 36203, 33689, 33685, 33663, 33661, 35701, 33660, 33695, 33706, 35503, 35807, 36596, 36717, 36393, 36521, 36634, 36186, 36001, 36618, 36506, 36003, 35810, 36603, 36716, 36394, 35910, 35979, 36566, 35811, 36037};\r\n\r\nint[] questArray2 = {34209, 34216, 34227, 34228, 34647, 34648, 34229, 34230, 34278, 34277, 34280, 34291, 34292, 34295, 34642, 36494};\r\n\r\nint[] MaxLevelArray = {33633};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n    \tif (!IsQuestCompleted(questArray2[i])) \r\n\t{\r\n            if (questArray2[i] != 36494 || (!IsQuestCompleted(36953) && !IsQuestCompleted(34681) && !HasQuest(36953) && !HasQuest(34681)))\r\n            {\r\n                count2++;\r\n            }\r\n    \t}\r\n}\r\ncount3 = count + count2;\r\n\r\nif (Me.Level > 99)\r\n{\r\n    for (int i = 0; i < MaxLevelArray.Length; i++)\r\n    {\r\n        if (!IsQuestCompleted(MaxLevelArray[i]))\r\n        {\r\n            count3++;\r\n        }\r\n    }\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif ((count3) == 0) {\r\n\treturn true;\r\n}\r\nelse if (count == 0){\r\n    G[\"DNF_To_Gorgrond\"] = \"true\";\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -24859,6 +24859,190 @@
               "Children": [
                 {
                   "$type": "Comment",
+                  "Text": "\"Rooter the Ravenous\"",
+                  "Color": "0, 128, 255"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "AcceptQuestCommand",
+                        "QuestIds": [
+                          33633
+                        ]
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!HasQuest(33633)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "Comment",
+                  "Text": "Since You Are lvl 100 or Higher, You Can Now Do This Quest!",
+                  "Color": "64, 128, 128"
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    33633
+                  ]
+                },
+                {
+                  "$type": "TurnInQuestsCommand",
+                  "QuestIds": [
+                    33633
+                  ]
+                },
+                {
+                  "$type": "Comment",
+                  "Text": "Yay! You Will Now Find Rooster Inside Your Garrison!",
+                  "Color": "64, 128, 128"
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "!IsQuestCompleted(33633) && Me.Level > 99"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "Let's Quickly Go Learn the Skysea Ridge Flightpath!",
+                  "Color": "64, 128, 128"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "7600.217 1798.656 81.27028",
+                    "GroundPosition": "0 0 0",
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "7597.596 1826.244 79.12482",
+                    "GroundPosition": "0 0 0",
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "Interact",
+                  "Target": {
+                    "Name": "Faronn Dustwalker",
+                    "EntryId": 85829
+                  },
+                  "NumOfTimes": 0
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "QH.IsClose(7523.2f, 1587.9f, 76.6f,50) && Me.Level > 99"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "Comment",
                   "Text": "“Treasure: Brokor's Sack\"",
                   "Color": "0, 128, 192"
                 },
@@ -24881,7 +25065,7 @@
                     "HotspotsX": [
                       {
                         "Position": "6706.718 1659.527 69.0848",
-                        "GroundPosition": "0 0 0",
+                        "GroundPosition": "6706.718 1659.527 69.76732",
                         "IsGroundPosition": false,
                         "ContinentId": 1116
                       }
