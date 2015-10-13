@@ -554,18 +554,13 @@ public class QH
         // This takes the following player coordinates, X and Y, and converts them into a Vector3 position.  Blizzard's API only gives us
         // 2 coordinates, but not the 3-dimensional z-coordinate, so using a simple algorithm we can determine the z coordinate based on
         // the MapAreaID.
-        double x = API.ExecuteLua<double>("local posX, _= GetPlayerMapPosition('player'); return posX;");
-        double y = API.ExecuteLua<double>("local _, posY = GetPlayerMapPosition('player'); return posY;");
-        int z = API.ExecuteLua<int>("return GetCurrentMapAreaID()");
-        var v = API.CoordsToPositionByAreaId(x * 100,y * 100,z);
         Vector3 location = new Vector3(1666.5f, 1743.6f, 298.6f);      
-        
         if (IsClose(1410f, 1728.5f, 310.3f, 390)) 
         {
             // Z location is important because the Gordal fortress is high, so by determining player IS close to zone AND is above the z coordinate,
             // the height of the player can be determined as likely to represent its position.  I COULD write a 3D area map, but this was significantly
             // less time-consuming and just as effeective.
-            if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
+            if ((API.Me.Position.Z > 302.4) || ((API.Me.Position.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
             {
         		return true;
         	}       
