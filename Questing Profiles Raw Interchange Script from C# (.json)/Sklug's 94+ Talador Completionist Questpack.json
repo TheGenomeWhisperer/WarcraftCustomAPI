@@ -49,8 +49,20 @@
             "FileName": "QH.cs"
           },
           {
+            "$type": "LoadCSharpScript",
+            "FileName": "Flight.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorZones.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "Localization.cs"
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\n"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;"
           },
           {
             "$type": "Comment",
@@ -309,7 +321,93 @@
                   "$type": "If",
                   "IsExtendedInEditor": false,
                   "ActionsFalse": {
-                    "Children": [],
+                    "Children": [
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "If",
+                              "IsExtendedInEditor": false,
+                              "ActionsFalse": {
+                                "Children": [],
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Else",
+                                "GroupName": ""
+                              },
+                              "ActionsTrue": {
+                                "Children": [
+                                  {
+                                    "$type": "CSharpAction",
+                                    "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Vol'jin's Pride, Talador\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Then",
+                                "GroupName": ""
+                              },
+                              "Conditions": [
+                                {
+                                  "Condition": {
+                                    "$type": "CSharpCondition",
+                                    "CSharpCode": "!IsInGarrison"
+                                  },
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                }
+                              ],
+                              "IsNot": false
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison && (IsQuestCompleted(36953) || IsQuestCompleted(34681))"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Else",
                     "GroupName": ""
@@ -330,7 +428,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6662 && !IsInGarrison) || (Me.ZoneId == 6662 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)) || (Me.ZoneId == 6662 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)))"
+                        "CSharpCode": "(Me.ZoneId == 6662 && !IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681)) || \r\n(Me.ZoneId == 6662 && IsQuestCompleted(36494) && !HasQuest(36953) && !IsQuestCompleted(36953) && !HasQuest(34681) && !IsQuestCompleted(34681))"
                       },
                       "IsNot": false
                     },
@@ -28065,19 +28163,7 @@
             "Children": [
               {
                 "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GTownHallExit());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;"
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
               }
             ],
             "IsExtendedInEditor": false,

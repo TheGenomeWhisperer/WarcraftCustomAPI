@@ -44,8 +44,20 @@
             "FileName": "QH.cs"
           },
           {
+            "$type": "LoadCSharpScript",
+            "FileName": "Flight.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorZones.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "Localization.cs"
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\n"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;\r\n"
           },
           {
             "$type": "Comment",
@@ -146,7 +158,6 @@
               "Children": [
                 {
                   "$type": "If",
-                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [
                       {
@@ -195,7 +206,7 @@
                           {
                             "Condition": {
                               "$type": "CSharpCondition",
-                              "CSharpCode": "QH.QuestNotDone(34124) && HasQuest(34124)"
+                              "CSharpCode": "QH.QuestNotDone(34124) && HasQuest(34124) && Me.ContinentID == 1116"
                             },
                             "IsNot": false
                           },
@@ -237,7 +248,6 @@
                         "Target": "Intro Quest for Dark Portal"
                       }
                     ],
-                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -266,7 +276,6 @@
                   "IsNot": false
                 }
               ],
-              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -315,7 +324,6 @@
                   "Target": "Garrison Return"
                 }
               ],
-              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -33836,22 +33844,9 @@
             "Children": [
               {
                 "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GTownHallExit());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;"
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
               }
             ],
-            "IsExtendedInEditor": false,
             "GroupName": "Garrison Return"
           },
           {

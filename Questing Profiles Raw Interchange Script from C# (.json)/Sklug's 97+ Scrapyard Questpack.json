@@ -44,8 +44,20 @@
             "FileName": "QH.cs"
           },
           {
+            "$type": "LoadCSharpScript",
+            "FileName": "Flight.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorZones.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "Localization.cs"
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\n"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;"
           },
           {
             "$type": "Comment",
@@ -173,6 +185,7 @@
             "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Else",
               "GroupName": ""
@@ -180,8 +193,8 @@
             "ActionsTrue": {
               "Children": [
                 {
-                  "$type": "CallBlock",
-                  "Target": "Garrison Return"
+                  "$type": "CSharpAction",
+                  "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Pinchwhistle Gearworks, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                 }
               ],
               "IsExtendedInEditor": false,
@@ -193,7 +206,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6722 && !IsInGarrison"
+                  "CSharpCode": "(IsQuestCompleted(36862) || IsQuestCompleted(35620)) && Me.ContinentID == 1116 && Me.ZoneId != 6722 && !IsInGarrison"
                 },
                 "IsNot": false
               },
@@ -5090,19 +5103,7 @@
             "Children": [
               {
                 "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GTownHallExit());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;"
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
               }
             ],
             "IsExtendedInEditor": false,
