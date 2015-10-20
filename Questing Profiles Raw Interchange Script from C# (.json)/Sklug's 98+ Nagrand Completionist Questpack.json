@@ -9,7 +9,12 @@
       },
       {
         "$type": "Comment",
-        "Text": "Warning! This Profile is Only Compatible With the \"\" Zone Outpost Quest Chain!",
+        "Text": "Warning! This Profile is Only Compatible With the \"Corral\" Zone Outpost Quest Chain!",
+        "Color": "Red"
+      },
+      {
+        "$type": "Comment",
+        "Text": "Very Incomplete!!! Many Quality of Life Checks missing, and only about 15% of zone completed.",
         "Color": "Red"
       },
       {
@@ -49,8 +54,20 @@
             "FileName": "QH.cs"
           },
           {
+            "$type": "LoadCSharpScript",
+            "FileName": "Flight.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorZones.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "Localization.cs"
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;"
           },
           {
             "$type": "Comment",
@@ -139,6 +156,7 @@
                   "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Else",
                     "GroupName": ""
@@ -159,7 +177,137 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6755 && !IsInGarrison) || \r\n(Me.ZoneId == 6755 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)) || \r\n(Me.ZoneId == 6755 && (IsQuestCompleted(36602) || IsQuestCompleted(36607)) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)))"
+                        "CSharpCode": "(Me.ZoneId == 6755 && !IsQuestCompleted(36602) && !IsQuestCompleted(36607) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952)) || \r\n(Me.ZoneId == 6755 && (IsQuestCompleted(36602) || IsQuestCompleted(36607)) && !HasQuest(34794) && !IsQuestCompleted(34794) && !HasQuest(36952) && !IsQuestCompleted(36952))"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "CSharpAction",
+                              "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Retribution Point, Talador\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6755 && !IsInGarrison && (IsQuestCompleted(36952) || IsQuestCompleted(34794))"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "CSharpAction",
+                              "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Wor'var, Nagrand\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!IsInGarrison"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6755 && !IsInGarrison && IsQuestCompleted(34795)"
                       },
                       "IsNot": false
                     },
@@ -835,6 +983,7 @@
                         "DelayMax": 0.0
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -1470,12 +1619,6 @@
                       {
                         "$type": "CSharpAction",
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-                      },
-                      {
-                        "$type": "TurnInQuestsCommand",
-                        "QuestIds": [
-                          34794
-                        ]
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -1507,6 +1650,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -1516,6 +1660,96 @@
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "!IsQuestCompleted(36952) && !IsQuestCompleted(34794)"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "CallBlock",
+                        "Target": "To Retribution Point"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!IsQuestCompleted(34795) && IsInGarrison"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "CallBlock",
+                  "Target": "To Wor'var"
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "IsQuestCompleted(34795) && IsInGarrison"
                 },
                 "IsNot": false
               },
@@ -1842,6 +2076,52 @@
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "!IsQuestCompleted(35976)"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "TurnInQuestsCommand",
+                  "QuestIds": [
+                    34794
+                  ]
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "HasQuest(34794)"
                 },
                 "IsNot": false
               },
@@ -2820,6 +3100,16 @@
                   "QuestIds": [
                     34808
                   ]
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "3214.292 4594.235 141.9686",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
                 },
                 {
                   "$type": "TurnInQuestsCommand",
@@ -4849,7 +5139,167 @@
           },
           {
             "$type": "ActionSequence",
-            "Children": [],
+            "Children": [
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [],
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Retribution Point, Talador",
+                              "Item2": "0.41469910740852",
+                              "Item3": "0.37505489587784"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Retribution Point"
+              },
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [],
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Wor'var, Nagrand",
+                              "Item2": "0.33750686049461",
+                              "Item3": "0.48833435773849"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Wor'var"
+              }
+            ],
+            "IsExtendedInEditor": false,
             "GroupName": "Travel"
           },
           {
@@ -4857,19 +5307,7 @@
             "Children": [
               {
                 "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GTownHallExit());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\n"
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
               }
             ],
             "IsExtendedInEditor": false,

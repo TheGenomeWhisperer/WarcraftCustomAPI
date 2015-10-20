@@ -49,8 +49,20 @@
             "FileName": "QH.cs"
           },
           {
+            "$type": "LoadCSharpScript",
+            "FileName": "Flight.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorZones.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "Localization.cs"
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;"
           },
           {
             "$type": "Comment",
@@ -87,7 +99,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35670,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tPrint(questArray[i]);\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\n\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35670,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -209,7 +221,349 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "((Me.ContinentID == 1116 && Me.ZoneId != 6722 && !IsInGarrison) || \r\n(Me.ZoneId == 6722 && !IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)) || \r\n(Me.ZoneId == 6722 && IsQuestCompleted(35537) && !HasQuest(34653) && !IsQuestCompleted(34653) && !HasQuest(36951) && !IsQuestCompleted(36951)))"
+                        "CSharpCode": "(Me.ZoneId == 6722 && !IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951)) || \r\n(Me.ZoneId == 6722 && IsQuestCompleted(35537) && !HasQuest(34653) && !IsQuestCompleted(34653) && !HasQuest(36951) && !IsQuestCompleted(36951))"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [
+                            {
+                              "$type": "If",
+                              "IsExtendedInEditor": false,
+                              "ActionsFalse": {
+                                "Children": [
+                                  {
+                                    "$type": "If",
+                                    "IsExtendedInEditor": false,
+                                    "ActionsFalse": {
+                                      "Children": [],
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Else",
+                                      "GroupName": ""
+                                    },
+                                    "ActionsTrue": {
+                                      "Children": [
+                                        {
+                                          "$type": "If",
+                                          "IsExtendedInEditor": false,
+                                          "ActionsFalse": {
+                                            "Children": [],
+                                            "IsSpecialElement": true,
+                                            "SpecialElementName": "Else",
+                                            "GroupName": ""
+                                          },
+                                          "ActionsTrue": {
+                                            "Children": [
+                                              {
+                                                "$type": "CSharpAction",
+                                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Retribution Point, Talador\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                                              }
+                                            ],
+                                            "IsExtendedInEditor": false,
+                                            "IsSpecialElement": true,
+                                            "SpecialElementName": "Then",
+                                            "GroupName": ""
+                                          },
+                                          "Conditions": [
+                                            {
+                                              "Condition": {
+                                                "$type": "CSharpCondition",
+                                                "CSharpCode": "!IsInGarrison"
+                                              },
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            },
+                                            {
+                                              "Condition": null,
+                                              "IsNot": false
+                                            }
+                                          ],
+                                          "IsNot": false
+                                        }
+                                      ],
+                                      "IsExtendedInEditor": false,
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Then",
+                                      "GroupName": ""
+                                    },
+                                    "Conditions": [
+                                      {
+                                        "Condition": {
+                                          "$type": "CSharpCondition",
+                                          "CSharpCode": "(IsQuestCompleted(36951) || IsQuestCompleted(34653)) && Me.ContinentID == 1116 && Me.ZoneId != 6722"
+                                        },
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      }
+                                    ],
+                                    "IsNot": false
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Else",
+                                "GroupName": ""
+                              },
+                              "ActionsTrue": {
+                                "Children": [
+                                  {
+                                    "$type": "If",
+                                    "IsExtendedInEditor": false,
+                                    "ActionsFalse": {
+                                      "Children": [],
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Else",
+                                      "GroupName": ""
+                                    },
+                                    "ActionsTrue": {
+                                      "Children": [
+                                        {
+                                          "$type": "CSharpAction",
+                                          "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Crow's Crook, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                                        }
+                                      ],
+                                      "IsExtendedInEditor": false,
+                                      "IsSpecialElement": true,
+                                      "SpecialElementName": "Then",
+                                      "GroupName": ""
+                                    },
+                                    "Conditions": [
+                                      {
+                                        "Condition": {
+                                          "$type": "CSharpCondition",
+                                          "CSharpCode": "!IsInGarrison"
+                                        },
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "Condition": null,
+                                        "IsNot": false
+                                      }
+                                    ],
+                                    "IsNot": false
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Then",
+                                "GroupName": ""
+                              },
+                              "Conditions": [
+                                {
+                                  "Condition": {
+                                    "$type": "CSharpCondition",
+                                    "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6722 && IsQuestCompleted(34659) && !IsInGarrison"
+                                  },
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                }
+                              ],
+                              "IsNot": false
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "If",
+                              "IsExtendedInEditor": false,
+                              "ActionsFalse": {
+                                "Children": [],
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Else",
+                                "GroupName": ""
+                              },
+                              "ActionsTrue": {
+                                "Children": [
+                                  {
+                                    "$type": "CSharpAction",
+                                    "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Veil Terokk, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                                  }
+                                ],
+                                "IsExtendedInEditor": false,
+                                "IsSpecialElement": true,
+                                "SpecialElementName": "Then",
+                                "GroupName": ""
+                              },
+                              "Conditions": [
+                                {
+                                  "Condition": {
+                                    "$type": "CSharpCondition",
+                                    "CSharpCode": "!IsInGarrison"
+                                  },
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                },
+                                {
+                                  "Condition": null,
+                                  "IsNot": false
+                                }
+                              ],
+                              "IsNot": false
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6722 && IsQuestCompleted(35671) && !IsInGarrison"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "CSharpAction",
+                              "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Axefall, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!IsInGarrison"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.ContinentID == 1116 && Me.ZoneId != 6722 && IsQuestCompleted(35277) && !IsInGarrison"
                       },
                       "IsNot": false
                     },
@@ -1461,7 +1815,13 @@
                                     "$type": "If",
                                     "IsExtendedInEditor": false,
                                     "ActionsFalse": {
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "CallBlock",
+                                          "Target": "Garrison Return"
+                                        }
+                                      ],
+                                      "IsExtendedInEditor": false,
                                       "IsSpecialElement": true,
                                       "SpecialElementName": "Else",
                                       "GroupName": ""
@@ -27583,20 +27943,94 @@
             "$type": "ActionSequence",
             "Children": [
               {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.GTownHallExit());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\n"
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [
+                    {
+                      "$type": "If",
+                      "IsExtendedInEditor": false,
+                      "ActionsFalse": {
+                        "Children": [],
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Else",
+                        "GroupName": ""
+                      },
+                      "ActionsTrue": {
+                        "Children": [
+                          {
+                            "$type": "CSharpAction",
+                            "CSharpCode": "Print(\"Unfortunately Your Hearthstone is on Cooldown. Heading to Nearest FlightMaster.\");\r\nFlight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                          }
+                        ],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Then",
+                        "GroupName": ""
+                      },
+                      "Conditions": [
+                        {
+                          "Condition": {
+                            "$type": "CSharpCondition",
+                            "CSharpCode": "Me.ContinentID == 1116"
+                          },
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        }
+                      ],
+                      "IsNot": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "ItemCooldown(110560) == 0"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
               }
             ],
             "IsExtendedInEditor": false,

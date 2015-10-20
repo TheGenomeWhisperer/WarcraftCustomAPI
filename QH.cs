@@ -554,18 +554,13 @@ public class QH
         // This takes the following player coordinates, X and Y, and converts them into a Vector3 position.  Blizzard's API only gives us
         // 2 coordinates, but not the 3-dimensional z-coordinate, so using a simple algorithm we can determine the z coordinate based on
         // the MapAreaID.
-        double x = API.ExecuteLua<double>("local posX, _= GetPlayerMapPosition('player'); return posX;");
-        double y = API.ExecuteLua<double>("local _, posY = GetPlayerMapPosition('player'); return posY;");
-        int z = API.ExecuteLua<int>("return GetCurrentMapAreaID()");
-        var v = API.CoordsToPositionByAreaId(x * 100,y * 100,z);
         Vector3 location = new Vector3(1666.5f, 1743.6f, 298.6f);      
-        
         if (IsClose(1410f, 1728.5f, 310.3f, 390)) 
         {
             // Z location is important because the Gordal fortress is high, so by determining player IS close to zone AND is above the z coordinate,
             // the height of the player can be determined as likely to represent its position.  I COULD write a 3D area map, but this was significantly
             // less time-consuming and just as effeective.
-            if ((v.Z > 302.4) || ((v.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
+            if ((API.Me.Position.Z > 302.4) || ((API.Me.Position.Z > 296.0) && (API.Me.Distance2DTo(location) > 47.05))) 
             {
         		return true;
         	}       
@@ -1289,8 +1284,8 @@ public class QH
     }
     
     // Method:          TakeElevator(int,int,float,float,float)
-    //      WARNING!!! This is 100% working, but the "Catch" I want to add some additional assistance to resolve this, then recursively hit it again. 
-    //      Work in progress until then.
+    //                  WARNING!!! This is 100% working, but the "Catch" I want to add some additional assistance to resolve this, then recursively hit it again. 
+    //                  Work in progress until then.
     // What it Does:    Allows the navigation of any elevator
     // Purpose:         At times in the script, transversing an elevator effectively can be a cumbersome to program
     //                  and as such I wrote a scalable method... the only key thing needed is for the developer to
@@ -1369,6 +1364,110 @@ public class QH
                         position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                         yield return 100;
                     }
+                }
+                API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
+                API.CTM(unit.Position);
+                // The 4 seconds is added here to account for the stoppage of when you enter the elevator and it is stationary
+                yield return ((elevatorTravelTime + 4) * 1000);
+                while(!API.CTM(destination)) 
+                {
+                    yield return 200;
+                }
+                API.Print("You Have Successfully Beaten the Elevator Boss... Congratulations!!!");
+        	}
+        }
+        if (!elevatorFound) 
+        {
+            API.Print("No Elevator Found. Please Be Sure elevator ID is Entered Properly and You are Next to It");
+            yield break;
+        }
+        API.DisableCombat = false;
+    }
+    
+    // Method:          TakeElevator(int,int,float,float,float,float,float,float)
+    // What it Does:    Allows the navigation of any elevator! This Elevator method allows the input of a starting position!
+    // Purpose:         At times in the script, transversing an elevator effectively can be a cumbersome to program
+    //                  and as such I wrote a scalable method... the only key thing needed is for the developer to
+    //                  time how long it takes the elevator to go from the bottom to the top, or the other way around.
+    //                  Also, the position you would like the player to exit the elevator and travel to.  The travel time
+    //                  was kind of a rough solution because it appears that while on the elevator, the API freezes all return values
+    //                  thus I cannot seem to get an accurate positional check, so the timing allows me to enter, then determine exit time.
+    public static IEnumerable<int> TakeElevator(int ElevatorID, int elevatorTravelTime, float startX, float startY, float startZ, float x, float y, float z) 
+    {
+        double position;
+        double position2;
+        bool elevatorFound = false;
+        // Starting position to navigate to and wait for elevator (PLACE AT SAME LEVEL AS Elevator)
+        Vector3 start = new Vector3(startX,startY,startZ);
+        Vector3 destination = new Vector3(x,y,z);
+        
+        while (!API.MoveTo(start))
+        {
+            yield return 100;
+        }
+        foreach (var unit in API.GameObjects)
+        {
+            // This first determines if the elevator is properly identified.
+        	if (unit.EntryID == ElevatorID)
+        	{
+                elevatorFound = true;
+                API.SetFacing(unit);
+                // The choice to disable combat is because once on the elevator, player should not attempt to leave it
+                // or it could mess up the passing as the bot remembers its last spot before combat starts then returns to it
+                API.DisableCombat = true;
+                API.Print("Waiting For the Elevator...");
+                position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                yield return 100;
+                position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                yield return 100;
+                
+                // The two positional checks right after each other are to determine movement of the elevator.
+                // if they are equal, elevator is not moving, but if they are different, like the second location is further than the first,
+                // then it can easily be determined it is moving away from you.
+                // This first check holds position until the elevator moves.  This is actually really critical because what if
+                // player arrives at the elevator and the elevator is at location already.  The method would recognize this then quickly try to jump on.
+                // This could create a problem though because what if the elevator was only going to be there a split second more, then player tries to
+                // traverse then ends up missing it.  This just helps avoid that... Long explanation I know.
+                while (position == position2)
+                {
+                    position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                    yield return 100;
+                    position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                    yield return 100;
+                }
+                // Meaning it is moving away from you or it is at least 10 yrds away.
+                if (position != position2 || Math.Sqrt(API.Me.DistanceSquaredTo(unit)) > 10.0) 
+                {
+                    API.Print("Elevator is Moving...");
+                    if (position > position2) 
+                    {
+                        API.Print("Elevator is Moving Towards Us... Almost Here!");
+                    }
+                    else 
+                    {
+                        API.Print("Elevator is Moving Away! Patience!");
+                        while(position != position2) 
+                        {
+                            position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 100;
+                            position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 100;
+                        }
+                        API.Print("Elevator Has Stopped at Other Side.  Let's Wait For It To Return!");
+                        while(position == position2) 
+                        {
+                            position = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 100;
+                            position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
+                            yield return 100;
+                        }
+                        API.Print("Alright, It Is Coming Back to us. Get Ready!");
+                    }
+                    while(unit.Position.Z > (startZ + 1.0)) 
+                    {
+                        yield return 100;
+                    }
+
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
                 API.CTM(unit.Position);
