@@ -17,29 +17,29 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Constructor Takes No Arguments
     
 ##Method Summary  
-**void AbandonQuest(int questID)** 
->>Abandons the given quest from the player's quest-log.
+**void AbandonQuest(int questID)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.
 
-**bool BannerAvailable()**
->>Returns true if any of the 3 Guild "Bonus XP" banners are available for use.
+**bool BannerAvailable()**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.
 
-**IEnumerable<int> DisableAddOn(string name, bool reload)**
->>Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.
+**IEnumerable<int> DisableAddOn(string name, bool reload)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.
 
-**void DoGossipOnMatch(string choice)**
->>Selects the gossip option on any NPC that matches the given string. Full Unicode support compatibility
+**void DoGossipOnMatch(string choice)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the gossip option on any NPC that matches the given string. Full Unicode support compatibility
 
 
 
 ###Draenor Specific Methods
-**IEnumerable\<int\> AbandonGarrisonFlightQuests(int questToKeep)**
->>Abandons all Draenor garrison missions that require flight gossip interaction, except for the questID the player wishes to keep.
+**IEnumerable\<int\> AbandonGarrisonFlightQuests(int questToKeep)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons all Draenor garrison missions that require flight gossip interaction, except for the questID the player wishes to keep.
 
-**IEnumerable\<int\> ArsenalGarrisonAbility(int numStrikes)**
->>Whilst in the Talador Zone or Tanaan Jungle, uses the Outpost ability on a "Focus" target, max 3 strikes.
+**IEnumerable\<int\> ArsenalGarrisonAbility(int numStrikes)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whilst in the Talador Zone or Tanaan Jungle, uses the Outpost ability on a "Focus" target, max 3 strikes.
 
-**void BuyExpPotions(int toBuy)**
->>Buys the given amount of XP potions "toBuy" at the Garrison Vendor
+**void BuyExpPotions(int toBuy)**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buys the given amount of XP potions "toBuy" at the Garrison Vendor
 
-**IEnumerable\<int\> CTA_GarrisonAbility()**
->>When in Frostfire Ridge or Tanaan Jungle, Uses the Call to Arms Garrison zone ability on a "Focus" target.
+**IEnumerable\<int\> CTA_GarrisonAbility()**  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When in Frostfire Ridge or Tanaan Jungle, Uses the Call to Arms Garrison zone ability on a "Focus" target.
