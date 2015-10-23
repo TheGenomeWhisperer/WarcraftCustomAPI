@@ -31,27 +31,27 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.|
 
 |void |DoGossipOnMatch(string choice)|
-|-----|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the gossip option on any NPC that matches the given string. Full Unicode support compatibility.|
+|-----:|:--------------------------|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the gossip option on any NPC that matches the given string. Full Unicode Support.|
 
 |bool |HasAddOnEnabled(string name)|
-|-----|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true only if the given addon is enabled, not just if its installed.|
+|-----:|:--------------------------|
+|------------------------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true only if the given addon is enabled, not just if its installed.|
 
 |bool |HasArchaeology()|
-|-----|:--------------------------|
+|-----:|:--------------------------|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has the 2ndary Archaeology profession learned, regardless of skill lvl.|
 
 |bool |HasGuildBannerAura()|
-|-----|:--------------------------|
+|-----:|:--------------------------|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player already is within 100 yrd range of a guild banner, thus having the bonus aura.|
 
 |bool |HasHiddenAura(int spellID)|
-|-----|:--------------------------|
+|-----:|:--------------------------|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if player has the given Aura, not based on only buffs/debuffs, but all hidden auras.|
 
 |bool |HasProfession()|
-|-----|:--------------------------|
+|-----:|:--------------------------|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has either 1 or 2 professions learned, regardless of skill level.|
 
 
