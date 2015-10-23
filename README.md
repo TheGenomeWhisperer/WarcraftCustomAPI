@@ -38,8 +38,26 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if player has the given Aura, not based on only buffs/debuffs, but all hidden auras.|
 |**bool** |**HasProfession()**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has either 1 or 2 professions learned, regardless of skill level.|
+|**IEnumerable\<int\>** |**HearthToGarrison()**
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uses the Garrison hearthstone to return to the Draenor Garrison. This can be useful in future expansions due to the amenities in the Garrison.|
+|**bool** |**IsClose(float x, float y, float z, int distance)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player distance to the Vector3 coordinate is within the given yards|
+|**bool** |**IsInScenario()**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true of the player is currently phased into a "scenario" quest/instance|
+|**bool** |**ItemsNeededForQuest(int questID, int objective, int itemID)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player needs to collect more items to fulfill all quest requirements.|
+|**bool** |**MiniMapZoneEquals(string name)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the minimapzone name equals the given name.|
+|**IEnumerable\<int\>** |**PlaceGuildBannerAt(float x, float y, float z)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Places a guild banner at the Vector3 given position by priority of best available banner.|
+|*IEnumerable<int>** |**PlaceGuildBannerOnAuraCheck()**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If the player is not within 100 yards of a banner, and the player is in combat, it will place the best available banner at the player position.|
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+
+
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 
 
 ###Draenor Specific Methods
@@ -63,13 +81,22 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 |**int** |**GetPlayerGold()**|  
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the amount of Gold the player has as an int.|
 |**IEnumerable\<int\>** |**GTownHallExit()**|  
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Custom navigation out of Garrison Town Hall for rank 2 and 3 garrisons (Odd phasing issue fix).|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Custom navigation out of Garrison Town Hall for rank 2 and 3 garrisons.|
+|**bool** |**IsInGordalFortress()**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player is located within the Gordal Fortress in Talador.|
+|**bool** |**NeedsFollower(string Name)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the the player still needs the given follower.
+|**int** |**ProfBuildingID(string professionName)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the Garrison plotID to match the given profession for a small-size plot.|
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+
+
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
