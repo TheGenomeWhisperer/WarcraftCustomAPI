@@ -12,22 +12,34 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 
 **The following list contains all Methods and Properties of the QH.cs Class:**
 
-###Constructor Summary
+##Constructor Summary
 **QH()**  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Constructor Takes No Arguments
     
-###Method Summary  
-***void* AbandonQuest(int questID)** 
+##Method Summary  
+**void AbandonQuest(int questID)** 
 >>Abandons the given quest from the player's quest-log.
 
-***bool* BannerAvailable()**
+**bool BannerAvailable()**
 >>Returns true if any of the 3 Guild "Bonus XP" banners are available for use.
 
+**IEnumerable<int> DisableAddOn(string name, bool reload)**
+>>Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.
+
+**void DoGossipOnMatch(string choice)**
+>>Selects the gossip option on any NPC that matches the given string. Full Unicode support compatibility
 
 
-####Draenor Specific Methods
+
+###Draenor Specific Methods
 **IEnumerable\<int\> AbandonGarrisonFlightQuests(int questToKeep)**
 >>Abandons all Draenor garrison missions that require flight gossip interaction, except for the questID the player wishes to keep.
 
 **IEnumerable\<int\> ArsenalGarrisonAbility(int numStrikes)**
->>Whilst in the Talador Zone, using the Outpost ability on a "Focus" target, max 3 strikes.
+>>Whilst in the Talador Zone or Tanaan Jungle, uses the Outpost ability on a "Focus" target, max 3 strikes.
+
+**void BuyExpPotions(int toBuy)**
+>>Buys the given amount of XP potions "toBuy" at the Garrison Vendor
+
+**IEnumerable\<int\> CTA_GarrisonAbility()**
+>>When in Frostfire Ridge or Tanaan Jungle, Uses the Call to Arms Garrison zone ability on a "Focus" target.
