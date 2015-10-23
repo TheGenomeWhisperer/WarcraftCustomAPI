@@ -22,6 +22,10 @@ public class QH
     public QH() { }	
 		
 	// Method:			"AbandonGarrisonFlightQuests(int)"
+    // WARNING!!!       Mostly redundant now as full localization class has been built and 100% compatibility has been built into 
+    //                  all profiles, but I will leave this here as a legacy method for the off-chance anyone might find some use of
+    //                  it, and it might be a method worth emulating for a temporary stop-gap method on future similar circumstances
+    //                  when time is limited to expand the Localization class further.
 	// What it Does:	Acts as a stop-gap in regards to localization, EU/Russian/Asian script is compatible regardless
 	//					of translation by abanding unnecessary quests at the moment to normalize all clients, regardless of languages.
 	// Purpose:			Blizzard does not provide an API to match Gossip to Quest ID, so, the String has to be parsed
@@ -1467,7 +1471,6 @@ public class QH
                     {
                         yield return 100;
                     }
-
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
                 API.CTM(unit.Position);
