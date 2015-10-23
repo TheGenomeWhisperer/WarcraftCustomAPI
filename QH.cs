@@ -840,8 +840,52 @@ public class QH
         }
         return false;
     }
-    
+
+    // Method:          "QuestObjectiveProgress(int,int,string)"
+    // What it does:    Returns a boolean TRUE if the given description matches the current quest progress
+    // Purpose:         Occasionally when writing quest templates, sometimes you want something to keep
+    //                  checking or doing things over and over again until it accomplishes it.  For example,
+    //                  imagine a quest that wanted you to destroy 5 targets, but it was all one objective
+    //                  so you start off with a description like "0/5"  Often these targets
+    //                  are not repeatable as the server stores some private information tied to your character, however,
+    //                  given the current interact and collectobject abilities within Rebot, it will often attempt to
+    //                  destroy the same target over and over again.  This allows you to break up a single
+    //                  quest objective into different pieces, because if say the objective changes to "1/5 targets destroyed"
+    //                  then it will carry on to the next sub-part of the objective rather than being stuck
+    //                  in often what can occur is an infinite loop.
+    public static bool QuestObjectiveProgress(int questID, int objective, int numberToCompleteObjective, string description)
+    {
+        string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + " , false); return currentProgress;";
+        string progress = API.ExecuteLua<string>(luaCall);
+        string result = "";
+        string finalResult = "";
+
+        for (int i = 0; i < progress.Length; i++)
+        {
+            if (progress[i] > 46 && progress[i] < 58)
+            {
+                result = progress.Substring(i);
+                for (int j = 0; j < result.Length; j++)
+                {
+                    if (result[j] > 46 && result[j] < 58)
+                    {
+                        finalResult += result[j];
+                    }
+                }
+                break;
+            }
+        }
+        if (finalResult.Equals(description))
+        {
+            return true;
+        }
+        return false;
+    }
+
     // Method:          "QuestObjectiveProgress(int,int,int,string)"
+    // WARNING          This Method is LEGACY and is largely redundant now.  It has been rescripted
+    //                  with one less argument, but due to the vast wide-spread use of it prior to rescripting it,
+    //                  this method will remain. It is highly recommended to use the older method.
     // What it does:    Returns a boolean TRUE if the given description matches the current quest progress
     // Purpose:         Occasionally when writing quest templates, sometimes you want something to keep
     //                  checking or doing things over and over again until it accomplishes it.  For example,
