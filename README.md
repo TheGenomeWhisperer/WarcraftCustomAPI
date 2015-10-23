@@ -20,7 +20,7 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 
 |void | AbandonQuest(int questID)|
 |-----:|:--------------------------|
-|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
+|               |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
 
 |bool |BannerAvailable()|
 |-----:|:--------------------------|
