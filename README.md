@@ -20,40 +20,39 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 
 |void | AbandonQuest(int questID)|
 |-----:|:--------------------------|
-|-------------------------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
 
 |bool |BannerAvailable()|
 |-----:|:--------------------------|
-|-------------------------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
 
 |IEnumerable\<int\> | DisableAddOn(string name, bool reload)|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.|
 
 |void |DoGossipOnMatch(string choice)|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the gossip option on any NPC that matches the given string. Full Unicode Support.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the gossip option on any NPC that matches the given string. Full Unicode Support.|
 
 |bool |HasAddOnEnabled(string name)|
 |-----:|:--------------------------|
-|------------------------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true only if the given addon is enabled, not just if its installed.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true only if the given addon is enabled, not just if its installed.|
 
 |bool |HasArchaeology()|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has the 2ndary Archaeology profession learned, regardless of skill lvl.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has the 2ndary Archaeology profession learned.|
 
 |bool |HasGuildBannerAura()|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player already is within 100 yrd range of a guild banner, thus having the bonus aura.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player already is within 100 yrd range of a guild banner, thus having the bonus aura.|
 
 |bool |HasHiddenAura(int spellID)|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if player has the given Aura, not based on only buffs/debuffs, but all hidden auras.|
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if player has the given Aura, not based on only buffs/debuffs, but all hidden auras.|
 
 |bool |HasProfession()|
 |-----:|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has either 1 or 2 professions learned, regardless of skill level.|
-
+|_______________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the player has either 1 or 2 professions learned, regardless of skill level.|
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
