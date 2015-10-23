@@ -50,11 +50,10 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the minimapzone name equals the given name.|
 |**IEnumerable\<int\>** |**PlaceGuildBannerAt(float x, float y, float z)**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Places a guild banner at the Vector3 given position by priority of best available banner.|
-|*IEnumerable<int>** |**PlaceGuildBannerOnAuraCheck()**|
+|**IEnumerable\<int\>** |**PlaceGuildBannerOnAuraCheck()**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If the player is not within 100 yards of a banner, and the player is in combat, it will place the best available banner at the player position.|
-
-
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+|*bool** |**QuestNotDone(int QuestID)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the quest not only is NOT completed, but it is also NOT in the log and complete, just not turned in yet.|
 
 
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
