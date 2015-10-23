@@ -853,7 +853,7 @@ public class QH
     //                  quest objective into different pieces, because if say the objective changes to "1/5 targets destroyed"
     //                  then it will carry on to the next sub-part of the objective rather than being stuck
     //                  in often what can occur is an infinite loop.
-    public static bool QuestObjectiveProgress(int questID, int objective, int numberToCompleteObjective, string description)
+    public static bool QuestObjectiveProgress(int questID, int objective, string description)
     {
         string luaCall = "local currentProgress = GetQuestObjectiveInfo(" + questID + ", " + objective + " , false); return currentProgress;";
         string progress = API.ExecuteLua<string>(luaCall);
