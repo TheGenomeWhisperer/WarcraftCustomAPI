@@ -17,17 +17,17 @@ Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebo
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Constructor Takes No Arguments
     
 ##Method Summary  
-|void | AbandonQuest(int questID)|
-|-----|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
 
+|void | AbandonQuest(int questID)|
+|-----:|:--------------------------|
+|________________|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
 
 |bool |BannerAvailable()|
-|-----|:--------------------------|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
+|-----:|:--------------------------|
+|---------------------------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
 
 |IEnumerable\<int\> | DisableAddOn(string name, bool reload)|
-|-----|:--------------------------|
+|-----:|:--------------------------|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.|
 
 |void |DoGossipOnMatch(string choice)|
