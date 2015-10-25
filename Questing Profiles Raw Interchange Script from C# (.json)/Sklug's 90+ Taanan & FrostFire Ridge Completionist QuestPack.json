@@ -33905,7 +33905,7 @@
                   "Children": [
                     {
                       "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     }
                   ],
                   "IsExtendedInEditor": false,

@@ -32755,6 +32755,7 @@
             "Children": [
               {
                 "$type": "If",
+                "IsExtendedInEditor": false,
                 "ActionsFalse": {
                   "Children": [
                     {
@@ -32811,9 +32812,10 @@
                   "Children": [
                     {
                       "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.GarrisonReturn());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     }
                   ],
+                  "IsExtendedInEditor": false,
                   "IsSpecialElement": true,
                   "SpecialElementName": "Then",
                   "GroupName": ""
@@ -32842,6 +32844,7 @@
                 "IsNot": false
               }
             ],
+            "IsExtendedInEditor": false,
             "GroupName": "Garrison Return"
           },
           {
