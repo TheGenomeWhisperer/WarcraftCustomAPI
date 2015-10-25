@@ -528,6 +528,7 @@ public class QH
                 yield break;
             }
         }
+        yield break;
     }
     
     // Method:          "IsClose(float,float,float,int)"
