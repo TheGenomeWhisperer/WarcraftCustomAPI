@@ -1736,6 +1736,7 @@ public class QH
             }
             API.Print("Player Exited the Flightpath after " + count + " seconds!");
         }
+        yield break;
     }
     
     // Method:          XPMacro()

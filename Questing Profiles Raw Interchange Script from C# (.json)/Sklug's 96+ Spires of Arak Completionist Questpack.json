@@ -27637,6 +27637,10 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
                 "$type": "If",
                 "IsExtendedInEditor": false,
                 "ActionsFalse": {
@@ -27650,11 +27654,6 @@
                     {
                       "$type": "PauseResumeThread",
                       "ThreadName": "main",
-                      "PauseThread": true
-                    },
-                    {
-                      "$type": "PauseResumeThread",
-                      "ThreadName": "GAM",
                       "PauseThread": true
                     },
                     {
@@ -27707,11 +27706,6 @@
                       "PauseThread": true
                     },
                     {
-                      "$type": "PauseResumeThread",
-                      "ThreadName": "GAM",
-                      "PauseThread": true
-                    },
-                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RepairCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     }
@@ -27761,11 +27755,6 @@
                       "PauseThread": true
                     },
                     {
-                      "$type": "PauseResumeThread",
-                      "ThreadName": "GAM",
-                      "PauseThread": true
-                    },
-                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.InventoryCheck());\r\nwhile (Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     }
@@ -27779,7 +27768,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "Merchant.InventoryIsFull()"
+                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.PlayerShouldStopVendoring()"
                     },
                     "IsNot": false
                   },
@@ -27801,11 +27790,6 @@
               {
                 "$type": "PauseResumeThread",
                 "ThreadName": "main",
-                "PauseThread": false
-              },
-              {
-                "$type": "PauseResumeThread",
-                "ThreadName": "GAM",
                 "PauseThread": false
               },
               {

@@ -28110,6 +28110,10 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
                 "$type": "If",
                 "IsExtendedInEditor": false,
                 "ActionsFalse": {
@@ -28237,7 +28241,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "Merchant.InventoryIsFull()"
+                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.PlayerShouldStopVendoring()"
                     },
                     "IsNot": false
                   },
