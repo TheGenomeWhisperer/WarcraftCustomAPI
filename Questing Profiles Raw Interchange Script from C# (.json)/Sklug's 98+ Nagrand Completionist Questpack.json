@@ -14,7 +14,7 @@
       },
       {
         "$type": "Comment",
-        "Text": "Very Incomplete!!! Many Quality of Life Checks missing, and only about 15% of zone completed.",
+        "Text": "Very Incomplete!!! Many Quality of Life Checks missing, and only about 25% of zone completed. THIS IS Pre-Alpha",
         "Color": "Red"
       },
       {
@@ -22,7 +22,7 @@
         "Children": [
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 98) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_NAGRAND\"] = \"false\";\r\n\r\n// Rebot Features\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 4;\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\n// GlobalBotSettings.VendorOnMinDurability = 0.1;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 1;"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 98) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_NAGRAND\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}"
           },
           {
             "$type": "Comment",
@@ -51,6 +51,14 @@
           },
           {
             "$type": "LoadCSharpScript",
+            "FileName": "Merchant.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
+            "FileName": "DraenorMerchants.cs"
+          },
+          {
+            "$type": "LoadCSharpScript",
             "FileName": "QH.cs"
           },
           {
@@ -67,7 +75,7 @@
           },
           {
             "$type": "CSharpAction",
-            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;"
+            "CSharpCode": "// Initializing Instance and Injecting Custom API into Rebot\r\nQH.API = this;\r\nFlight.API = this;\r\nMerchant.API = this;"
           },
           {
             "$type": "Comment",
@@ -473,12 +481,17 @@
           {
             "$type": "Comment",
             "IsInfo": false,
-            "Text": "This is the XP Potion use Macro Thread - DELETE if you do not wish to use XP Potion"
+            "Text": "This is the XP Potion use Macro and Vendor Manager Threads"
           },
           {
             "$type": "CreateScriptThread",
             "Target": "XP Macro",
-            "ThreadName": null
+            "ThreadName": "XP_Macro"
+          },
+          {
+            "$type": "CreateScriptThread",
+            "Target": "VendorManager",
+            "ThreadName": "VM"
           },
           {
             "$type": "JumpToBlock",
@@ -4906,6 +4919,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -4946,6 +4960,7 @@
                   "Color": "64, 128, 128"
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -4975,6 +4990,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -4990,6 +5006,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5005,6 +5022,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5039,6 +5057,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5068,6 +5087,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5083,6 +5103,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5112,6 +5133,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5127,6 +5149,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5142,6 +5165,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5170,6 +5194,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5199,6 +5224,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5214,6 +5240,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5243,6 +5270,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5258,6 +5286,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5273,6 +5302,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5301,6 +5331,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5330,6 +5361,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5345,6 +5377,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5360,6 +5393,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5389,6 +5423,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5402,6 +5437,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(3017.1f, 4885.0f, 130.6f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5442,6 +5478,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5471,6 +5508,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5486,6 +5524,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5501,6 +5540,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5530,6 +5570,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5543,6 +5584,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(3017.1f, 4885.0f, 130.6f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5583,6 +5625,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5612,6 +5655,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5627,6 +5671,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5642,6 +5687,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5671,6 +5717,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5684,6 +5731,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(3017.1f, 4885.0f, 130.6f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5724,6 +5772,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5753,6 +5802,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5768,6 +5818,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5783,6 +5834,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5812,6 +5864,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5825,6 +5878,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(3017.1f, 4885.0f, 130.6f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5865,6 +5919,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -5894,6 +5949,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -5909,6 +5965,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5924,6 +5981,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -5953,6 +6011,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -5966,6 +6025,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(3017.1f, 4885.0f, 130.6f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6006,6 +6066,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6035,6 +6096,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6050,6 +6112,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6085,6 +6148,7 @@
                         "Method": "Navi"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6113,6 +6177,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6142,6 +6207,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6157,6 +6223,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6197,6 +6264,7 @@
                         "DelayMax": 0.0
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6225,6 +6293,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6254,6 +6323,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6269,6 +6339,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6304,6 +6375,7 @@
                         "Method": "Navi"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6332,6 +6404,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6361,6 +6434,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6376,6 +6450,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6391,6 +6466,7 @@
                         "Sphere": "3131 4914 128 3.7"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6419,6 +6495,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6448,6 +6525,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6463,6 +6541,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6478,6 +6557,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6506,6 +6586,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6535,6 +6616,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6550,6 +6632,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6579,6 +6662,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6594,6 +6678,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6609,6 +6694,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6637,6 +6723,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6666,6 +6753,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6687,6 +6775,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6716,6 +6805,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6731,6 +6821,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6746,6 +6837,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6774,6 +6866,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6803,6 +6896,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6818,6 +6912,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6847,6 +6942,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6862,6 +6958,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6877,6 +6974,7 @@
                         "Sphere": "2351 4595 230 4.8"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6905,6 +7003,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -6934,6 +7033,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -6949,6 +7049,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -6964,6 +7065,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -6992,6 +7094,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7021,6 +7124,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7036,6 +7140,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -7051,6 +7156,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -7079,6 +7185,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7108,6 +7215,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7123,6 +7231,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7152,6 +7261,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7167,6 +7277,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7196,6 +7307,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7267,6 +7379,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -7280,6 +7393,7 @@
                         "CSharpCode": "QH.UseGuildBanner();"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -7309,6 +7423,7 @@
                 },
                 {
                   "$type": "While",
+                  "IsExtendedInEditor": false,
                   "LoopActions": {
                     "Children": [
                       {
@@ -7326,6 +7441,7 @@
                         "DelayMax": 3.0
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Do",
                     "GroupName": ""
@@ -7360,6 +7476,7 @@
                 },
                 {
                   "$type": "While",
+                  "IsExtendedInEditor": false,
                   "LoopActions": {
                     "Children": [
                       {
@@ -7402,6 +7519,7 @@
                         "TimeLimit": 10
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Do",
                     "GroupName": ""
@@ -7436,6 +7554,7 @@
                   "DelayMax": 0.0
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7465,6 +7584,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7480,6 +7600,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7509,6 +7630,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7524,6 +7646,7 @@
                   "Sphere": "2016 4553 306 5"
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7553,6 +7676,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7568,6 +7692,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -7583,6 +7708,7 @@
                         "Sphere": "2016 4553 306 7.7"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -7611,6 +7737,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7640,6 +7767,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7655,6 +7783,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -7670,6 +7799,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -7698,6 +7828,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -7727,6 +7858,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -7746,6 +7878,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -7916,6 +8049,7 @@
                         }
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -7982,6 +8116,7 @@
                   "CSharpCode": "DisableCombat = false;\r\n"
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8011,6 +8146,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8040,6 +8176,7 @@
                   }
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8069,6 +8206,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8088,6 +8226,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8117,6 +8256,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8131,6 +8271,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8144,6 +8285,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(1981.7f, 4680.5f, 335.9f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8178,6 +8320,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8207,6 +8350,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8249,6 +8393,7 @@
                   "TimeLimit": 0
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8278,6 +8423,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8293,6 +8439,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8322,6 +8469,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8337,6 +8485,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8364,6 +8513,7 @@
                         "Sphere": "2696 4827 175 4.5"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8392,6 +8542,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8421,6 +8572,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8436,6 +8588,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8461,6 +8614,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8489,6 +8643,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8518,6 +8673,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8533,6 +8689,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8558,6 +8715,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8586,6 +8744,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8615,6 +8774,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8630,6 +8790,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8640,6 +8801,7 @@
                     "Children": [
                       {
                         "$type": "If",
+                        "IsExtendedInEditor": false,
                         "ActionsFalse": {
                           "Children": [],
                           "IsSpecialElement": true,
@@ -8684,6 +8846,7 @@
                               "TimeLimit": 30
                             }
                           ],
+                          "IsExtendedInEditor": false,
                           "IsSpecialElement": true,
                           "SpecialElementName": "Then",
                           "GroupName": ""
@@ -8718,6 +8881,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8746,6 +8910,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8775,6 +8940,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -8804,6 +8970,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -8817,6 +8984,7 @@
                         "CSharpCode": "QH.UseGuildBanner();"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -8846,6 +9014,7 @@
                 },
                 {
                   "$type": "While",
+                  "IsExtendedInEditor": false,
                   "LoopActions": {
                     "Children": [
                       {
@@ -8863,6 +9032,7 @@
                         "DelayMax": 3.0
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Do",
                     "GroupName": ""
@@ -8897,6 +9067,7 @@
                 },
                 {
                   "$type": "While",
+                  "IsExtendedInEditor": false,
                   "LoopActions": {
                     "Children": [
                       {
@@ -8933,6 +9104,7 @@
                         "TimeLimit": 10
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Do",
                     "GroupName": ""
@@ -8967,6 +9139,7 @@
                   "DelayMax": 0.0
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -8996,6 +9169,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9006,6 +9180,7 @@
               "Children": [
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -9019,6 +9194,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(2650.2f, 5006.9f, 127.5f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -9053,6 +9229,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9082,6 +9259,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9092,6 +9270,7 @@
               "Children": [
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -9111,6 +9290,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -9145,6 +9325,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9174,6 +9355,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9188,6 +9370,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -9201,6 +9384,7 @@
                         "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(2590.6f, 5057.7f, 137.3f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -9235,6 +9419,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9268,6 +9453,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9283,6 +9469,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9312,6 +9499,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9369,6 +9557,7 @@
                   "TimeLimit": 0
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9398,6 +9587,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9419,6 +9609,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9448,6 +9639,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9463,6 +9655,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -9478,6 +9671,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -9506,6 +9700,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9535,6 +9730,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9570,6 +9766,7 @@
                   "Method": "Navi"
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9599,6 +9796,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9620,6 +9818,7 @@
                   ]
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9649,6 +9848,7 @@
           },
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
               "IsSpecialElement": true,
@@ -9664,6 +9864,7 @@
                 },
                 {
                   "$type": "If",
+                  "IsExtendedInEditor": false,
                   "ActionsFalse": {
                     "Children": [],
                     "IsSpecialElement": true,
@@ -9679,6 +9880,7 @@
                         ]
                       }
                     ],
+                    "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
                     "SpecialElementName": "Then",
                     "GroupName": ""
@@ -9707,6 +9909,7 @@
                   "IsNot": false
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9739,6 +9942,7 @@
             "Target": "Nagrand 3"
           }
         ],
+        "IsExtendedInEditor": false,
         "GroupName": "Nagrand 2"
       },
       {
@@ -9757,6 +9961,7 @@
         "Children": [
           {
             "$type": "If",
+            "IsExtendedInEditor": false,
             "IsEnabled": false,
             "ActionsFalse": {
               "Children": [],
@@ -9815,6 +10020,7 @@
                   "TimeLimit": 0
                 }
               ],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Then",
               "GroupName": ""
@@ -9847,6 +10053,7 @@
             "Target": "End"
           }
         ],
+        "IsExtendedInEditor": false,
         "GroupName": "Nagrand 4"
       },
       {
@@ -9864,7 +10071,7 @@
           },
           {
             "$type": "EndThread",
-            "ThreadName": "XP Macro"
+            "ThreadName": "XP_Macro"
           },
           {
             "$type": "EndScript"
@@ -9876,6 +10083,174 @@
       {
         "$type": "ActionSequence",
         "Children": [
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RestingCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Merchant.IsFoodOrDrinkNeeded(Merchant.MinFood,Merchant.MinWater) && Me.ZoneId != 6719 && Me.ZoneId != 6941 && Me.ZoneId != 7548\r\n"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RepairCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Merchant.IsRepairNeeded()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.InventoryCheck());\r\nwhile (Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Merchant.InventoryIsFull()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "PauseResumeThread",
+                "ThreadName": "main",
+                "PauseThread": false
+              },
+              {
+                "$type": "Wait",
+                "Delay": 10.0,
+                "DelayMax": 15.0
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "VendorManager"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "VendorManager"
+          },
           {
             "$type": "ActionSequence",
             "Children": [
@@ -9953,6 +10328,7 @@
                 "Children": [
                   {
                     "$type": "If",
+                    "IsExtendedInEditor": false,
                     "ActionsFalse": {
                       "Children": [],
                       "IsSpecialElement": true,
@@ -10005,6 +10381,7 @@
                           "TimeLimit": 0
                         }
                       ],
+                      "IsExtendedInEditor": false,
                       "IsSpecialElement": true,
                       "SpecialElementName": "Then",
                       "GroupName": ""
@@ -10033,6 +10410,7 @@
                     "IsNot": false
                   }
                 ],
+                "IsExtendedInEditor": false,
                 "GroupName": "To Top of Overwatch"
               },
               {
@@ -10470,6 +10848,7 @@
                 "GroupName": "To Wor'var"
               }
             ],
+            "IsExtendedInEditor": false,
             "GroupName": "Travel"
           },
           {
@@ -10477,6 +10856,7 @@
             "Children": [
               {
                 "$type": "If",
+                "IsExtendedInEditor": false,
                 "ActionsFalse": {
                   "Children": [
                     {
@@ -10536,6 +10916,7 @@
                       "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     }
                   ],
+                  "IsExtendedInEditor": false,
                   "IsSpecialElement": true,
                   "SpecialElementName": "Then",
                   "GroupName": ""
@@ -10564,6 +10945,7 @@
                 "IsNot": false
               }
             ],
+            "IsExtendedInEditor": false,
             "GroupName": "Garrison Return"
           },
           {
@@ -14026,6 +14408,7 @@
             "GroupName": "Return to Draenor from Anywhere"
           }
         ],
+        "IsExtendedInEditor": false,
         "GroupName": "Tools"
       }
     ],
