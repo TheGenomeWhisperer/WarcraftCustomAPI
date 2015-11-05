@@ -1,6 +1,65 @@
-To Do:  Additional Garrison Bonus buffs
-To Do:  Add a Flightmap to take closest FP, depending on the zone player is in, for when hearth is down.
-	Do a Food Check
+To Do: Additional Garrison Bonus buffs
+To Do: Add Method to get player iLvl.
+To Do: Elevator Method could generate the accurate travel time all on its own.
+To Do: Possible Expansion of the Flightmanager to include positional checks of the qualifying quest location
+		- If My position and quest position would take us to the FP, then do not fly, else FlyTo(closest FP to questing location)
+To Do: Write Flight logic that if the node that is wanted to fly-to is not found, it searches for any other known FP within the
+	   same zone and flies to that one instead (maybe include adjacent zones as further redundancy?)
+To Do: Add input modifaction for JSON parser so the user can input their own string to look for and parse which line/quest.
+To Do: Figure out how to add Logitech Keyboard Functionality
+To Do: Possible Ilvl check to enable killing of certain rares.
+To Do: RebotAPI "GarrisonManager.PlotIDs" etc...  Fix those profession things...
+To Do: Cannon Firing on the Spires of Arak quest using Method "AimAt(Vector3, float gravity, float velocity)"
+To Do: Create a HotKey to Force Vendor.
+To Do: IF player is in garrison and herb garden is level 3 and player needs food - check the herb-garden for the good stuff first
+To DO: Option to use stat food
+To Do: Purge known food/drink items from "To Use" list on Initialization before setting new ones.
+To Do: Add Engineering Repair bots as an option to repair from if high enough engineering level (Jeeves, 4000, 5000, and other repair items?
+To Do: Implement use of Tabards to return to Org in my "Return to Draenor from anywhere" script.
+
+
+Version 1.30 - November 4th Release!
+
+For context as to why this has taken so long, I got a bit distracted with some side Quality of Life projects with this bot.  Any of you ever notice the wonkiness at times of stopping and restarting the bot in the wrong zones, or errors in not finding a mesh point that is too far away, but the bot tries to take flightpaths anyway, and then ends up on these weird endless flight loops?
+
+Or, have you ever needed to restock some food, but then all of a sudden the bot wants to fly you to the crap middle of nowhere, or try to get you to return to some other continent, or whatever, bypassing endless other vendors?  Ya, this was something that always bugged me, and the only reason I never did anything about it was in the hope that the Rebot devs would do something about it themselves because it would have been a lot of work to do it.
+
+Well, my OCD and impatience got the best of me and with my wife having our 3rd baby recently, I took a little time off from work, and ended up spending a lot of time at the computer at home, as the baby slept a lot! lol  So, what did I do?  I filled in all the gaps.  I rewrote my own Flight Manager and Vendor Manager, completely scalable and easily implementable with any other script, but for now, are only used here.  I built them with the idea of scalability in mind, with the idea that if I spend a good amount of time making sure the code was flexible, I could then implement it in any future expansion release or even go back to older zones.  This was not a small project.  We are talking about something like 4000+ lines of code that I somehow hammered out to get this done lol.  It's not just a bunch of fluff code too!
+MISC:
+Built a custom "Food and Vendor and Repair" script, completely scalable, for all Draenor zones, but can be adapted for any past or future continents easily.
+	- This was actually a fairly large task that I put together solely because I found the built-in logic to sometimes be flawed, and my 
+	- system wouldn't go crazy on return to a vendor.
+Built a custom Flight Manager (serious work, over 1500 lines of code) to handle better management of zone flightpaths and travel to avoid mesh errors.
+Added tons more initialization logic to each script.  A lot of people may not be fully comfortable with how to best configure all of Rebot's settings, so
+	I do all the configuration for you that best suits this profile.  This also works as a redundancy check. Some features still need manual configuration, like
+	the NPC you wish to mail all your crap to.
+
+API:
+QuestObjectiveProgres(int,int,string) - Reworked, alternative method that is leaner.
+FlightManager API Complete Suite
+TravelManger API Complete Suite
+
+Gorgrond:
+- Goes out of way to learn additional FP if lvl 100
+Quest:	"Rooter the Ravenous" (33633) New Lvl 100 only template
+Quest:  "Bonus Objective: Hemet's Happy Hunting Grounds" (35379) - NEW TEMPLATE
+Quest:	"That Pounding Sound" (35374) - Missing Kill target added, hotspots reworked.
+Quest:	"Ring of Trials: Crushmaul" (34662) - Full Template Rewrite- better stop/start conditionals. Plus evasion behaviors added
+Quest:	"Ring of Trials: Crushmaul" (34663) - Full Template Rewrite- better stop/start conditionals. Plus evasion behaviors added
+Quest:	"Ring of Trials: Crushmaul" (34664) - Full Template Rewrite- better stop/start conditionals. Plus evasion behaviors added
+Quest:	"Ring of Trials: Crushmaul" (34665) - Full Template Rewrite- better stop/start conditionals. Plus evasion behaviors added
+Quest:	"Ring of Trials: Crushmaul" (34666) - Full Template Rewrite- better stop/start conditionals. Plus evasion behaviors added
+Quest: 	"My Precious!" (34516) - Added hotspot for the item, as it was missing.
+Quest:  "Obliterating Ogres" (35155) - Added hotspots as it had none.
+Quest:	"Obtaining Ogre Offensive Orders" (35157) - Full Template re-write for parallelization.
+Quest:  "Reglakk's Research(35158) - Rescripted the template completely, included evasion behaviors.
+Quest:  "Tastes Like Chicken" (34869) - adjusted hotspots, and added missing kill NPC
+Quest:	"Fruitful Ventures" (34819) - Adjusted better hotspots
+
+
+
+
+
 
 Version 1.30 - October 7th Release!
 
