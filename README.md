@@ -11,6 +11,7 @@ Also included are full profiles representative of the QH Class in full implemnta
 Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebot.to/showthread.php?t=4930)
 
 Current Release: [Version 1.50 - November 4th, 2015](http://www.mediafire.com/download/rrl9vl68q2l69pa/Sklug%27s+90-100+No-Assist+Questpack+%28Ver.+1.50%29.zip)
+
 **The following list contains all Methods and Properties of the QH.cs Class:**
 
 ##Constructor Summary
