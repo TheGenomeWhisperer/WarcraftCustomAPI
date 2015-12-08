@@ -297,6 +297,19 @@ public class QH
         return toBuy;
     }
     
+    // Method:          "GetGarrisonBuildingInfo(int)"
+    // What it Does:    Returns a List of 2 objects, an int representing the buildingID that is placed there, and a string representing the name of that building
+    //                  If no building is present, it will return ZERO for the buildingID, and "No Building" for the string.
+    // Purpose:         Mainly to be used to determine if a Garrison plot position is empty so a building can be placed.
+    public static List<object> GetGarrisonBuildingInfo(int plotID)
+    {
+        int builtID = API.ExecuteLua<int>("local builtID = C_Garrison.GetOwnedBuildingInfo(" + plotID + "); if builtID == nil then return 0 else return builtID end;");
+        string buildingName = API.ExecuteLua<string>("local _,name = C_Garrison.GetOwnedBuildingInfo(" + plotID + "); if name ~= nil then return name else return \"No Building\" end;");
+        
+        List<object> result = new List<object>(){builtID,buildingName};
+        return result;
+    }
+    
     // Method:          "GetGarrisonLevel();
     // What it Does:    Returns the current rank of the player garrison, 1-3
     // Purpose:         When dealing with various pathing at the Garrison, it is important to note that object
@@ -306,7 +319,6 @@ public class QH
         return API.ExecuteLua<int>("local level = C_Garrison.GetGarrisonInfo(); return level;");
     }
 
-    
     // Method:          "GetGarrisonResources()"
     // What it Does:    Returns the amount of Garrison Resources the player has at the given moment.
     // Purpose:         Often you can save a lot of processing time/power by ensuring the player has enough resources
@@ -325,6 +337,147 @@ public class QH
         int money = API.ExecuteLua<int>("return GetMoney()");
         // Since it returns from the Blizz API as copper, the /10000 converts it to Gold. 1xCopper X 100 X 100 = 1.0g
         return (money/10000);
+    }
+    
+    // Method:          "GetPlayerItemLevel()"
+    // What it Does:    Returns the numerical value of the player "iLvl" of currently obtained equipped gear.
+    // Purpose:         In case of challenging quests, player iLvl can be determined to be a sufficient minimum
+    public static int GetPlayerItemLevel()
+    {
+        return API.ExecuteLua<int>("local _,equipped = GetAverageItemLevel(); return equipped");
+    }
+    
+    // Method:          "GetPlayerProfessions()"
+    // What it Does:    Returns a String array of the names of the 2 player professions, or "none" if none in slot
+    // Purpose:         To create a localized and friendly method that returns the ENGLISH names of professions,
+    //                  regardless of the client used.
+    public static string[] GetPlayerProfessions()
+    {
+        string[] professions = new string[2];
+        string prof1 = API.ExecuteLua<string>("local prof1 = GetProfessions(); if prof1 ~= nil then local _,texture = GetProfessionInfo(prof1); return texture; else return \"null\"; end");
+        string prof2 = API.ExecuteLua<string>("local _,prof2 = GetProfessions(); if prof2 ~= nil then local _,texture = GetProfessionInfo(prof2); return texture; else return \"null\"; end");
+        
+        // Parsing the name of the first profession (for localization sake, avoids translation need using filename of icon instead)
+        if (!prof1.Equals("null"))
+        {
+            if (prof1.Substring(prof1.LastIndexOf('\\') + 1, 3).Equals("INV"))
+            {
+                // Special condition for 2 unique cases where this occurs for ease.
+                if (prof1.Substring(prof1.LastIndexOf('\\') + 1, 8).Equals("INV_Misc"))
+                {
+                    for (int i = 0; i < prof1.Substring(prof1.LastIndexOf('\\') + 10).Length; i++)
+                    {
+                        if (prof1.Substring(prof1.LastIndexOf('\\') + 10)[i] == '_')
+                        {
+                            prof1 = prof1.Substring(prof1.LastIndexOf('\\') + 10, i);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    prof1 = prof1.Substring(prof1.IndexOf('_') + 1, prof1.Substring(prof1.IndexOf('_') + 1).IndexOf('_'));
+                }
+            }
+            else
+            {
+                prof1 = prof1.Substring(prof1.LastIndexOf('_') + 1);
+            }
+            professions[0] = prof1;
+        }
+        else
+        {
+            professions[0] = "None";
+        }
+    
+        // Parsing the name of the Second profession
+        if (!prof2.Equals("null"))
+        {
+            if (prof2.Substring(prof2.LastIndexOf('\\') + 1, 3).Equals("INV"))
+            {
+                // Special condition for 2 unique cases where this occurs for ease.
+                if (prof2.Substring(prof2.LastIndexOf('\\') + 1, 8).Equals("INV_Misc"))
+                {
+                    for (int i = 0; i < prof2.Substring(prof2.LastIndexOf('\\') + 10).Length; i++)
+                    {
+                        if (prof2.Substring(prof2.LastIndexOf('\\') + 10)[i] == '_')
+                        {
+                            prof2 = prof2.Substring(prof2.LastIndexOf('\\') + 10, i);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    prof2 = prof2.Substring(prof2.IndexOf('_') + 1, prof2.Substring(prof2.IndexOf('_') + 1).IndexOf('_'));
+                }
+            }
+            else
+            {
+                prof2 = prof2.Substring(prof2.LastIndexOf('_') + 1);
+            }
+            professions[1] = prof2;
+        }
+        else
+        {
+            professions[1] = "None";
+        }
+        
+        return professions;
+    }
+
+    // Method:          "GetProfessionBuildingID(string)"
+    // What it Does:    This matches the player's profession to the correct building ID within the garrison
+    // Purpose:         This is important because each Garrison Building has a corresponding ID.  This will match the
+    //                  given profession to its corresponding ID so that the correct matching building can be placed.
+    //                  This is best used with GetPlayerProfessions() - Example: int buildingID1 = GetProfessionBuildingID(GetPlayerProfessions()[0])
+    public static int GetProfessionBuildingID(string professionName)
+    {
+        int idNumber;
+        switch(professionName) 
+        {
+            case "Alchemy":
+                idNumber = 76;
+                break;
+            case "Engraving" : 
+            	idNumber = 93;
+                break;
+            case "Engineering":
+            	idNumber = 91;
+                break;
+            case "Gem":
+            	idNumber = 96;
+                break;
+            case "Inscription":
+            	idNumber = 95;
+                break;
+            case "Tailoring": 
+            	idNumber = 94;
+                break;
+            case "BlackSmithing": 
+            	idNumber = 60;
+                break;
+            case "LeatherWorking":
+            	idNumber = 90;
+                break;
+            case "Herbalism":
+            	API.Print("Herbalism Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            case "Pick":
+            	API.Print("Mining Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            case "Pelt":
+            	API.Print("Skinning Has No Corresponding Building to Place. Using Default!");
+                idNumber = 0;
+                break;
+            default:
+                API.Print("No Valid Profession Identified...");
+                idNumber = 0;
+                break;
+        }
+        return idNumber;    
     }
     
     // Method:          "GTownHallExit()"
@@ -669,6 +822,15 @@ public class QH
         return toBuy;
     }
     
+    // Method:          "PlaceGarrisonBuildingAt(int,int)"
+    // What it Does:    Exactly as it sounds, sets the given building to the given plot in your garrison when player
+    //                  is looking at the architect table in their Garrison.
+    // Purpose:         Easier access to tools in C# rather than having to use Lua within code.
+    public static void PlaceGarrisonBuildingAt(int plotID, int buildingID)
+    {
+        API.ExecuteLua("C_Garrison.PlaceBuilding(" + plotID + ", " + buildingID + ");");
+    }
+    
     // Method:          "PlaceGuildBannerAt(float,float,float)"
     // What it does:    Basic check to first, see if one of the 3 banners is available.  If so,
     //		            it will execute the MoveTo to the given Vector3 location and then use an available banner.
@@ -769,61 +931,6 @@ public class QH
         {
             yield return 100;
         }
-    }
-    
-    // Method:          "ProfBuildingID(string)"
-    //      WARNING - Method is only compatible with ENGLISH clients and should probably be made redundant.
-    // Method:          ProfBuildingID(string)
-    // What it Does:    This matches the player's profession to the correct building ID within the garrison
-    // Purpose:         This is important because each Garrison Building has a corresponding ID.  This will match the
-    //                  given profession to its corresponding ID so that the correct matching building can be placed.
-    public static int ProfBuildingID(string professionName)
-    {
-        int idNumber;
-        switch(professionName) 
-        {
-            case "Alchemy":
-                idNumber = 76;
-                break;
-            case "Enchanting" : 
-            	idNumber = 93;
-                break;
-            case "Engineering":
-            	idNumber = 91;
-                break;
-            case "Jewelcrafting":
-            	idNumber = 96;
-                break;
-            case "Inscription":
-            	idNumber = 95;
-                break;
-            case "Tailoring": 
-            	idNumber = 94;
-                break;
-            case "Blacksmithing": 
-            	idNumber = 60;
-                break;
-            case "Leatherworking":
-            	idNumber = 90;
-                break;
-            case "Herbalism":
-            	API.Print("Herbalism Has No Corresponding Building to Place. Using Default!");
-                idNumber = 0;
-                break;
-            case "Mining":
-            	API.Print("Mining Has No Corresponding Building to Place. Using Default!");
-                idNumber = 0;
-                break;
-            case "Skinning":
-            	API.Print("Skinning Has No Corresponding Building to Place. Using Default!");
-                idNumber = 0;
-                break;
-            default:
-                API.Print("No Valid Profession Identified...");
-                idNumber = 0;
-                break;
-        }
-        return idNumber;    
     }
     
     // Method:          "QuestNotDone(int)"
@@ -1011,6 +1118,87 @@ public class QH
                 API.Me.SetTarget(unit);
                 break;
             }
+        }
+    }
+    
+    // Method:          "SetGarrisonProfessionBuildings()"
+    // What it Does:    Matches your professions to the corresponding profession buildings, then plots them
+    //                  Note: It only plots them if the spaces are already vacant, thus not to disrupt player actions
+    //                  if they choose to have something else there.
+    // Purpose:         To automate profession building and garrison management whilst leveling, thus half the work
+    //                  is already completed by the time the player takes back over control at lvl 100.
+    public static void SetGarrisonProfessionBuildings()
+    {
+        int buildingID1 = 93; // Default is Storehouse
+        int buildingID2 = 51; // Default is Enchanter's Study
+        int plotID1 = 18;  // Default plot positions.
+        int plotID2 = 19;
+        string pName1 = "Storehouse"; // Default plot names
+        string pName2 = "Enchanting";
+        // Gathering player professions
+        string[] professions = GetPlayerProfessions();
+        
+        if (!professions[0].Equals("None"))
+        {
+            buildingID1 = GetProfessionBuildingID(professions[0]);
+            if (buildingID1 != 0)
+            {
+                plotID1 = API.ExecuteLua<int>("local count = 1; local plotID1 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID1 + ")) do if count == 1 then plotID1 = y count = count + 1 end end; return plotID1");
+                pName1 = professions[0];
+            }
+        }
+        
+        if (!professions[1].Equals("None"))
+        {
+            buildingID2 = GetProfessionBuildingID(professions[1]);
+            if (buildingID2 != 0)
+            {
+                plotID2 = API.ExecuteLua<int>("local count = 1; local plotID2 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID2 + ")) do if count == 1 then count = count + 1 elseif count == 2 then plotID2 = y end end; return plotID2");
+                pName2 = professions[1];
+            }
+        }
+        
+        // PlotInfo containes a bool representing if building is built there or not, and building name if there is one.
+        List<object> plotInfo =  GetGarrisonBuildingInfo(plotID1);
+        List<object> plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
+        if ((int)plotInfo[0] == 0)
+        {
+            if (buildingID1 != (int)plotInfo2[0])
+            {
+                PlaceGarrisonBuildingAt(plotID1, buildingID1);
+                API.Print("Placing Plot For " + pName1 + "!!!");
+            }
+            else if ((int)plotInfo2[0] != 0)
+            {
+                PlaceGarrisonBuildingAt(plotID1, buildingID2);
+                API.Print("Placing Plot For " + pName2 + "!");
+            }
+        }
+        else
+        {
+            API.Print("You Already Have the " + (string)plotInfo[1] + " Building There!");
+        }
+               
+        // Second Profession Plotting.
+        // Remember, if no 2nd profession is found, the Enchanter's study is placed by default.
+        plotInfo =  GetGarrisonBuildingInfo(plotID1);
+        plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
+        if ((int)plotInfo2[0] == 0)
+        {
+            if (buildingID2 != (int)plotInfo[0])
+            {
+                PlaceGarrisonBuildingAt(plotID2, buildingID2);
+                API.Print("Placing Plot For " + pName2 + "!");
+            }
+            else if ((int)plotInfo[0] != 0)
+            {
+                PlaceGarrisonBuildingAt(plotID2, buildingID1);
+                API.Print("Placing Plot For " + pName1 + "!!");
+            }
+        }
+        else
+        {
+            API.Print("You Already Have the " + (string)plotInfo2[1] + " Building There!");
         }
     }
 
