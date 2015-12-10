@@ -124,9 +124,42 @@ public class QH
     {
         if (toBuy > 0) 
         {
-            string buy = "BuyMerchantItem(22," + toBuy + ")";  // Building LUA script to paste in string form
+            string buy = "BuyMerchantItem(24," + toBuy + ")";  // Building LUA script to paste in string form
             API.ExecuteLua(buy);
         }
+    }
+    
+    // Method:          "BuyVendorItemByID(int ID)"
+    public static IEnumerable<int> BuyVendorItemByID(int itemToBuy, int howMany)
+    {
+        // parsing through vendor
+        int BuyTwenty = howMany / 20;
+        int remainder = howMany % 20;
+        string itemID;
+        string temp;
+        int ID;
+        for (int i = 1; i < API.ExecuteLua<int>("return GetMerchantNumItems()"); i++)
+			{
+				itemID = API.ExecuteLua<string>("return GetMerchantItemLink(" + i + ");");
+				temp = itemID.Substring(itemID.IndexOf(':') + 1);
+				itemID = itemID.Substring(itemID.IndexOf(':') + 1, temp.IndexOf(':'));
+				ID = int.Parse(itemID);
+				if (itemToBuy == ID)
+				{
+					// j = Multiples of 20
+					for (int j = 0; j < BuyTwenty; j++)
+					{
+						API.ExecuteLua("BuyMerchantItem(" + i + ", 20)");
+						yield return 500;
+					}
+					if (remainder > 0)
+					{
+						API.ExecuteLua("BuyMerchantItem(" + i + "," + remainder + ")");
+						yield return 500;
+					}
+					yield break;
+				}
+			}
     }
     
     // Method:          "CTA_GarrisonAbility()"
@@ -1294,7 +1327,7 @@ public class QH
         }
     }
     
-    // Method:          "SetNearestFocusUnit(int[])"
+    // Method:          "SetNearestFocusUnit(int)"
     // What it does:    Targets and sets focus to the closest give unit.
     // Purpose:         Sometimes when iterating through the list of "Units," the closest does not always come first.
     //                  Often it is more effective to target closest unit first, rather than seemingly any
@@ -1317,6 +1350,65 @@ public class QH
                     closestUnit = unit.Distance;
                     // This stores the GUID, which is necessary as ALL units share the same UnitID, but the GUID is a unique identifier.
                     killTarget = unit.GUID;
+                }
+            }
+        }
+        if (closestUnit == 5000)
+        {
+            API.Print("No Units Found Within Targetable Range.");
+        }
+        else
+        {
+            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print.
+            API.Print("Closest target is " + closest + " yards away.");
+            // Setting Focus to closest Unit
+            foreach (var unit in API.Units)
+            {
+                if (unit.GUID == killTarget)
+                {
+                    API.Me.SetFocus(unit);
+                    API.Me.SetTarget(unit);
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Method:          "SetNearestFocusUnit(int, Vector3[])"
+    // What it does:    Targets and sets focus to the closest give unit.
+    // Purpose:         Sometimes when iterating through the list of "Units," the closest does not always come first.
+    //                  Often it is more effective to target closest unit first, rather than seemingly any
+    //                  random unit within 100 yrds.
+    public static void SetNearestFocusUnit(int ID, Vector3[] blacklist)
+    {
+        API.Me.ClearFocus();
+        var killTarget = API.Me.GUID;
+        float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+        int count = 0; // Blacklisted nodes
+        
+        // Identifying Closest Desired Unit
+        foreach (var unit in API.Units)
+        {
+            if (unit.EntryID == ID && !unit.IsDead)
+            {
+                if (unit.Distance < closestUnit)
+                {
+                    for (int i = 0; i < blacklist.Length; i++)
+                    {
+                        if (unit.Distance2DTo(blacklist[i]) <= 10)
+                        {
+                            count++;
+                            break;
+                        }
+                    }
+                    if (count == 0)
+                    {
+                        // This stores the distance of the new unit, so when it re-iterates through,
+                        // ultimately the unit with the lowest distance, or the one closest to you is stored
+                        closestUnit = unit.Distance;
+                        // This stores the GUID, which is necessary as ALL units share the same UnitID, but the GUID is a unique identifier.
+                        killTarget = unit.GUID;
+                    }
                 }
             }
         }
@@ -1979,3 +2071,4 @@ public class QH
         }
     }
 }
+
