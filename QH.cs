@@ -759,6 +759,36 @@ public class QH
         return false;
     }
     
+    // Method:          "IsItemSoulbound(int)"
+    // What it Does:    Returns whether the given item in a player bags is SoulBound.  If the given item is not, or not owned, it returns false
+    // Purpose:         Mainly for vendor filtering.  If item is SoulBound, not equippable, and has a vendor value > 0, it might be worth selling.
+    public static bool IsItemSoulbound(int ID)
+	{
+		bool result;
+		int container = -1;
+		int slot = -1;
+		// parsing through inventory items to match ID
+		foreach (var item in Inventory.Items)
+		{
+			if (item.ItemId == ID)
+			{
+				container = item.ContainerId; // Establishing bag position
+				slot = item.SlotId;
+			}
+		}
+		
+		// Parsing tooltip for Soulbound info
+		if (container >= 0)
+		{
+			result = API.ExecuteLua<bool>("local tooltip; local function create() local tip, leftside = CreateFrame(\"GameTooltip\"), {} for i = 1, 3 do local L,R = tip:CreateFontString(), tip:CreateFontString() L:SetFontObject(GameFontNormal) R:SetFontObject(GameFontNormal) tip:AddFontStrings(L,R) leftside[i] = L end tip.leftside = leftside return tip end; local function Is_Soulbound(bag, slot) tooltip = tooltip or create() tooltip:SetOwner(UIParent,\"ANCHOR_NONE\") tooltip:ClearLines() tooltip:SetBagItem(bag, slot) local s = tooltip.leftside[2]:GetText() local t = tooltip.leftside[3]:GetText() tooltip:Hide() if (s == ITEM_SOULBOUND or t == ITEM_SOULBOUND) then return true; else return false; end end return Is_Soulbound(" + container + "," + slot + ")");
+		}
+		else
+		{
+			result = false;
+		}
+		return result;
+	}
+    
     // Method:          "IsInScenario()"
     // What it Does:    Returns a boolean on if a player is in a scenario or not.  This applies to those major zone story quests
     //                  where the player is phased, are considered "scenarios."
@@ -1699,6 +1729,21 @@ public class QH
                         position2 = Math.Sqrt(API.Me.DistanceSquaredTo(unit));
                         yield return 100;
                     }
+                    // Checking position of elevator against your current position.
+                    if (API.Me.Position.Z < unit.Position.Z)
+                    {
+                        while(unit.Position.Z > (API.Me.Position.Z + 1.0)) 
+                        {
+                            yield return 100;
+                        }
+                    }
+                    else if (API.Me.Position.Z > unit.Position.Z)
+                    {
+                        while(unit.Position.Z < (API.Me.Position.Z - 1.0)) 
+                        {
+                            yield return 100;
+                        }
+                    }
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
                 API.CTM(unit.Position);
@@ -1804,9 +1849,20 @@ public class QH
                         }
                         API.Print("Alright, It Is Coming Back to us. Get Ready!");
                     }
-                    while(unit.Position.Z > (startZ + 1.0)) 
+                    // Checking position of elevator against your current position.
+                    if (API.Me.Position.Z < unit.Position.Z)
                     {
-                        yield return 100;
+                        while(unit.Position.Z > (startZ + 1.0)) 
+                        {
+                            yield return 100;
+                        }
+                    }
+                    else if (API.Me.Position.Z > unit.Position.Z)
+                    {
+                        while(unit.Position.Z < (startZ - 1.0)) 
+                        {
+                            yield return 100;
+                        }
                     }
                 }
                 API.Print("Ah, Excellent! Elevator is Here! Hop On Quick!");
@@ -2070,5 +2126,64 @@ public class QH
             yield return 100;
         }
     }
+    
+    
+    
+    
+    public static int GetItemMinLevel(int ID)
+	{
+		return API.ExecuteLua<int>("local _,_,_,_,itemMinLevel = GetItemInfo(" + ID + "); return itemMinLevel;");
+	}
+	
+	public static bool IsItemAToy(int ID)
+	{
+		bool result;
+		int container = -1;
+		int slot = -1;
+		// parsing through inventory items to match ID
+		foreach (var item in Inventory.Items)
+		{
+			if (item.ItemId == ID)
+			{
+				container = item.ContainerId; // Establishing bag position
+				slot = item.SlotId;
+			}
+		}
+		
+		// Parsing tooltip for Soulbound info
+		if (container >= 0)
+		{
+			result = API.ExecuteLua<bool>("local tooltip; local function create() local tip, leftside = CreateFrame(\"GameTooltip\"), {} for i = 1, 5 do local L,R = tip:CreateFontString(), tip:CreateFontString() L:SetFontObject(GameFontNormal) R:SetFontObject(GameFontNormal) tip:AddFontStrings(L,R) leftside[i] = L end tip.leftside = leftside return tip end; local function Is_Toy(bag, slot) tooltip = tooltip or create() tooltip:SetOwner(UIParent,\"ANCHOR_NONE\") tooltip:ClearLines() tooltip:SetBagItem(bag, slot) local s = tooltip.leftside[2]:GetText() local t = tooltip.leftside[3]:GetText() u = tooltip.leftside[4]:GetText() tooltip:Hide() if (s == TOY or t == TOY or u == TOY) then return true; else return false; end end return Is_Toy(" + container + "," + slot + ")");
+		}
+		else
+		{
+			result = false;
+		}
+		return result;
+	}
+    
+    public static void DestroyKnownToys()
+	{
+        Inventory.Refresh();
+		int vendorPrice;
+		bool soulBound;
+		bool isToy;
+		bool playerHasToy;
+		var ItemList = Inventory.Items;
+		// Items to Destroy - Toys that are soulbound, already known, and not vendorable.
+		foreach (var item in ItemList)
+		{
+			// Gear items that have no value
+			vendorPrice = item.ItemInfo.VendorPrice;
+			soulBound = IsItemSoulbound(item.ItemId);
+			isToy = IsItemAToy(item.ItemId);
+			playerHasToy = API.ExecuteLua<bool>("return PlayerHasToy(" + item.ItemId + ")");
+			if (soulBound && vendorPrice == 0 && isToy && playerHasToy)
+			{
+				// Destroy the item...
+				API.Print("Destroying the Following Item:  " + item.Name);
+			}
+		}
+	}
 }
 
