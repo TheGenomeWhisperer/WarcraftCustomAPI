@@ -11,6 +11,9 @@
 |               
 |               Full Information on actual use in live profiles: http://www.rebot.to/showthread.php?t=4930
 |               QH = Q.H. = QuestingHelps
+|
+|               Last Update: December 17th, 2015
+|
 */  
 	
 public class QH
@@ -138,7 +141,7 @@ public class QH
         string itemID;
         string temp;
         int ID;
-        for (int i = 1; i < API.ExecuteLua<int>("return GetMerchantNumItems()"); i++)
+        for (int i = 1; i <= API.ExecuteLua<int>("return GetMerchantNumItems()"); i++)
 			{
 				itemID = API.ExecuteLua<string>("return GetMerchantItemLink(" + i + ");");
 				temp = itemID.Substring(itemID.IndexOf(':') + 1);
@@ -188,6 +191,34 @@ public class QH
             yield break;
         }
     }
+    
+    // Method:          DestroyKnownToys()
+    // What it Does:    If there are any items in the player's inventory that are also TOYS, but the player already has Learned them, it them destroys the item
+    // Purpose:         To help with the whole inventory clearing process.  The manual way would be to pick it up, click out of bags, type in "DELETE" for rare or higher items
+    //                  This just automates it all.
+    public static void DestroyKnownToys()
+	{
+        Inventory.Refresh();
+		int vendorPrice;
+		bool soulBound;
+		bool isToy;
+		bool playerHasToy;
+		var ItemList = Inventory.Items;
+		// Items to Destroy - Toys that are soulbound, already known, and not vendorable.
+		foreach (var item in ItemList)
+		{
+			// Gear items that have no value
+			vendorPrice = item.ItemInfo.VendorPrice;
+			soulBound = IsItemSoulbound(item.ItemId);
+			isToy = IsItemInInventoryAToy(item.ItemId);
+			playerHasToy = API.ExecuteLua<bool>("return PlayerHasToy(" + item.ItemId + ")");
+			if (soulBound && vendorPrice == 0 && isToy && playerHasToy)
+			{
+				// Destroy the item...
+				API.Print("Destroying the Following Item:  " + item.Name);
+			}
+		}
+	}
 
     // Method:          "DisableAddOn(string,bool)"
     // What it Does:    Disables the named addon and reloads the UI (if you so choose)
@@ -211,6 +242,33 @@ public class QH
             API.ExecuteLua("ReloadUI()");
             yield return 1500;
             API.Print("On Loading screen...");
+        }
+    }
+    
+    // Method:          "DisableAddons(string[])"
+    // What it Does:    First, disables all the given addons in the array, based on the given name of the addon (This is based on the [FOLDER NAME] of the addon in /interface/addons/<name>)
+    //                  And then after disabling, give the boolean option set to true and the player's UI will reload.  This would typically be done as in most cases a reload is necessary to disable.
+    // Purpose:         As with the previous method's description, it is mainly to be able to add a Quality of Life feature to prevent the user's experience from being sub-par by managing their addons
+    //                  for them as with certain items there can be certain UI issues that affect macro interactions...
+    public static void DisableAddons(string[] addonName, bool reloadUI)
+    {
+        int numDisabled = 0;
+        
+        for (int i = 0; i < addonName.Length; i++)
+        {
+            if (HasAddOnEnabled(addonName[i]))
+            {
+                numDisabled++;
+                API.Print("Disabling " + addonName[i] + " addon!");
+                string luaCall = "DisableAddOn(\"" + addonName[i] + "\", UnitName(\"player\"))";
+                API.ExecuteLua(luaCall);
+            }
+        }
+        
+        if (numDisabled > 0 && reloadUI)
+        {
+            API.Print("You Have Disabled " + numDisabled + " Addons and Need to Reload.\nReloading Now!");
+            API.ExecuteLua("ReloadUI()");
         }
     }
     
@@ -255,6 +313,76 @@ public class QH
             API.Print("Unable to Identify Correct Gossip Option.");
         }
     }
+    
+    // Method:          "DoFlightMasterGossip()"
+    // What it Does:    If talking to a flightmaster, if the flightwindow is not open on interact and you are presented with gossip options, this chooses the correct option.
+    // Purpose:         Often Flightmasters have a lot of different Gossip options, like say, unfinished quests,
+    //                  which will replace the normal gossip position on the flightmaster.  This finds the gossip option and 
+    //                  selects the correct one.  This also brings in compatibility for ALL clients.
+    public static void DoFlightMasterGossip()
+    {
+        // Initializing Function
+        string title = "title0";
+        string luaCall = ("local title0,_ = GetGossipOptions(); if title0 ~= nil then return title0 else return \"nil\" end");
+        string result = API.ExecuteLua<string>(luaCall);
+        // Now Ready to Iterate through All Gossip Options!
+        // The reason "1" is used instead of the conventional "0" is because Gossip options start at 1.
+        int i = 1;
+        string num = "";
+        while (result != null)
+        {
+            if (result.Equals("Show me where I can fly.") || result.Equals("Muéstrame adónde puedo ir volando.") || result.Equals("Mostre-me para onde posso voar.") || result.Equals("Wohin kann ich fliegen?") || result.Equals("Muéstrame adónde puedo ir volando.") || result.Equals("Montrez-moi où je peux voler.") || result.Equals("Mostrami dove posso volare.") || result.Equals("Покажи, куда я могу отправиться.") || result.Equals("제가 날아갈 수 있는 곳을 알려 주십시오.") || result.Equals("告訴我可以飛往那些地方。") || result.Equals("告诉我可以飞到哪里去。"))
+            {
+                API.ExecuteLua("SelectGossipOption(" + i + ");");
+                break;
+            }
+            else
+            {
+                // This builds the new string to be added into an Lua API call.
+                num = i.ToString();
+                title = (title.Substring(0,title.Length-1) + num);
+                luaCall = ("local " + title + ",_," + luaCall.Substring(6,luaCall.Length-6));
+                result = API.ExecuteLua<string>(luaCall);
+                i++;
+            }
+        }
+    }
+    
+    // Method:          "DoMerchantGossip()"
+    // What it Does:    Interacts with the appropriate Gossip option on a vendor to open the buy/sell window.
+    // Purpose:         If the player is at a Merchant (Refreshment, Vendor, or any generic merchant), at times on first interaction the Merchant may have various
+    //                  gossip options rather than opening the buy/sell window immediately.  In these cases, it would be necessary to determine which gossip option would be the
+    //                  correct one to open the vendor.  While most of the time it is the first option, I have found a few unique cases where this is not true, and as such
+    //                  to encompass all possibilities, this is a universal method to coose the correct option always.
+    //                  Example of when to use, after interacting with a merchant:  if (!IsVendorOpen) {DoMerchantGossip()};
+    private static void DoMerchantGossip()
+	{
+		// Initializing Function
+		string title = "title0";
+		string luaCall = ("local title0,_ = GetGossipOptions(); if title0 ~= nil then return title0 else return \"nil\" end");
+		string result = API.ExecuteLua<string>(luaCall);
+		// Now Ready to Iterate through All Gossip Options!
+		// The reason "1" is used instead of the conventional "0" is because Gossip options start at 1.
+		int i = 1;
+		string num = "";
+		while (result != null)
+		{
+			if ((result.Equals("Let me browse your goods.") || result.Equals("I want to browse your goods.")) || (result.Equals("Deja que eche un vistazo a tus mercancías.") || result.Equals("Quiero ver tus mercancías.")) || (result.Equals("Deixe-me dar uma olhada nas suas mercadorias.") || result.Equals("Quero ver o que você tem à venda.")) || (result.Equals("Ich möchte ein wenig in Euren Waren stöbern.") || result.Equals("Ich sehe mich nur mal um.")) || (result.Equals("Deja que eche un vistazo a tus mercancías.") || result.Equals("Quiero ver tus mercancías.")) || (result.Equals("Permettez-moi de jeter un œil à vos biens.") || result.Equals("Je voudrais regarder vos articles.")) || (result.Equals("Fammi vedere la tua merce.") || result.Equals("Voglio dare un'occhiata alla tua merce.")) || (result.Equals("Позвольте взглянуть на ваши товары.") || result.Equals("Я хочу посмотреть на ваши товары.")) || (result.Equals("물건을 살펴보고 싶습니다.") || result.Equals("물건을 보고 싶습니다.")) || (result.Equals(" 讓我看看你出售的貨物。") || result.Equals("我想要看看你賣的貨物。")) || (result.Equals("让我看看你出售的货物。") || result.Equals("我想要看看你卖的货物。")))
+			{
+				API.ExecuteLua("SelectGossipOption(" + i + ");");
+				break;
+			}
+			else
+			{
+				// This builds the new string to be added into an Lua API call.
+				num = i.ToString();
+				title = (title.Substring(0, title.Length - 1) + num);
+				luaCall = ("local " + title + ",_," + luaCall.Substring(6, luaCall.Length - 6));
+				result = API.ExecuteLua<string>(luaCall);
+				i++;
+			}
+		}
+	}
     
     // Method:          "ExpPotionsNeeded()"
     // What it Does:    Returns the number of experience potions a player should buy based on their player level.
@@ -330,6 +458,30 @@ public class QH
         return toBuy;
     }
     
+    // Method:          "GetDurability()"
+	// What it Does:    Returns the % of character durability as an int (0-100)
+    // Purpose:         Could be a good reason to check player's durability before moving on.
+	public static int GetDurability()
+	{
+		int count = 9;
+		float durability = 0;
+		durability += API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(1) if durability ~= nil then local result = durability/max; return result else return 1.0 end");
+		durability += API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(3) if durability ~= nil then local result = durability/max; return result else return 1.0 end");
+		for (int i = 5; i <= 10; i++)
+		{
+			durability += API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(" + i + ") if durability ~= nil then local result = durability/max; return result else return 1.0 end");
+		}
+		durability += API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(16) if durability ~= nil then local result = durability/max; return result else return 1.0 end");
+
+		if (API.ExecuteLua<bool>("local durability = GetInventoryItemDurability(17); if durability ~= nil then return true else return false end"))
+		{
+			durability += API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(17) local result = durability/max; return result");
+			count++;
+		}
+		durability = durability / count * 100;
+		return (int)durability;
+	}
+    
     // Method:          "GetGarrisonBuildingInfo(int)"
     // What it Does:    Returns a List of 2 objects, an int representing the buildingID that is placed there, and a string representing the name of that building
     //                  If no building is present, it will return ZERO for the buildingID, and "No Building" for the string.
@@ -361,6 +513,49 @@ public class QH
         return API.ExecuteLua<int>("local _, gResources = GetCurrencyInfo(824); return gResources");
     }
     
+    // Method:          "GetItemMinLevel(int)
+    // What it Does:    Returns the Minimum Level required of a piece of gear to be equipped.  It returns '0' if there is no minimum.
+    // Purpose:         So player can check conditionals on gear for whatever reason. It is commonly to be usedin regards to outdated gear vendoring.
+    public static int GetItemMinLevel(int ID)
+	{
+		return API.ExecuteLua<int>("local _,_,_,_,itemMinLevel = GetItemInfo(" + ID + "); return itemMinLevel;");
+	}
+    
+    // Method:          "GetNumItemsBroken()"
+	// What it Does:    Returns if player has any Broken ("RED") items equipped.
+    // Purpose:         Could be useful if at a vendor to institute a brief repair.
+	public static int GetNumItemsBroken()
+	{
+		int count = 0;
+		if (API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(1) if durability ~= nil then local result = durability/max; return result else return 1.0 end") < 0.1f)
+		{
+			count++;
+		}
+		if (API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(3) if durability ~= nil then local result = durability/max; return result else return 1.0 end") < 0.1f)
+		{
+			count++;
+		}
+		for (int i = 5; i <= 10; i++)
+		{
+			if (API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(" + i + ") if durability ~= nil then local result = durability/max; return result else return 1.0 end") < 0.1f)
+			{
+				count++;
+			}
+		}
+		if (API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(16) if durability ~= nil then local result = durability/max; return result else return 1.0 end") < 0.1f)
+		{
+			count++;
+		}
+		if (API.ExecuteLua<bool>("local durability = GetInventoryItemDurability(17); if durability ~= nil then return true else return false end"))
+		{
+			if (API.ExecuteLua<float>("local durability,max = GetInventoryItemDurability(17) local result = durability/max; return result") < 0.1f)
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+    
     // Method:          "GetPlayerGold()"
     // What it Does:    Returns the amount of Gold a player has (Rounded down to even(int) Gold number)
     // Purpose:         Much like with the Garrison Resources method, this can be useful to ensure player has the means to
@@ -377,7 +572,7 @@ public class QH
     // Purpose:         In case of challenging quests, player iLvl can be determined to be a sufficient minimum
     public static int GetPlayerItemLevel()
     {
-        return API.ExecuteLua<int>("local _,equipped = GetAverageItemLevel(); return equipped");
+        return (int)API.ExecuteLua<double>("local _,equipped = GetAverageItemLevel(); return equipped");
     }
     
     // Method:          "GetPlayerProfessions()"
@@ -624,6 +819,19 @@ public class QH
         return false;
     }
     
+    // Method:			"HasRepairMount();
+	// What it Does:	Return true if you have any of the Horde repair mounts(Traveler's Tundra, Expedition Yak).
+    // Purpose:         Could be useful in a check to get quick access to a vendor if needed...
+	public static bool HasHordeRepairMount()
+	{
+		// Traveler's Tundra or
+		if (API.HasMount(61447) || API.HasMount(122708))
+		{
+			return true;
+		}
+		return false;
+	}
+    
     // Method:          "Hasprofession()"
     // What it Does:    Returns a boolean on whether the player has any primary profession or not.
     // Purpose:         There are a few instances with the Garrison where I match professions to their buildings, that first
@@ -641,6 +849,7 @@ public class QH
         }
         return false;
     }
+    
     
     // Method:          "HearthToGarrison()"
     // What it Does:    Exactly as described, uses the Garrison hearthstone.
@@ -733,6 +942,69 @@ public class QH
         return false;
     }
     
+    // Method:          "IsFlightMapOpen()"
+    // What it Does:    Returns true if the player is at a Flightmaster and the flightmap to choose a destination is open
+    // Purpose:         Basic boolean gate can be useful at times before attempting to choose flight destination.
+    public static bool IsFlightMapOpen()
+	{
+		return API.ExecuteLua<bool>("if TaxiNodeName(1) ~= \"INVALID\" then return true else return false end");
+	}
+    
+    // Method:          "IsFoodVendorNearby()"
+    // What it Does:    Returns true if a player is within 100 yards of a food vendor
+    // Purpose:         Could be a useful check if player wanted to search for a vendor if passing through town
+    public static bool IsFoodVendorNearby()
+	{
+		foreach (var unit in API.Units)
+		{
+			if (!unit.IsDead && unit.HasFlag(UnitNPCFlags.SellsFood))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+    
+    // Method:          "IsInCombat()"
+    // What it Does:    If the player is in Combat (as in the bot-base is active), then it returns true
+    // Purpose:         One example of use could be as simple as while(IsInCombat()) {yield retun 100;} - or something like that... 
+    //                  waiting til out of combat, continuing action if in combat and so on.
+    public static bool IsInCombat()
+    {
+        return ReBot.Behaviours.Combat.Base.CombatBase.IsFighting;
+    }
+    
+    // Method:          "IsItemInInventoryAToy(int ID)
+    // What it Does:    Returns true if the given item is found in your inventory AND it is a toy
+    // Purpose:         This is mainly used to identify items in your bag, as you parse through it, and return true if they are.
+    //                  It's a basic boolean check before moving on to more bloated code.
+    public static bool IsItemInInventoryAToy(int ID)
+	{
+		bool result;
+		int container = -1;
+		int slot = -1;
+		// parsing through inventory items to match ID
+		foreach (var item in Inventory.Items)
+		{
+			if (item.ItemId == ID)
+			{
+				container = item.ContainerId; // Establishing bag position
+				slot = item.SlotId;
+			}
+		}
+		
+		// Parsing tooltip for Soulbound info
+		if (container >= 0)
+		{
+			result = API.ExecuteLua<bool>("local tooltip; local function create() local tip, leftside = CreateFrame(\"GameTooltip\"), {} for i = 1, 5 do local L,R = tip:CreateFontString(), tip:CreateFontString() L:SetFontObject(GameFontNormal) R:SetFontObject(GameFontNormal) tip:AddFontStrings(L,R) leftside[i] = L end tip.leftside = leftside return tip end; local function Is_Toy(bag, slot) tooltip = tooltip or create() tooltip:SetOwner(UIParent,\"ANCHOR_NONE\") tooltip:ClearLines() tooltip:SetBagItem(bag, slot) local s = tooltip.leftside[2]:GetText() local t = tooltip.leftside[3]:GetText() u = tooltip.leftside[4]:GetText() tooltip:Hide() if (s == TOY or t == TOY or u == TOY) then return true; else return false; end end return Is_Toy(" + container + "," + slot + ")");
+		}
+		else
+		{
+			result = false;
+		}
+		return result;
+	}
+    
     // Method:          "IsInGordalFortress()"
     // What it Does:    Returns a boolean if the player is located within the specific zone called "Gordal Fortress" located in Talador.
     // Purpose:         Gordal Fortress has a barrier to get to and the mesh system can be problematic navigating it. For all the quests
@@ -821,6 +1093,30 @@ public class QH
         return result;
     }
     
+    // Method:          "IsRepairVendorNearby()"
+    // What it Does:    Returns true if a player is within 100 yards of a Repair vendor
+    // Purpose:         Could be a useful check if player wanted to search for a vendor if passing through town
+	public static bool IsRepairVendorNearby()
+	{
+		foreach (var unit in API.Units)
+		{
+			if (!unit.IsDead && unit.HasFlag(UnitNPCFlags.CanRepair))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+    
+    // Method:		    "IsVendorOpen()"
+    // What it Does:    Returns true if the Vendor window is open and you are currently able to buy/selling
+    // Purpose:         Many vendors have gossip options on interact.  This could be useful on interaction checking to ensure
+    //                  the vendor window is open, and if it is not yet open, parsing through gossip options and selecting the correct one.
+	public static bool IsVendorOpen()
+	{
+		return API.ExecuteLua<bool>("local name = GetMerchantItemInfo(1); if name ~= nil then return true else return false end;");
+	}
+    
     // Method:          "ItemsNeededForQuest(int,int,int)"
     // What it Does:    Determines how many items for say, a specific quest objective still need to be collected.
     // Purpose:         Some quests require you to collect items and then use them in place or on another objet.
@@ -876,13 +1172,9 @@ public class QH
     // Method:          "NeedsFollower(string)"
     // What it Does:    Returns a boolean on Garrison Mission Followers already owned. If you already own the given one, it will return false.
     // Purpose:         This helps to determine if a player should waste time attempting to retrieve said follower or not.
-    public static bool NeedsFollower(string Name)
+    public static bool NeedsFollower(int followerDisplayID)
     {
-        string followerName = ("\"" + Name + "\"");
-        bool toBuy = false;
-        int displayID = API.ExecuteLua<int>("local allFollowers = C_Garrison.GetFollowers(); local followerID = 0; for x, y in pairs(allFollowers) do if (y.name == " + followerName + ") then followerID = y.displayID; break; end end; return followerID;");
-        toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + displayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy");
-        return toBuy;
+        return API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + followerDisplayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
     }
     
     // Method:          "PlaceGarrisonBuildingAt(int,int)"
@@ -994,6 +1286,14 @@ public class QH
         {
             yield return 100;
         }
+    }
+    
+    // Method:          "PlayerHasToy(int toyID)"
+    // What it Does:    Returns true if the player has already learned the toy
+    // Purpose:         For easy checking to see if toy should be used or not.
+    public static bool PlayerHasToy(int toyID)
+    {
+        return API.ExecuteLua<bool>("local isOwned = PlayerHasToy(" + toyID + "); return isOwned;");
     }
     
     // Method:          "QuestNotDone(int)"
@@ -1558,12 +1858,13 @@ public class QH
          // Smuggler's Run is Not on CoolDown and you are in the right zone, and not on a transport.
         if (RemainingSpellCD(170097) == 0 && API.Me.ZoneId == 6722 && !API.Me.IsOnTransport)
         {
+            Inventory.Refresh();
             int item1 = API.ExecuteLua<int>("local itemCount =GetItemCount(113277, false, false); return itemCount;");
             int item2 = API.ExecuteLua<int>("local itemCount =GetItemCount(113276, false, false); return itemCount;");
             int item3 = API.ExecuteLua<int>("local itemCount =GetItemCount(113275, false, false); return itemCount;");
             int item4 = API.ExecuteLua<int>("local itemCount =GetItemCount(113274, false, false); return itemCount;");
             int item5 = API.ExecuteLua<int>("local itemCount =GetItemCount(113273, false, false); return itemCount;");
-            if (item1 < 1 || item2 < 1 || item3 < 1 || item4 < 1 || item5 < 1 || (NeedsFollower("Ziri'ak") && GetPlayerGold() > 400))
+            if (item1 < 1 || item2 < 1 || item3 < 1 || item4 < 1 || item5 < 1 || (NeedsFollower(58876) && GetPlayerGold() > 400))
             {
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
                 yield return 6000;
@@ -1585,7 +1886,7 @@ public class QH
                 }
                 while (API.Me.Focus != null && API.Me.Focus.Distance > 5) 
                 {
-                    API.CTM(API.Me.Focus.Position);
+                    API.MoveTo(API.Me.Focus.Position);
                     yield return 50;
                 }
                 if (API.Me.Focus != null && API.Me.Focus.EntryID == 84243) 
@@ -1594,20 +1895,65 @@ public class QH
                     yield return 1000;
                     API.ExecuteLua("GossipTitleButton1:Click()");
                     yield return 1000;
+                    // First check if player needs to buy the rare follower on here.
                     bool toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == 58876 and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
                     if (toBuy && GetPlayerGold() > 400)
                     {
-                        API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if (price == 4000000) then BuyMerchantItem(i, 1); end end;");
+                        var check0 = new Fiber<int>(BuyVendorItemByID(116915,1));
+                        while (check0.Run()) {yield return 100;}
                         yield return 1000;
+                        Inventory.Refresh();
                         if (API.HasItem(116915))
                         {
                             API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
                             API.UseItem(116915);
                             yield return 2000;
-                            API.Print("Yay! Ziri'ak is Now Your Follower!");
-                        }                       
+                            API.Print("Yay! Ziri'ak is Now Your Follower!"); 
+                        }    
                     }
-                    API.ExecuteLua("for i = 1, GetMerchantNumItems() do local _, _, price, _, numAvailable, _, _ = GetMerchantItemInfo(i); if ((price == 20000 and (GetItemCount(113276, false, false) < 1 or GetItemCount(113275, false, false) < 1 or GetItemCount(113273, false, false) < 1 or GetItemCount(113277, false, false) < 1)) or (price == 54595 and GetItemCount(113274, false, false) < 1)) then BuyMerchantItem(i, numAvailable); end end;");
+                    // Let's check for that 500g toy as well, Bloodmane Charm.
+                    bool notOwned = PlayerHasToy(113096);
+                    if (notOwned && GetPlayerGold() > 400)
+                    {
+                        var check0 = new Fiber<int>(BuyVendorItemByID(113096,1));
+                        while (check0.Run()) {yield return 100;}
+                        yield return 1000;
+                        Inventory.Refresh();
+                        if (API.HasItem(113096))
+                        {
+                            API.Print("Buying the Rare Toy \"Bloodmane Charm \" Found on the Vendor!");
+                            API.UseItem(113096);
+                            yield return 2000;
+                            API.Print("Toy is now learned! Yay!"); 
+                        }    
+                    }
+                    
+                    // If player is not already in posession of an item and doesn't have the aura, he sells it.
+                    if (item1 < 1) 
+                    {
+                        var check1 = new Fiber<int>(BuyVendorItemByID(113277,1));
+                        while (check1.Run()) {yield return 100;}
+                    }
+                    if (item2 < 1) 
+                    {
+                        var check2 = new Fiber<int>(BuyVendorItemByID(113276,1));
+                        while (check2.Run()) {yield return 100;}
+                    }
+                    if (item3 < 1) 
+                    {
+                        var check3 = new Fiber<int>(BuyVendorItemByID(113275,1));
+                        while (check3.Run()) {yield return 100;}
+                    }
+                    if (item4 < 1) 
+                    {
+                        var check4 = new Fiber<int>(BuyVendorItemByID(113274,1));
+                        while (check4.Run()) {yield return 100;}
+                    }
+                    if (item5 < 1) 
+                    {
+                        var check5 = new Fiber<int>(BuyVendorItemByID(113273,1));
+                        while (check5.Run()) {yield return 100;}
+                    }
                     yield return 1000;                    
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
@@ -1997,6 +2343,84 @@ public class QH
         return found;
     }
     
+    // Method:          "UseCannonInMovingVehicle(int[] targetIDs, int vehicleSpell, int spellCooldown)"
+    // What it Does:    Targets the closest unit that is IN FRONT of the player and fires the given cannon spell.
+    // Purpose:         Some flying quests can crash the bot as the built in cannon tool may try to target the cannon outside its given range.
+    //                  This causes not just a bot crash, but can crash the entire WOW game itself.  So, I wrote a custom targeting system when in a "Moving"
+    //                  vehicle.  The reason this is important is some moving vehicle quests the player's camera may change swiftly that the bot does not account
+    //                  for with current tools.  This resolves that issue/
+    // Add. notes:      Note - the "spellCooldown" argument is in SECONDS
+    public static IEnumerable<int> UseCannonInMovingVehicle(int[] targetIDs, int vehicleSpell, int spellCooldown)
+    {
+        if (vehicleSpell < 1 || vehicleSpell > 9)
+        {
+            API.Print("Error! Vehicle Spell chosen does not exist! Please ensure you chose the correct ability, starting at position 1.\nSetting default vehicle ability to position 1.");
+        }
+        var killTarget = API.Me.GUID;
+        float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+        float position1;
+        float position2;
+        API.Me.ClearFocus();
+        
+        // Identifying Closest Desired Unit
+        foreach (var unit in API.Units)
+        {
+            for (int i = 0; i < targetIDs.Length;  i++)
+                {
+                        if (unit.EntryID == targetIDs[i] && !unit.IsDead)
+                        {
+                                if (unit.Distance < closestUnit)
+                                {
+                                    // This stores the distance of the new unit, so when it re-iterates through,
+                                    // ultimately the unit with the lowest distance, or the one closest to you is stored
+                                    closestUnit = unit.Distance;
+                                    // This stores the GUID, which is necessary as ALL units share the same UnitID, but the GUID is a unique identifier.
+                                    killTarget = unit.GUID;
+                                }
+                        }
+                }
+        }
+        if (closestUnit == 5000f)
+        {
+            API.Print("No Units Found Within Targetable Range.");
+        }
+        else
+        {
+            Int32 closest = (Int32)closestUnit; // Easier on the eyes to Print.
+                // Setting Focus to closest Unit
+        
+            foreach (var unit in API.Units)
+            {
+                if (unit.GUID == killTarget)
+                {
+                    API.Me.SetTarget(unit);
+                    // Verifying Target is in front!!!
+                    position1 = API.Me.Distance2DTo(unit.Position);
+                    yield return 250;
+                    position2 = API.Me.Distance2DTo(unit.Position);
+                    if (position1 > position2) 
+                    {
+                        API.Print("Target Acquired... Firing on " + unit.Name + "!");
+                        API.Me.SetFocus(unit);
+                        var v = unit.Position - API.Me.Position;
+                        v.Normalize();
+                        ((UnitObject) API.Me.Transport).AimAt(API.Me.Target.PositionPredicted);
+                        API.ExecuteLua(string.Format("local pitch = {0}; local delta = pitch - VehicleAimGetAngle(); VehicleAimIncrement(delta);", Math.Asin(v.Z)));
+                        API.ExecuteLua("OverrideActionBarButton" + vehicleSpell + ":Click();");
+                    }
+                    else
+                    {
+                        yield return 250;
+                        API.Me.ClearFocus();
+                    }
+                    break;
+                }
+            }
+        }
+        yield return (spellCooldown * 1000);
+        API.Me.ClearFocus();
+    }
+    
     // Method:          "UseGuildBanner()"
     // What it does:    Uses a Horde Guild Banner at Player Position by prioritization of best (15% bonus gains) to worst (5%).
     // Purpose:         If the banner is not on cooldown, it will use it when called upon. This is to assist in the Player
@@ -2127,63 +2551,4 @@ public class QH
         }
     }
     
-    
-    
-    
-    public static int GetItemMinLevel(int ID)
-	{
-		return API.ExecuteLua<int>("local _,_,_,_,itemMinLevel = GetItemInfo(" + ID + "); return itemMinLevel;");
-	}
-	
-	public static bool IsItemAToy(int ID)
-	{
-		bool result;
-		int container = -1;
-		int slot = -1;
-		// parsing through inventory items to match ID
-		foreach (var item in Inventory.Items)
-		{
-			if (item.ItemId == ID)
-			{
-				container = item.ContainerId; // Establishing bag position
-				slot = item.SlotId;
-			}
-		}
-		
-		// Parsing tooltip for Soulbound info
-		if (container >= 0)
-		{
-			result = API.ExecuteLua<bool>("local tooltip; local function create() local tip, leftside = CreateFrame(\"GameTooltip\"), {} for i = 1, 5 do local L,R = tip:CreateFontString(), tip:CreateFontString() L:SetFontObject(GameFontNormal) R:SetFontObject(GameFontNormal) tip:AddFontStrings(L,R) leftside[i] = L end tip.leftside = leftside return tip end; local function Is_Toy(bag, slot) tooltip = tooltip or create() tooltip:SetOwner(UIParent,\"ANCHOR_NONE\") tooltip:ClearLines() tooltip:SetBagItem(bag, slot) local s = tooltip.leftside[2]:GetText() local t = tooltip.leftside[3]:GetText() u = tooltip.leftside[4]:GetText() tooltip:Hide() if (s == TOY or t == TOY or u == TOY) then return true; else return false; end end return Is_Toy(" + container + "," + slot + ")");
-		}
-		else
-		{
-			result = false;
-		}
-		return result;
-	}
-    
-    public static void DestroyKnownToys()
-	{
-        Inventory.Refresh();
-		int vendorPrice;
-		bool soulBound;
-		bool isToy;
-		bool playerHasToy;
-		var ItemList = Inventory.Items;
-		// Items to Destroy - Toys that are soulbound, already known, and not vendorable.
-		foreach (var item in ItemList)
-		{
-			// Gear items that have no value
-			vendorPrice = item.ItemInfo.VendorPrice;
-			soulBound = IsItemSoulbound(item.ItemId);
-			isToy = IsItemAToy(item.ItemId);
-			playerHasToy = API.ExecuteLua<bool>("return PlayerHasToy(" + item.ItemId + ")");
-			if (soulBound && vendorPrice == 0 && isToy && playerHasToy)
-			{
-				// Destroy the item...
-				API.Print("Destroying the Following Item:  " + item.Name);
-			}
-		}
-	}
 }
-

@@ -16,8 +16,71 @@
         "$type": "ActionSequence",
         "Children": [
           {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "JumpToBlock",
+                  "Target": "To Tanaan"
+                },
+                {
+                  "$type": "ActionSequence",
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "Loading Tanaan Intro Script...",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "LoadScript",
+                      "FileName": "Sklug's 90+ (First) Taanan Jungle WoD Intro Completionist QuestPack"
+                    },
+                    {
+                      "$type": "EndScript"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "GroupName": "To Tanaan"
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "if (!IsQuestCompleted(33868) && !IsQuestInLogAndComplete(33868) && !IsQuestCompleted(33815) && Me.ContinentID != 1116)\r\n{\r\n\tPrint(\"It Appears You Still Need to Complete the Tanaan Intro Quests. Loading Correct Script!\");\r\n\treturn true;\r\n}\r\nreturn false;"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 1;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\n"
           },
           {
             "$type": "Comment",
@@ -107,7 +170,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35670,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\nint[] questArray3 = {35669,35670,35672};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\n\r\n// Tough Quests, need group or high level\r\nif (Group.GetNumGroupMembers() > 0)\r\n{\r\n\tcount3 += questArray3.Length;\r\n}\r\n\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -125,6 +188,15 @@
               }
             ],
             "IsNot": false
+          },
+          {
+            "$type": "Comment",
+            "IsInfo": false,
+            "Text": "Disabling Addons With Conflicts"
+          },
+          {
+            "$type": "CSharpAction",
+            "CSharpCode": "// Disabling Addons With Known Conflict\r\nint numDisabled = 0;\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\n\r\nfor (int i = 0; i < addonName.Length; i++)\r\n{\r\n\tif (QH.HasAddOnEnabled(addonName[i]))\r\n    \t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addonName[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addonName[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t}\r\n}\r\n\r\nif (numDisabled > 0)\r\n{\r\n\tPrint(\"You Have Disabled \" + numDisabled + \" Addons and Need to Reload.\\nReloading Now!\");\r\n\tExecuteLua(\"ReloadUI()\");\r\n}\r\n"
           },
           {
             "$type": "Comment",
@@ -3351,7 +3423,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "644.0566 2079.408 140.6815",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "644.0566 2079.408 140.6506",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
@@ -3360,13 +3432,50 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "643.4634 2091.615 133.8464",
+                    "Position": "643.2831 2089.448 136.0697",
                     "GroundPosition": "0 0 0",
                     "UseCTM": true,
                     "NoMount": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   }
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "643.107 2090.362 135.0099",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "NoMount": true,
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 2.0,
+                  "DelayMax": 3.0
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "642.9435 2091.078 134.2065",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "NoMount": true,
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 2.0
                 },
                 {
                   "$type": "CollectObjectsTemplateScriptAction",
@@ -3381,20 +3490,10 @@
                           "ContinentId": 1116
                         },
                         "Name": "Misplaced Scrolls",
-                        "EntryId": 234154,
-                        "CSharpCode": ""
+                        "EntryId": 234154
                       }
                     ],
-                    "HotspotsX": [
-                      {
-                        "Position": "642.9484 2092.807 132.4069",
-                        "GroundPosition": "0 0 0",
-                        "UseCTM": true,
-                        "NoMount": true,
-                        "IsGroundPosition": false,
-                        "ContinentId": 1116
-                      }
-                    ],
+                    "HotspotsX": [],
                     "Blackspots": [],
                     "IsLoot": true,
                     "OpeningCast": false,
@@ -3408,7 +3507,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "645.3015 2081.888 141.0429",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "645.3015 2081.888 140.7143",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -11873,14 +11972,69 @@
                   ]
                 },
                 {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "67.3051 2523.539 79.08813",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
                   },
-                  "Method": "Navi"
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "67.3051 2523.539 79.08813",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 2.0,
+                        "DelayMax": 3.0
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "67.3051 2523.539 79.08813",
+                          "GroundPosition": "67.3051 2523.539 79.50198",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(87f, 2528.8f, 79f,4) && !IsQuestInLogAndComplete(35273)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "TurnInQuestsCommand",
@@ -11949,6 +12103,21 @@
                         "Hotspot": {
                           "Position": "67.3051 2523.539 79.08813",
                           "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 2.0,
+                        "DelayMax": 3.0
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "67.3051 2523.539 79.08813",
+                          "GroundPosition": "67.3051 2523.539 79.50198",
                           "IsGroundPosition": false,
                           "ContinentId": 1116
                         },
@@ -12279,21 +12448,10 @@
             "IsNot": false
           },
           {
-            "$type": "If",
+            "$type": "While",
             "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
+            "LoopActions": {
               "Children": [
-                {
-                  "$type": "Comment",
-                  "Text": "\"Bonus Objective: Bladefist Hold\"",
-                  "Color": "0, 128, 255"
-                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -12306,10 +12464,71 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "AcceptQuestCommand",
+                        "$type": "Comment",
+                        "Text": "\"Bonus Objective: Bladefist Hold\"",
+                        "Color": "0, 128, 255"
+                      },
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "AcceptQuestCommand",
+                              "QuestIds": [
+                                36792
+                              ]
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!HasQuest(36792)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      },
+                      {
+                        "$type": "DoQuestsCommand",
                         "QuestIds": [
                           36792
                         ]
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "39.16306 2826.825 44.2722",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -12321,7 +12540,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!HasQuest(36792)"
+                        "CSharpCode": "!IsQuestCompleted(36792)"
                       },
                       "IsNot": false
                     },
@@ -12339,27 +12558,11 @@
                     }
                   ],
                   "IsNot": false
-                },
-                {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    36792
-                  ]
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "39.16306 2826.825 44.2722",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Then",
+              "SpecialElementName": "Do",
               "GroupName": ""
             },
             "Conditions": [
@@ -12667,21 +12870,10 @@
             "IsNot": false
           },
           {
-            "$type": "If",
+            "$type": "While",
             "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
+            "LoopActions": {
               "Children": [
-                {
-                  "$type": "Comment",
-                  "Text": "\"Bonus Objective: The Writhing Mire\"",
-                  "Color": "0, 128, 255"
-                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -12694,7 +12886,58 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "AcceptQuestCommand",
+                        "$type": "Comment",
+                        "Text": "\"Bonus Objective: The Writhing Mire\"",
+                        "Color": "0, 128, 255"
+                      },
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "AcceptQuestCommand",
+                              "QuestIds": [
+                                35649
+                              ]
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!HasQuest(35649)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      },
+                      {
+                        "$type": "DoQuestsCommand",
                         "QuestIds": [
                           35649
                         ]
@@ -12709,7 +12952,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!HasQuest(35649)"
+                        "CSharpCode": "!IsQuestCompleted(35649)"
                       },
                       "IsNot": false
                     },
@@ -12727,17 +12970,11 @@
                     }
                   ],
                   "IsNot": false
-                },
-                {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    35649
-                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Then",
+              "SpecialElementName": "Do",
               "GroupName": ""
             },
             "Conditions": [
@@ -12794,104 +13031,6 @@
                   "$type": "Comment",
                   "Text": "Yay! A New Pet Ikky!",
                   "Color": "64, 128, 128"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-463.6151 1866.819 41.16911",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-680.0033 2394.947 40.97789",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-680.0033 2394.947 40.97789",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-673.1826 2407.067 33.72918",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-672.1765 2411.028 34.1403",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-670.4258 2413.007 34.28037",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-668.8462 2414.789 35.28593",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-667.2673 2416.502 34.26711",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-666.3535 2414.891 34.04846",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "IsIndoors": true,
-                    "ContinentId": 1116
-                  },
-                  "Method": "Navi"
                 }
               ],
               "IsExtendedInEditor": false,
@@ -14585,10 +14724,10 @@
                   "Hotspot": {
                     "Position": "-892.0746 2415.044 39.3258",
                     "GroundPosition": "0 0 0",
-                    "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
-                  }
+                  },
+                  "Method": "Navi"
                 },
                 {
                   "$type": "MoveTo",
@@ -17640,7 +17779,7 @@
                           ],
                           "Blackspots": [],
                           "ForceLoot": true,
-                          "ForcePullMobs": false,
+                          "ForcePullMobs": true,
                           "GameObjectiveIndex": 1,
                           "RunTime": 5.0
                         },
@@ -17856,95 +17995,97 @@
                   "TimeLimit": 0
                 },
                 {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-896.7285 652.0496 -1.851661",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "InWater": true,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-958.0148 734.2605 2.208601",
-                    "GroundPosition": "0 0 0",
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
                   },
-                  "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-951.048 713.6035 16.29552",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-940.9513 700.9745 25.33633",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-924.3605 695.8642 34.45825",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-906.5735 694.5852 42.51064",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-872.3018 697.6691 37.38145",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-822.0159 679.4601 28.01799",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "-801.288 692.1862 36.85568",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-878.3094 670.9037 -2.68567",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "InWater": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-874.4122 674.3416 -2.653186",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "InWater": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-864.6317 674.6659 1.173061",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "Jump": true,
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-840.8986 670.8255 17.75841",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-817.0364 679.1181 30.37854",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        }
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.IsClose(-899.6f, 656.6f, -12.9f,30)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 }
               ],
               "IsExtendedInEditor": false,
@@ -19780,6 +19921,89 @@
                   "$type": "Wait",
                   "Delay": 1.0,
                   "DelayMax": 0.0
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-200.5238 1357.896 -0.3444369",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "CollectObjectsTemplateScriptAction",
+                        "Template": {
+                          "$type": "CollectObjectsTemplate",
+                          "TargetObjects": [
+                            {
+                              "Hotspot": {
+                                "Position": "-202.724 1362.5 -0.3476545",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Submerged Battery",
+                              "EntryId": 233147
+                            }
+                          ],
+                          "HotspotsX": [
+                            {
+                              "Position": "-200.5238 1357.896 -0.3444369",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            }
+                          ],
+                          "Blackspots": [],
+                          "IsLoot": true,
+                          "OpeningCast": false,
+                          "NoMovement": false,
+                          "GameObjectiveIndex": 1,
+                          "RunTime": 5.0
+                        },
+                        "TimeLimit": 0
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "HasQuest(35706) && !IsQuestCompleted(35706)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 }
               ],
               "IsExtendedInEditor": false,
@@ -20041,6 +20265,10 @@
                   "Method": "Navi"
                 },
                 {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "Me.ClearFocus()\r\n"
+                },
+                {
                   "$type": "Comment",
                   "Text": "Killing Drones Until Sunderthorn is Here!",
                   "Color": "64, 128, 128"
@@ -20051,49 +20279,223 @@
                   "LoopActions": {
                     "Children": [
                       {
-                        "$type": "KillMobsTemplateScriptAction",
-                        "Template": {
-                          "$type": "KillMobsTemplate",
-                          "TargetObjects": [
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
                             {
-                              "Hotspot": {
-                                "Position": "-443.9115 1081.415 52.88169",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1116
-                              },
-                              "Name": "Stingtail Drone",
-                              "EntryId": 84909
+                              "$type": "Comment",
+                              "Text": "Searching for Sunderthorn...",
+                              "Color": "64, 128, 128"
                             },
                             {
-                              "Name": "Sunderthorn",
-                              "EntryId": 84912,
-                              "CSharpCode": ""
-                            }
-                          ],
-                          "HotspotsX": [
+                              "$type": "CSharpAction",
+                              "CSharpCode": "QH.SetFocusUnit(84912)"
+                            },
                             {
-                              "Position": "-439.8168 1121.834 32.04563",
-                              "GroundPosition": "0 0 0",
-                              "IsGroundPosition": false,
-                              "ContinentId": 1116
+                              "$type": "Wait",
+                              "Delay": 2.0,
+                              "DelayMax": 3.0
                             }
                           ],
-                          "Blackspots": [
-                            "-444 1081 53 20",
-                            "-444 1081 53 30.1"
-                          ],
-                          "ForceLoot": false,
-                          "ForcePullMobs": true,
-                          "GameObjectiveIndex": 1,
-                          "RunTime": 5.0
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
                         },
-                        "TimeLimit": 0
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.Focus == null && !IsQuestCompleted(36298)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
                       },
                       {
-                        "$type": "Wait",
-                        "Delay": 1.0,
-                        "DelayMax": 0.0
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "Comment",
+                              "Text": "Sunderthorn Not Found... Killing More Stingtail Drones",
+                              "Color": "64, 128, 128"
+                            },
+                            {
+                              "$type": "KillMobsTemplateScriptAction",
+                              "Template": {
+                                "$type": "KillMobsTemplate",
+                                "TargetObjects": [
+                                  {
+                                    "Hotspot": {
+                                      "Position": "-443.9115 1081.415 52.88169",
+                                      "GroundPosition": "0 0 0",
+                                      "IsGroundPosition": false,
+                                      "ContinentId": 1116
+                                    },
+                                    "Name": "Stingtail Drone",
+                                    "EntryId": 84909
+                                  },
+                                  {
+                                    "Name": "Sunderthorn",
+                                    "EntryId": 84912,
+                                    "CSharpCode": ""
+                                  }
+                                ],
+                                "HotspotsX": [
+                                  {
+                                    "Position": "-439.8168 1121.834 32.04563",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  }
+                                ],
+                                "Blackspots": [
+                                  "-444 1081 53 20",
+                                  "-444 1081 53 30.1"
+                                ],
+                                "ForceLoot": false,
+                                "ForcePullMobs": true,
+                                "GameObjectiveIndex": 1,
+                                "RunTime": 5.0
+                              },
+                              "TimeLimit": 0
+                            },
+                            {
+                              "$type": "Wait",
+                              "Delay": 1.0,
+                              "DelayMax": 0.0
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.Focus == null && !IsQuestCompleted(36298)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      },
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "Comment",
+                              "Text": "\"Sunderthorn Has Been Found!\"",
+                              "Color": "0, 128, 192"
+                            },
+                            {
+                              "$type": "KillMobsTemplateScriptAction",
+                              "Template": {
+                                "$type": "KillMobsTemplate",
+                                "TargetObjects": [
+                                  {
+                                    "Name": "Sunderthorn",
+                                    "EntryId": 84912,
+                                    "CSharpCode": ""
+                                  }
+                                ],
+                                "HotspotsX": [
+                                  {
+                                    "Position": "-439.8168 1121.834 32.04563",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  }
+                                ],
+                                "Blackspots": [
+                                  "-444 1081 53 20",
+                                  "-444 1081 53 30.1"
+                                ],
+                                "ForceLoot": false,
+                                "ForcePullMobs": true,
+                                "GameObjectiveIndex": 1,
+                                "RunTime": 5.0
+                              },
+                              "TimeLimit": 15
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "Me.Focus != null && !IsQuestCompleted(36298)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -23272,7 +23674,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35670) && !IsQuestInLogAndComplete(35670)"
+                  "CSharpCode": "HasQuest(35670) && !IsQuestInLogAndComplete(35670) && Group.GetNumGroupMembers() > 0"
                 },
                 "IsNot": false
               },
@@ -23292,21 +23694,10 @@
             "IsNot": false
           },
           {
-            "$type": "If",
+            "$type": "While",
             "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
+            "LoopActions": {
               "Children": [
-                {
-                  "$type": "Comment",
-                  "Text": "\"Bonus Objective: Bloodmane Pridelands\"",
-                  "Color": "0, 128, 255"
-                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -23319,17 +23710,68 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "MoveTo",
-                        "Hotspot": {
-                          "Position": "-1107.332 1907.397 17.12995",
-                          "GroundPosition": "-1107.332 1907.397 17.62751",
-                          "IsGroundPosition": false,
-                          "ContinentId": 1116
-                        },
-                        "Method": "Navi"
+                        "$type": "Comment",
+                        "Text": "\"Bonus Objective: Bloodmane Pridelands\"",
+                        "Color": "0, 128, 255"
                       },
                       {
-                        "$type": "AcceptQuestCommand",
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "MoveTo",
+                              "Hotspot": {
+                                "Position": "-1107.332 1907.397 17.12995",
+                                "GroundPosition": "-1107.332 1907.397 17.62751",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Method": "Navi"
+                            },
+                            {
+                              "$type": "AcceptQuestCommand",
+                              "QuestIds": [
+                                36660
+                              ]
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!HasQuest(36660)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      },
+                      {
+                        "$type": "DoQuestsCommand",
                         "QuestIds": [
                           36660
                         ]
@@ -23344,7 +23786,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!HasQuest(36660)"
+                        "CSharpCode": "!IsQuestCompleted(36660)"
                       },
                       "IsNot": false
                     },
@@ -23362,17 +23804,11 @@
                     }
                   ],
                   "IsNot": false
-                },
-                {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    36660
-                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Then",
+              "SpecialElementName": "Do",
               "GroupName": ""
             },
             "Conditions": [
@@ -24349,6 +24785,16 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-638.0843 1562.883 33.82942",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
                 },
                 {
                   "$type": "TurnInQuestsCommand",
@@ -26929,21 +27375,10 @@
             "IsNot": false
           },
           {
-            "$type": "If",
+            "$type": "While",
             "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
+            "LoopActions": {
               "Children": [
-                {
-                  "$type": "Comment",
-                  "Text": "\"Bonus Objective: The Howling Crag\"",
-                  "Color": "0, 128, 255"
-                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -26956,7 +27391,64 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "AcceptQuestCommand",
+                        "$type": "Comment",
+                        "Text": "\"Bonus Objective: The Howling Crag\"",
+                        "Color": "0, 128, 255"
+                      },
+                      {
+                        "$type": "If",
+                        "IsExtendedInEditor": false,
+                        "ActionsFalse": {
+                          "Children": [],
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Else",
+                          "GroupName": ""
+                        },
+                        "ActionsTrue": {
+                          "Children": [
+                            {
+                              "$type": "AcceptQuestCommand",
+                              "QuestIds": [
+                                36590
+                              ]
+                            }
+                          ],
+                          "IsExtendedInEditor": false,
+                          "IsSpecialElement": true,
+                          "SpecialElementName": "Then",
+                          "GroupName": ""
+                        },
+                        "Conditions": [
+                          {
+                            "Condition": {
+                              "$type": "CSharpCondition",
+                              "CSharpCode": "!HasQuest(36590)"
+                            },
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          },
+                          {
+                            "Condition": null,
+                            "IsNot": false
+                          }
+                        ],
+                        "IsNot": false
+                      },
+                      {
+                        "$type": "DoQuestsCommand",
+                        "QuestIds": [
+                          36590
+                        ]
+                      },
+                      {
+                        "$type": "TurnInQuestsCommand",
                         "QuestIds": [
                           36590
                         ]
@@ -26971,7 +27463,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!HasQuest(36590)"
+                        "CSharpCode": "!IsQuestCompleted(36590)"
                       },
                       "IsNot": false
                     },
@@ -26989,43 +27481,31 @@
                     }
                   ],
                   "IsNot": false
-                },
-                {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    36590
-                  ]
-                },
-                {
-                  "$type": "TurnInQuestsCommand",
-                  "QuestIds": [
-                    36590
-                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Then",
+              "SpecialElementName": "Do",
               "GroupName": ""
             },
             "Conditions": [
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
               {
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "!IsQuestCompleted(36590)"
                 },
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
                 "IsNot": false
               }
             ],
@@ -27637,6 +28117,176 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [
+                    {
+                      "$type": "If",
+                      "IsExtendedInEditor": false,
+                      "ActionsFalse": {
+                        "Children": [],
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Else",
+                        "GroupName": ""
+                      },
+                      "ActionsTrue": {
+                        "Children": [
+                          {
+                            "$type": "CSharpAction",
+                            "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                          }
+                        ],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Then",
+                        "GroupName": ""
+                      },
+                      "Conditions": [
+                        {
+                          "Condition": {
+                            "$type": "CSharpCondition",
+                            "CSharpCode": "Me.ContinentID == 1116 && !IsInGarrison"
+                          },
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        }
+                      ],
+                      "IsNot": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "VM",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "VM",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "ItemCooldown(110560) == 0 && !IsInGarrison"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "Garrison Return"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "// Initializing Vendor Manager\r\nMerchant.Initialize();"
+              },
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
               },
@@ -27657,8 +28307,33 @@
                       "PauseThread": true
                     },
                     {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": true
+                    },
+                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RestingCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": false
                     }
                   ],
                   "IsExtendedInEditor": false,
@@ -27706,8 +28381,33 @@
                       "PauseThread": true
                     },
                     {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": true
+                    },
+                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RepairCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
+                      "PauseThread": false
                     }
                   ],
                   "IsExtendedInEditor": false,
@@ -27755,557 +28455,32 @@
                       "PauseThread": true
                     },
                     {
-                      "$type": "CSharpAction",
-                      "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.InventoryCheck());\r\nwhile (Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
-                  "GroupName": ""
-                },
-                "Conditions": [
-                  {
-                    "Condition": {
-                      "$type": "CSharpCondition",
-                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.PlayerShouldStopVendoring()"
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
                     },
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  }
-                ],
-                "IsNot": false
-              },
-              {
-                "$type": "PauseResumeThread",
-                "ThreadName": "main",
-                "PauseThread": false
-              },
-              {
-                "$type": "Wait",
-                "Delay": 10.0,
-                "DelayMax": 15.0
-              },
-              {
-                "$type": "JumpToBlock",
-                "Target": "VendorManager"
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "VendorManager"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "ActionSequence",
-                "Children": [
-                  {
-                    "$type": "If",
-                    "IsExtendedInEditor": false,
-                    "ActionsFalse": {
-                      "Children": [],
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Else",
-                      "GroupName": ""
-                    },
-                    "ActionsTrue": {
-                      "Children": [
-                        {
-                          "$type": "UseTaxiTemplateScriptAction",
-                          "Template": {
-                            "$type": "UseTaxiTemplate",
-                            "Hotspots": [
-                              {
-                                "Position": "5578.593 4565.449 136.3368",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              }
-                            ],
-                            "Target": {
-                              "Hotspot": {
-                                "Position": "5575.775 4563.67 136.2083",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              },
-                              "Name": "Bron Skyhorn",
-                              "EntryId": 79407
-                            },
-                            "TaxiTarget": {
-                              "Item1": "Axefall, Spires of Arak",
-                              "Item2": "0.47768124938011",
-                              "Item3": "0.26852884888649"
-                            },
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
-                          },
-                          "TimeLimit": 0
-                        }
-                      ],
-                      "IsExtendedInEditor": false,
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Then",
-                      "GroupName": ""
-                    },
-                    "Conditions": [
-                      {
-                        "Condition": {
-                          "$type": "CSharpCondition",
-                          "CSharpCode": "IsInGarrison"
-                        },
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      }
-                    ],
-                    "IsNot": false
-                  }
-                ],
-                "IsExtendedInEditor": false,
-                "GroupName": "To Axefall"
-              },
-              {
-                "$type": "ActionSequence",
-                "Children": [
-                  {
-                    "$type": "If",
-                    "IsExtendedInEditor": false,
-                    "ActionsFalse": {
-                      "Children": [],
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Else",
-                      "GroupName": ""
-                    },
-                    "ActionsTrue": {
-                      "Children": [
-                        {
-                          "$type": "UseTaxiTemplateScriptAction",
-                          "Template": {
-                            "$type": "UseTaxiTemplate",
-                            "Hotspots": [
-                              {
-                                "Position": "5578.593 4565.449 136.3368",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              }
-                            ],
-                            "Target": {
-                              "Hotspot": {
-                                "Position": "5575.775 4563.67 136.2083",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              },
-                              "Name": "Bron Skyhorn",
-                              "EntryId": 79407
-                            },
-                            "TaxiTarget": {
-                              "Item1": "Veil Terokk, Spires of Arak",
-                              "Item2": "0.50240105390549",
-                              "Item3": "0.26665115356445"
-                            },
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
-                          },
-                          "TimeLimit": 0
-                        }
-                      ],
-                      "IsExtendedInEditor": false,
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Then",
-                      "GroupName": ""
-                    },
-                    "Conditions": [
-                      {
-                        "Condition": {
-                          "$type": "CSharpCondition",
-                          "CSharpCode": "IsInGarrison"
-                        },
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      }
-                    ],
-                    "IsNot": false
-                  }
-                ],
-                "IsExtendedInEditor": false,
-                "GroupName": "To Veil Terokk"
-              },
-              {
-                "$type": "ActionSequence",
-                "Children": [
-                  {
-                    "$type": "If",
-                    "IsExtendedInEditor": false,
-                    "ActionsFalse": {
-                      "Children": [],
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Else",
-                      "GroupName": ""
-                    },
-                    "ActionsTrue": {
-                      "Children": [
-                        {
-                          "$type": "UseTaxiTemplateScriptAction",
-                          "Template": {
-                            "$type": "UseTaxiTemplate",
-                            "Hotspots": [
-                              {
-                                "Position": "5578.593 4565.449 136.3368",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              }
-                            ],
-                            "Target": {
-                              "Hotspot": {
-                                "Position": "5575.775 4563.67 136.2083",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              },
-                              "Name": "Bron Skyhorn",
-                              "EntryId": 79407
-                            },
-                            "TaxiTarget": {
-                              "Item1": "Retribution Point, Talador",
-                              "Item2": "0.41469910740852",
-                              "Item3": "0.37505489587784"
-                            },
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
-                          },
-                          "TimeLimit": 0
-                        }
-                      ],
-                      "IsExtendedInEditor": false,
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Then",
-                      "GroupName": ""
-                    },
-                    "Conditions": [
-                      {
-                        "Condition": {
-                          "$type": "CSharpCondition",
-                          "CSharpCode": "IsInGarrison"
-                        },
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      }
-                    ],
-                    "IsNot": false
-                  }
-                ],
-                "IsExtendedInEditor": false,
-                "GroupName": "To Retribution Point"
-              },
-              {
-                "$type": "ActionSequence",
-                "Children": [
-                  {
-                    "$type": "If",
-                    "IsExtendedInEditor": false,
-                    "ActionsFalse": {
-                      "Children": [],
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Else",
-                      "GroupName": ""
-                    },
-                    "ActionsTrue": {
-                      "Children": [
-                        {
-                          "$type": "UseTaxiTemplateScriptAction",
-                          "Template": {
-                            "$type": "UseTaxiTemplate",
-                            "Hotspots": [
-                              {
-                                "Position": "5578.593 4565.449 136.3368",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              }
-                            ],
-                            "Target": {
-                              "Hotspot": {
-                                "Position": "5575.775 4563.67 136.2083",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              },
-                              "Name": "Bron Skyhorn",
-                              "EntryId": 79407
-                            },
-                            "TaxiTarget": {
-                              "Item1": "Crow's Crook, Spires of Arak",
-                              "Item2": "0.52285653352737",
-                              "Item3": "0.29882991313934"
-                            },
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
-                          },
-                          "TimeLimit": 0
-                        }
-                      ],
-                      "IsExtendedInEditor": false,
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Then",
-                      "GroupName": ""
-                    },
-                    "Conditions": [
-                      {
-                        "Condition": {
-                          "$type": "CSharpCondition",
-                          "CSharpCode": "IsInGarrison"
-                        },
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      }
-                    ],
-                    "IsNot": false
-                  }
-                ],
-                "IsExtendedInEditor": false,
-                "GroupName": "To Crow's Crook"
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "Travel"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "If",
-                "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [
-                    {
-                      "$type": "If",
-                      "IsExtendedInEditor": false,
-                      "ActionsFalse": {
-                        "Children": [],
-                        "IsSpecialElement": true,
-                        "SpecialElementName": "Else",
-                        "GroupName": ""
-                      },
-                      "ActionsTrue": {
-                        "Children": [
-                          {
-                            "$type": "CSharpAction",
-                            "CSharpCode": "Print(\"Unfortunately Your Hearthstone is on Cooldown. Heading to Nearest FlightMaster.\");\r\nFlight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
-                          }
-                        ],
-                        "IsExtendedInEditor": false,
-                        "IsSpecialElement": true,
-                        "SpecialElementName": "Then",
-                        "GroupName": ""
-                      },
-                      "Conditions": [
-                        {
-                          "Condition": {
-                            "$type": "CSharpCondition",
-                            "CSharpCode": "Me.ContinentID == 1116"
-                          },
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        }
-                      ],
-                      "IsNot": false
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
-                  "Children": [
-                    {
-                      "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
-                  "GroupName": ""
-                },
-                "Conditions": [
-                  {
-                    "Condition": {
-                      "$type": "CSharpCondition",
-                      "CSharpCode": "ItemCooldown(110560) == 0"
-                    },
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  }
-                ],
-                "IsNot": false
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "Garrison Return"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "If",
-                "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [],
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
-                  "Children": [
-                    {
-                      "$type": "Comment",
-                      "Text": "Player is No Longer in Spires of Arak. Smuggling Run Macro No Longer Necessary!",
-                      "Color": "64, 128, 128"
-                    },
-                    {
-                      "$type": "EndThread",
-                      "ThreadName": null
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
-                  "GroupName": ""
-                },
-                "Conditions": [
-                  {
-                    "Condition": {
-                      "$type": "CSharpCondition",
-                      "CSharpCode": "Me.ZoneId != 6722"
-                    },
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  }
-                ],
-                "IsNot": false
-              },
-              {
-                "$type": "If",
-                "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [
-                    {
-                      "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.SmugglingRunMacro());\r\nwhile(QH.Fib.Run()){\r\n\tyield return 100;\r\n}"
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
-                  "Children": [
                     {
                       "$type": "PauseResumeThread",
-                      "ThreadName": "main",
+                      "ThreadName": "GAM",
                       "PauseThread": true
                     },
                     {
                       "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.SmugglingRunMacro());\r\nwhile(QH.Fib.Run()){\r\n\tyield return 100;\r\n}"
+                      "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.InventoryCheck());\r\nwhile (Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
                     },
                     {
                       "$type": "PauseResumeThread",
                       "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "GAM",
                       "PauseThread": false
                     }
                   ],
@@ -28318,7 +28493,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "QH.RemainingSpellCD(170097) == 0 && Me.ZoneId == 6722"
+                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.IgnoreVendor"
                     },
                     "IsNot": false
                   },
@@ -28343,47 +28518,26 @@
                 "DelayMax": 15.0
               },
               {
-                "$type": "JumpToBlock",
-                "Target": "Garrison Ability Macro"
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "Garrison Ability Macro"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "If",
+                "$type": "While",
                 "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [],
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
+                "LoopActions": {
                   "Children": [
                     {
-                      "$type": "Comment",
-                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
-                      "Color": "64, 128, 128"
-                    },
-                    {
-                      "$type": "EndThread",
-                      "ThreadName": null
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
                     }
                   ],
                   "IsExtendedInEditor": false,
                   "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
+                  "SpecialElementName": "Do",
                   "GroupName": ""
                 },
                 "Conditions": [
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "Me.Level > 99"
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
                     },
                     "IsNot": false
                   },
@@ -28403,21 +28557,12 @@
                 "IsNot": false
               },
               {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "Wait",
-                "Delay": 12.0,
-                "DelayMax": 15.2
-              },
-              {
                 "$type": "JumpToBlock",
-                "Target": "XP Macro"
+                "Target": "VendorManager"
               }
             ],
             "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
+            "GroupName": "VendorManager"
           },
           {
             "$type": "ActionSequence",
@@ -28575,7 +28720,7 @@
                                 },
                                 {
                                   "$type": "CSharpAction",
-                                  "CSharpCode": "QH.BuyExpPotions(QH.ExpPotionsNeeded());\r\n"
+                                  "CSharpCode": "QH.Fib = new Fiber<int>(QH.BuyVendorItemByID(120182, QH.ExpPotionsNeeded()));\r\nwhile (QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}"
                                 },
                                 {
                                   "$type": "Wait",
@@ -28650,7 +28795,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "(HasItem(120182) == true || HasItem(120182) == false)"
+                      "CSharpCode": "Inventory.Refresh();\r\n\r\nif (HasItem(120182) == true || HasItem(120182) == false)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                     },
                     "IsNot": false
                   },
@@ -28672,6 +28817,863 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "XP Potions"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "CSharpAction",
+                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Axefall, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.ZoneId != 6722"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Axefall, Spires of Arak",
+                              "Item2": "0.47768124938011",
+                              "Item3": "0.26852884888649"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Axefall"
+              },
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "CSharpAction",
+                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Veil Terokk, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.ZoneId != 6722"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Veil Terokk, Spires of Arak",
+                              "Item2": "0.50240105390549",
+                              "Item3": "0.26665115356445"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Veil Terokk"
+              },
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "CSharpAction",
+                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Retribution Point, Talador\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.ZoneId != 6662"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Retribution Point, Talador",
+                              "Item2": "0.41469910740852",
+                              "Item3": "0.37505489587784"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Retribution Point"
+              },
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "CSharpAction",
+                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Crow's Crook, Spires of Arak\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.ZoneId != 6722"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.593 4565.449 136.3368",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2083",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Crow's Crook, Spires of Arak",
+                              "Item2": "0.52285653352737",
+                              "Item3": "0.29882991313934"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Crow's Crook"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "Travel"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "Player is No Longer in Spires of Arak. Smuggling Run Macro No Longer Necessary!",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.ZoneId != 6722"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.SmugglingRunMacro());\r\nwhile(QH.Fib.Run()){\r\n\tyield return 100;\r\n}"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.SmugglingRunMacro());\r\nwhile(QH.Fib.Run()){\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "QH.RemainingSpellCD(170097) == 0 && Me.ZoneId == 6722"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "Wait",
+                "Delay": 10.0,
+                "DelayMax": 15.0
+              },
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "Garrison Ability Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "Garrison Ability Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
           },
           {
             "$type": "ActionSequence",
@@ -31215,45 +32217,6 @@
                                                     ],
                                                     "IsNot": false,
                                                     "CheckFrequently": true
-                                                  },
-                                                  {
-                                                    "$type": "While",
-                                                    "IsExtendedInEditor": false,
-                                                    "LoopActions": {
-                                                      "Children": [
-                                                        {
-                                                          "$type": "Wait",
-                                                          "Delay": 1.0,
-                                                          "DelayMax": 0.0
-                                                        }
-                                                      ],
-                                                      "IsExtendedInEditor": false,
-                                                      "IsSpecialElement": true,
-                                                      "SpecialElementName": "Do",
-                                                      "GroupName": ""
-                                                    },
-                                                    "Conditions": [
-                                                      {
-                                                        "Condition": {
-                                                          "$type": "CSharpCondition",
-                                                          "CSharpCode": "Me.ZoneId != 7025"
-                                                        },
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      }
-                                                    ],
-                                                    "IsNot": false
                                                   },
                                                   {
                                                     "$type": "Comment",

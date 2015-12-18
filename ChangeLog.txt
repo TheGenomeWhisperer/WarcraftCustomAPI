@@ -1,5 +1,5 @@
 To Do: Additional Garrison Bonus buffs
-To Do: Add Method to get player iLvl.
+To DO: "Plant Food" quest - make that script into an API method.
 To Do: Elevator Method could generate the accurate travel time all on its own.
 To Do: Possible Expansion of the Flightmanager to include positional checks of the qualifying quest location
 		- If My position and quest position would take us to the FP, then do not fly, else FlyTo(closest FP to questing location)
@@ -8,14 +8,164 @@ To Do: Write Flight logic that if the node that is wanted to fly-to is not found
 To Do: Add input modifaction for JSON parser so the user can input their own string to look for and parse which line/quest.
 To Do: Figure out how to add Logitech Keyboard Functionality
 To Do: Possible Ilvl check to enable killing of certain rares.
-To Do: RebotAPI "GarrisonManager.PlotIDs" etc...  Fix those profession things...
-To Do: Cannon Firing on the Spires of Arak quest using Method "AimAt(Vector3, float gravity, float velocity)"
 To Do: Create a HotKey to Force Vendor.
 To Do: IF player is in garrison and herb garden is level 3 and player needs food - check the herb-garden for the good stuff first
 To DO: Option to use stat food
-To Do: Purge known food/drink items from "To Use" list on Initialization before setting new ones.
 To Do: Add Engineering Repair bots as an option to repair from if high enough engineering level (Jeeves, 4000, 5000, and other repair items?
 To Do: Implement use of Tabards to return to Org in my "Return to Draenor from anywhere" script.
+To Do: Add a failsafe if the "FlyTo" destination is not known, collect all known FPs of that zone, then filter which FP is the closest to the destination FP
+		Or, if the zone number of FPs == 0, collect ALL FPs of all continent zones, then fly to closest one.
+
+To Do:	
+Add a condition that checks for food you can't vendor but is worthless...
+Add a condition if the gear item in bags are within player level, they are below the iLvl of the currently equipped piece by at least 10 pts, they can be added to vendor list.
+Add in some more global conditions to control the settings better with the vendor manager.
+ToDo: Lean out the code "Get Items to Sell" with some more complicated booleans, so as to only parse through inventory 1 time.
+To DO: If the gear item doesn't have a minimum lvl, but it's BoP && it's ilvl is above a certain threshold... sell it (like some neck pieces you obtain from lvling).
+To Do: For Vendor Manager -- create an API that determine which "type" of gear piece it is (Cloth,Mail,Plate)
+To Do: For Vendor Manager -- If gear piece does not match player gear "type" it is safe to be vendored.
+To Do: "Ritual Severance" (35003) - Need evasion behaviors on the shadow zones.
+To Do: Change the vendoring based on level to be based on player iLvl
+To Do: Filter high lvl quests by either player ilvl or player lvl or group size...
+
+
+
+Version 1.61 - December 17th, 2015 
+ 
+TL;DR - LOTS of Updates! Lots of Work!!! 
+ 
+ALL UPDATES 
+MISC: 
+All AutoEquip stat weights redone for every every single class and spec for patch 6.2.3 
+Nearly all Evasion Behaviors remapped as ReBot seems to have improved/updated their system (this was a lot of work lol) 
+Introduction of a Windows installer to assist people with easier updating 
+Removed Tanaan Intro quest chain into a separate questpack. This is because it is no longer necessary with lvl 100 boost. 
+Added some new Logic due to changes with players who get a lvl 100 boost and how some quests are aligned. 
+Built a logic check into each profile to ensure Tanaan Jungle is completed, or player used a lvl 100 boost before 
+continuing, and if not, it autoloads the Tanaan script. 
+I now auto-disable Swatter and _NPCScan addons as they can screen clutter and cause conflict. 
+And a ton of other things I don't feel like typing out here... 
+ 
+ 
+VENDOR MANAGER: 
+ 
+Fixed a bug where the "InventoryCheck()" was leaving off Repair vendors, but including food/water and generic vendors... 
+Now also sells BoP items that are Soubound but not equippable, as well as gear items that are SoulBound and outdated. (Note: This is extremely conservative on what to sell). 
+Player now destroys Toys that are collected in bags, worth nothing, but are already known (only when at vendor). 
+Player now purges old and unnecessary food/drink items from the "Food" and "Drink" list as he levels. 
+More informative Info as you are selling items... 
+Some Additional "Special Pathing" considerations added in Gorgrond and Talador 
+ 
+ 
+FLIGHT MANAGER: 
+ 
+FlightManager now checks if the destination the player wants to fly to also happens to be the closest Flightpath, and if so, does not travel. 
+Some Additional "Special Pathing" considerations added in Gorgrond and Talador 
+ 
+ 
+NEW API METHODS: 
+ 
+UseCannonInMovingVehicle(int[] targetIDs, int vehicleSpell, int spellCooldown) - Built my own cannon targeting system for when firing from a moving vehicle. The built-in tool can cause the game to crash often if in moving/flying vehicle whilst firing. 
+NumItemsBroken() - Returns the number of gear items that are "Red" or Broken that the player has equipped. 
+GetItemMinLevel(int ID) - Returns an Integer of the piece of gear's minimum required level to wear it (0 if no lvl requirement). 
+GetPlayerItemLevel() - Returns as an Integer the player's currently equipped avg. gear iLvl. 
+GetPlayerProfessions() - Returns a string[] of the 2 player professions, and "None" for empty professions. 
+GetProfessionBuildingID(string professionName) - Returns the Garrison building ID to Plot for the corresponding profession 
+GetGarrisonBuildingInfo(int plotID) - Returns a List<object> containing the buildingID of built unit (0 if empty), and name 
+PlaceGarrisonBuildingAt(int plotID, int buildingID) - Plots a Garrison building with given values 
+SetGarrisonProfessionBuildings() - Determines player's professions, then plots the matching Garrison buildings, as well as the storehouse if player only has 1 profession and/or a gather profession, or the 2nd plot will be Enchanter's study if player has no professions or 2 gather professions. 
+SetNearestFocusUnit(int ID, Vector3[] blacklist) - Sets focus to the nearest unit that is not within 10 yrds of any blacklisted nodes. 
+HasHordeRepairMount() - Returns true if the player has either the Traveler's Tundra mount or Grand Expedition Yak 
+IsFoodVendorNearby() - Returns true if a food vendor is within 100 yards of player position 
+IsRepairVendorNearby() - Returns true if a Repair vendor is within 100 yards of player position 
+IsVendorOpen() - Returns true only if the Vendor window is open to buy/sell, not if merely interacting with vendor. 
+IsFlightMapOpen() - Returns true if the window to select a flight destination at the flightmaster is open. 
+IsInCombat() - Returns true if the player is currently in combat, as in the botbase is active. 
+IsItemAToy(int ID) - Returns true if the given item ID from an item in your inventory is a "Toy" for the toybox. 
+DestroyKnownToys() - Destroys any toys in your bags that are Soublound, worth nothing to vendor, and are already known. 
+DisableAddons(string[] addonNames, bool reloadUI) - Disables addon, and if argument 2 is set to true, it reloads UI. 
+DoFlightMasterGossip() - If on interact with flightmaster the player is presented with gossip options instead of the flight window to choose a destination, this selects appropriate option to open window. Localized... 
+DoMerchantGossip() - If on interact with a Merchant/Repair, if the player is presented with gossip options instead of opening directly to buy/sell window, this method selects appropriate option. Localized... 
+BuyVendorItemByID(int itemID, int howMany) - Parses through a vendor and buys the given item if it is found. This was built because Blizz keeps changing vendor item positions around, so now it doesn't matter where they put it! 
+ 
+ 
+API Fixes: 
+ 
+Fixed SmugglingRunMacro() - Total overhaul, much better now. 
+I actually had a few fixes but I seem to have lost my documentation... Oops! 
+ 
+ 
+MISC BUGS: 
+ 
+XP potions would never be purchased since the latest 6.2.3 patch thanks to position change on vendor. Wrote a new API to deal with any future changes. Yay! 
+On some conditions the vendor manager would not initialize on bot start (Like if you stop/started in the phased end-zone story quests). 
+HUGE oversight on vendor manager where I forgot to initialize a food check on each round,  
+to add to usable food list on new items picked up, or on when bot is started 
+Found a Bug where if you start the script whilst in Blasted Lands and you have already completed the Tanaan Jungle Intro, it will get stuck in a wait loop 
+Fixed a bug where the Garrison hearth can be interrupted by the XP Potion aura check, canceling the whole procedure, forcing player to nearest FP instead, which can cause mesh loop errors. 
+Fixed a bug where IEnumerable methods could be interrupted on a recursive block call for my seperate threads (as in interrupting use of garrison ability). 
+ 
+ 
+TANAAN JUNGLE INTRO: 
+ 
+Quest: "Azeroth's Last Stand" had a condition where it would get an empty object error. 
+Quest: "The Shadowmoon Clan" (34379) - Was missing one NPC to be on the kill list. 
+Quest: "Taking a Trip to the Top of the Tank" (35747) - Occasionally player would end up in loop bug killing mini boss over and over. 
+ 
+ 
+FROSTFIRE RIDGE: 
+ 
+Quest: "Establish Your Garrison" (34378) - For some reason the "Collect Object" interaction would not work. Had to force constant interact with surveyor to get it to work. 
+In 2 trials of my toons, one worked and one didn't, so I just forced a work-around to ensure all worked. 
+Quest: "Build Your Barracks" (34461) - Slight pathing issue that could get you stuck for about 1 second before fixing. Minor fix, but a fix nonetheless. 
+Quest: "Mulverick's Plight" (33483) - Slighly faster pathing with a CTM after killing the slavemaster, to jump down cliff. 
+Quest: "Thunderlord Invasion!" (32791) - Added a slight delay on last phase of this quest so the final boss can path closer, to get help from NPCs. 
+Quest: "Gustmash" (33919) - Fixed an issue where if a player died on this mini boss, it would fail to attempt again, and would also fail to use Garrison Ability again. 
+Professions: The pathing to the town hall was a little messy when going to build your profession buildings. 
+ 
+ 
+GORGROND: 
+ 
+Quest: "Bonus Objective: Valley of Destruction" (36480) - Fixed a CTM that seemed to be erroneous and could cause bot-like behavior. 
+Quest: "Bonus Objective: The Forgotten Caves" - Smoothed out some pathing issues here if you are in the shredder... 
+Quest: "Chapter I: Plant Food" (35508) - Some mesh issues, so added some blacklisted zones and re-did some hotspots. This was actually a significant change because it inspired me to create a new better "MoveToNearestObject" method, with an option to interact/collect Object. I feel like it's actually superior to the built in object identifier in Rebot and I will likely be using my custom built one more frequently, or at least when needed. Though, the Rebot tool to auto-build in the editor is useful, so on an as-needed basis. 
+Quest: "Chapter II" -- Same 
+Quest: "Chapter II" -- Same 
+Quest: "Strike while the iron is hot" (36574) - Rewrote better evasive tactics to prevent death, as well as better management of the artifact to be used as it becomes available. TY @helo35 for pointing this out. 
+ 
+ 
+TALADOR: 
+ 
+Added some better pathing... options to use Water Strider at times if player is in possession of it. 
+Timed the Garrison Arsenal charges a little better, to be less wasteful on weaker guys and conserve for stronger. 
+Quest: "The Purge of Veil Shadar" (33580) - Noticed that I didn't have any real hotspots setup here if it couldn't find a target it'd just stand there. 
+Quest: "Frenzied Manafeeders" (34400) - Fixed an issue where bot could crash if multiple NPCs aggro'd 
+Quest: "Crystals of Unusual Power" (34404) - Better Parallelation with "Arcane Essence" Quest 
+ 
+ 
+SPIRES OF ARAK: 
+ 
+I think I fat-fingered a bunch of hotspots one day because I found like 10 of them randomly in the same place. REMOVED lol 
+Treasure: "Misplaced Scrolls" - pathing issue could look like running into a wall. Scripted a bit tighter 
+Treasure: "An Old Key" - The first navigational was a CTM. HORRIBLE! This would create a serious issue running into a wall. 
+Treasure: "Stingtail's Toxic Stinger" - This would keep killing drones even after treasure boss spawned. FIXED! 
+Rare: "Oskiira the Vengeful" - Noticed that in some cases with melee, if you stun the bird, bot will blacklist it before it flies down. 
+Quest: "Bonus Objective: Bladefist Hold" - Found a bug where if the bot chased an NPC outside the Bonus Objective zone, it would get stuck in an endless loop. 
+Quest: "Sticky Situation" (35706) - Hotspots not very good, could loop around and miss batteries. 
+Quest: "When All is Aligned" (35704) - Vastly improved the targeting system. Seriously, quest might finish in 2 minutes now instead of 5-6 min. Had to write my own custom cannon firing system to fix this one. 
+Quest: "Bonus Objective: The Howling Crag" (36590) - Fixed a minor pathing issue that could result in a brief bot-like pathing adjustment. 
+ 
+ 
+NAGRAND: 
+ 
+- Tankworks is now the Outpost of choice to help with harder bosses. MASSIVE rewrite due to this and it is under progress now. 
+WARNING!!! This is undergoing extensive work right now, as well as incorporating the Demo. My version is not yet ready for release, but yay, Christmas vacation starts tomorrow for 2 weeks so I'll have time! Please be patient for it. Until then know that Nagrand is very much not ready... 
+Rare: Hunter Blacktooth added 
+Quest: "Bonus Objective - Snarlpaw Ledge" (37280) New Template 
+Quest: "The Dead do Not Forget" (37318) - added 
+Quest: "The Good Doctor" (35146) - Needed better pathing as it was off mesh and had erroneous CTM. 
+Quest: "Whacking Weeds" (36273) - Had no hotspots, and missing a kill target. FIXED! 
+And... a lot of other additions and changes and quests I am not including here as it is still pre-Alpha. 
 
 
 Version 1.30 - November 4th Release!
