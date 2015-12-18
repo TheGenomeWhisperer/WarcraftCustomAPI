@@ -11,8 +11,71 @@
         "$type": "ActionSequence",
         "Children": [
           {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "JumpToBlock",
+                  "Target": "To Tanaan"
+                },
+                {
+                  "$type": "ActionSequence",
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "Loading Tanaan Intro Script...",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "LoadScript",
+                      "FileName": "Sklug's 90+ (First) Taanan Jungle WoD Intro Completionist QuestPack"
+                    },
+                    {
+                      "$type": "EndScript"
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "GroupName": "To Tanaan"
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "if (!IsQuestCompleted(33868) && !IsQuestInLogAndComplete(33868) && !IsQuestCompleted(33815) && Me.ContinentID != 1116)\r\n{\r\n\tPrint(\"It Appears You Still Need to Complete the Tanaan Intro Quests. Loading Correct Script!\");\r\n\treturn true;\r\n}\r\nreturn false;"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 97) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 97 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 97) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 97 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\n"
           },
           {
             "$type": "Comment",
@@ -115,6 +178,15 @@
               }
             ],
             "IsNot": false
+          },
+          {
+            "$type": "Comment",
+            "IsInfo": false,
+            "Text": "Disabling Addons With Conflicts"
+          },
+          {
+            "$type": "CSharpAction",
+            "CSharpCode": "// Disabling Addons With Known Conflict\r\nint numDisabled = 0;\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\n\r\nfor (int i = 0; i < addonName.Length; i++)\r\n{\r\n\tif (QH.HasAddOnEnabled(addonName[i]))\r\n    \t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addonName[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addonName[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t}\r\n}\r\n\r\nif (numDisabled > 0)\r\n{\r\n\tPrint(\"You Have Disabled \" + numDisabled + \" Addons and Need to Reload.\\nReloading Now!\");\r\n\tExecuteLua(\"ReloadUI()\");\r\n}"
           },
           {
             "$type": "Comment",
@@ -2647,41 +2719,185 @@
                   "Method": "Navi"
                 },
                 {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "Me.ClearFocus();\r\n"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "CSharpAction",
+                        "CSharpCode": "QH.UseGuildBanner();"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.BannerAvailable() && Me.Level < 100"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "While",
+                  "IsExtendedInEditor": false,
+                  "LoopActions": {
+                    "Children": [
+                      {
+                        "$type": "Comment",
+                        "Text": "Waiting For Betsi",
+                        "Color": "64, 128, 128"
+                      },
+                      {
+                        "$type": "CSharpAction",
+                        "CSharpCode": "QH.SetFocusUnit(84887)"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 2.0,
+                        "DelayMax": 3.0
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Do",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.Focus == null && !IsQuestCompleted(36291)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "Comment",
+                  "Text": "\"Betsi Has Been Found!\"",
+                  "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "While",
+                  "IsExtendedInEditor": false,
+                  "LoopActions": {
+                    "Children": [
+                      {
+                        "$type": "CSharpAction",
+                        "CSharpCode": "DisableCombat = false;"
+                      },
+                      {
+                        "$type": "KillMobsTemplateScriptAction",
+                        "Template": {
+                          "$type": "KillMobsTemplate",
+                          "TargetObjects": [
+                            {
+                              "Hotspot": {
+                                "Position": "-2027.67 1147.368 29.24378",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Betsi Boombasket",
+                              "EntryId": 84887
+                            }
+                          ],
+                          "HotspotsX": [
+                            {
+                              "Position": "-2046.564 1148.219 26.96038",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            }
+                          ],
+                          "Blackspots": [],
+                          "ForceLoot": true,
+                          "ForcePullMobs": false,
+                          "GameObjectiveIndex": 1,
+                          "RunTime": 5.0
+                        },
+                        "TimeLimit": 10
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Do",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "Me.Focus != null && !IsQuestCompleted(36291)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false,
+                  "CheckFrequently": true
+                },
+                {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "DisableCombat = false;"
+                },
+                {
                   "$type": "Wait",
                   "Delay": 1.0,
                   "DelayMax": 0.0
-                },
-                {
-                  "$type": "KillMobsTemplateScriptAction",
-                  "Template": {
-                    "$type": "KillMobsTemplate",
-                    "TargetObjects": [
-                      {
-                        "Hotspot": {
-                          "Position": "-2027.67 1147.368 29.24378",
-                          "GroundPosition": "0 0 0",
-                          "IsGroundPosition": false,
-                          "ContinentId": 1116
-                        },
-                        "Name": "Betsi Boombasket",
-                        "EntryId": 84887
-                      }
-                    ],
-                    "HotspotsX": [
-                      {
-                        "Position": "-2046.564 1148.219 26.96038",
-                        "GroundPosition": "0 0 0",
-                        "IsGroundPosition": false,
-                        "ContinentId": 1116
-                      }
-                    ],
-                    "Blackspots": [],
-                    "ForceLoot": false,
-                    "ForcePullMobs": false,
-                    "GameObjectiveIndex": 1,
-                    "RunTime": 5.0
-                  },
-                  "TimeLimit": 0
                 }
               ],
               "IsExtendedInEditor": false,
@@ -4964,6 +5180,49 @@
             "$type": "ActionSequence",
             "Children": [
               {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "// Initializing Vendor Manager\r\nMerchant.Initialize();"
+              },
+              {
                 "$type": "CSharpAction",
                 "CSharpCode": "QH.Fib = new Fiber<int>(QH.WaitUntilOffTaxi());\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}\r\n"
               },
@@ -4984,8 +5243,23 @@
                       "PauseThread": true
                     },
                     {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RestingCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
                     }
                   ],
                   "IsExtendedInEditor": false,
@@ -5033,8 +5307,23 @@
                       "PauseThread": true
                     },
                     {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.RepairCheck());\r\nwhile(Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
                     }
                   ],
                   "IsExtendedInEditor": false,
@@ -5082,8 +5371,23 @@
                       "PauseThread": true
                     },
                     {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
                       "$type": "CSharpAction",
                       "CSharpCode": "Merchant.Fib = new Fiber<int>(Merchant.InventoryCheck());\r\nwhile (Merchant.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "main",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
                     }
                   ],
                   "IsExtendedInEditor": false,
@@ -5095,7 +5399,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.PlayerShouldStopVendoring()"
+                      "CSharpCode": "Merchant.InventoryIsFull() && !Merchant.IgnoreVendor"
                     },
                     "IsNot": false
                   },
@@ -5115,14 +5419,48 @@
                 "IsNot": false
               },
               {
-                "$type": "PauseResumeThread",
-                "ThreadName": "main",
-                "PauseThread": false
-              },
-              {
                 "$type": "Wait",
                 "Delay": 10.0,
                 "DelayMax": 15.0
+              },
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
               },
               {
                 "$type": "JumpToBlock",
@@ -5131,258 +5469,6 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "VendorManager"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "If",
-                "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [],
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
-                  "Children": [
-                    {
-                      "$type": "Comment",
-                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
-                      "Color": "64, 128, 128"
-                    },
-                    {
-                      "$type": "EndThread",
-                      "ThreadName": null
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
-                  "GroupName": ""
-                },
-                "Conditions": [
-                  {
-                    "Condition": {
-                      "$type": "CSharpCondition",
-                      "CSharpCode": "Me.Level > 99"
-                    },
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  }
-                ],
-                "IsNot": false
-              },
-              {
-                "$type": "CSharpAction",
-                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-              },
-              {
-                "$type": "Wait",
-                "Delay": 12.0,
-                "DelayMax": 15.2
-              },
-              {
-                "$type": "JumpToBlock",
-                "Target": "XP Macro"
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "XP Macro"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "ActionSequence",
-                "Children": [
-                  {
-                    "$type": "If",
-                    "IsExtendedInEditor": false,
-                    "ActionsFalse": {
-                      "Children": [],
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Else",
-                      "GroupName": ""
-                    },
-                    "ActionsTrue": {
-                      "Children": [
-                        {
-                          "$type": "UseTaxiTemplateScriptAction",
-                          "Template": {
-                            "$type": "UseTaxiTemplate",
-                            "Hotspots": [
-                              {
-                                "Position": "5578.844 4566.655 136.437",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              }
-                            ],
-                            "Target": {
-                              "Hotspot": {
-                                "Position": "5575.775 4563.67 136.2082",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1330
-                              },
-                              "Name": "Bron Skyhorn",
-                              "EntryId": 79407
-                            },
-                            "TaxiTarget": {
-                              "Item1": "Pinchwhistle Gearworks, Spires of Arak",
-                              "Item2": "0.55648499727249",
-                              "Item3": "0.19467307627201"
-                            },
-                            "GameObjectiveIndex": 1,
-                            "RunTime": 5.0
-                          },
-                          "TimeLimit": 0
-                        }
-                      ],
-                      "IsExtendedInEditor": false,
-                      "IsSpecialElement": true,
-                      "SpecialElementName": "Then",
-                      "GroupName": ""
-                    },
-                    "Conditions": [
-                      {
-                        "Condition": {
-                          "$type": "CSharpCondition",
-                          "CSharpCode": "IsInGarrison"
-                        },
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      },
-                      {
-                        "Condition": null,
-                        "IsNot": false
-                      }
-                    ],
-                    "IsNot": false
-                  }
-                ],
-                "IsExtendedInEditor": false,
-                "GroupName": "To Pinchwhistle"
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "Travel"
-          },
-          {
-            "$type": "ActionSequence",
-            "Children": [
-              {
-                "$type": "If",
-                "IsExtendedInEditor": false,
-                "ActionsFalse": {
-                  "Children": [
-                    {
-                      "$type": "If",
-                      "IsExtendedInEditor": false,
-                      "ActionsFalse": {
-                        "Children": [],
-                        "IsSpecialElement": true,
-                        "SpecialElementName": "Else",
-                        "GroupName": ""
-                      },
-                      "ActionsTrue": {
-                        "Children": [
-                          {
-                            "$type": "CSharpAction",
-                            "CSharpCode": "Print(\"Unfortunately Your Hearthstone is on Cooldown. Heading to Nearest FlightMaster.\");\r\nFlight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
-                          }
-                        ],
-                        "IsExtendedInEditor": false,
-                        "IsSpecialElement": true,
-                        "SpecialElementName": "Then",
-                        "GroupName": ""
-                      },
-                      "Conditions": [
-                        {
-                          "Condition": {
-                            "$type": "CSharpCondition",
-                            "CSharpCode": "Me.ContinentID == 1116"
-                          },
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        },
-                        {
-                          "Condition": null,
-                          "IsNot": false
-                        }
-                      ],
-                      "IsNot": false
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Else",
-                  "GroupName": ""
-                },
-                "ActionsTrue": {
-                  "Children": [
-                    {
-                      "$type": "CSharpAction",
-                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
-                    }
-                  ],
-                  "IsExtendedInEditor": false,
-                  "IsSpecialElement": true,
-                  "SpecialElementName": "Then",
-                  "GroupName": ""
-                },
-                "Conditions": [
-                  {
-                    "Condition": {
-                      "$type": "CSharpCondition",
-                      "CSharpCode": "ItemCooldown(110560) == 0"
-                    },
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  },
-                  {
-                    "Condition": null,
-                    "IsNot": false
-                  }
-                ],
-                "IsNot": false
-              }
-            ],
-            "IsExtendedInEditor": false,
-            "GroupName": "Garrison Return"
           },
           {
             "$type": "ActionSequence",
@@ -5540,7 +5626,7 @@
                                 },
                                 {
                                   "$type": "CSharpAction",
-                                  "CSharpCode": "QH.BuyExpPotions(QH.ExpPotionsNeeded());\r\n"
+                                  "CSharpCode": "QH.Fib = new Fiber<int>(QH.BuyVendorItemByID(120182, QH.ExpPotionsNeeded()));\r\nwhile (QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}"
                                 },
                                 {
                                   "$type": "Wait",
@@ -5615,7 +5701,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "(HasItem(120182) == true || HasItem(120182) == false)"
+                      "CSharpCode": "Inventory.Refresh();\r\n\r\nif (HasItem(120182) == true || HasItem(120182) == false)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                     },
                     "IsNot": false
                   },
@@ -5637,6 +5723,402 @@
             ],
             "IsExtendedInEditor": false,
             "GroupName": "XP Potions"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "Comment",
+                      "Text": "No Longer Checking for XP Potions... Player is Level 100+",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "EndThread",
+                      "ThreadName": null
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.Level > 99"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "CSharpAction",
+                "CSharpCode": "QH.Fib = new Fiber<int>(QH.XPMacro());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+              },
+              {
+                "$type": "Wait",
+                "Delay": 12.0,
+                "DelayMax": 15.2
+              },
+              {
+                "$type": "While",
+                "IsExtendedInEditor": false,
+                "LoopActions": {
+                  "Children": [
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Do",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "Me.IsCasting || QH.Fib.Run()"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "JumpToBlock",
+                "Target": "XP Macro"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "XP Macro"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "ActionSequence",
+                "Children": [
+                  {
+                    "$type": "If",
+                    "IsExtendedInEditor": false,
+                    "ActionsFalse": {
+                      "Children": [
+                        {
+                          "$type": "If",
+                          "IsExtendedInEditor": false,
+                          "ActionsFalse": {
+                            "Children": [],
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Else",
+                            "GroupName": ""
+                          },
+                          "ActionsTrue": {
+                            "Children": [
+                              {
+                                "$type": "CSharpAction",
+                                "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                              }
+                            ],
+                            "IsExtendedInEditor": false,
+                            "IsSpecialElement": true,
+                            "SpecialElementName": "Then",
+                            "GroupName": ""
+                          },
+                          "Conditions": [
+                            {
+                              "Condition": {
+                                "$type": "CSharpCondition",
+                                "CSharpCode": "Me.ZoneId != 6722"
+                              },
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            },
+                            {
+                              "Condition": null,
+                              "IsNot": false
+                            }
+                          ],
+                          "IsNot": false
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Else",
+                      "GroupName": ""
+                    },
+                    "ActionsTrue": {
+                      "Children": [
+                        {
+                          "$type": "UseTaxiTemplateScriptAction",
+                          "Template": {
+                            "$type": "UseTaxiTemplate",
+                            "Hotspots": [
+                              {
+                                "Position": "5578.844 4566.655 136.437",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              }
+                            ],
+                            "Target": {
+                              "Hotspot": {
+                                "Position": "5575.775 4563.67 136.2082",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1330
+                              },
+                              "Name": "Bron Skyhorn",
+                              "EntryId": 79407
+                            },
+                            "TaxiTarget": {
+                              "Item1": "Pinchwhistle Gearworks, Spires of Arak",
+                              "Item2": "0.55648499727249",
+                              "Item3": "0.19467307627201"
+                            },
+                            "GameObjectiveIndex": 1,
+                            "RunTime": 5.0
+                          },
+                          "TimeLimit": 0
+                        }
+                      ],
+                      "IsExtendedInEditor": false,
+                      "IsSpecialElement": true,
+                      "SpecialElementName": "Then",
+                      "GroupName": ""
+                    },
+                    "Conditions": [
+                      {
+                        "Condition": {
+                          "$type": "CSharpCondition",
+                          "CSharpCode": "IsInGarrison"
+                        },
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      },
+                      {
+                        "Condition": null,
+                        "IsNot": false
+                      }
+                    ],
+                    "IsNot": false
+                  }
+                ],
+                "IsExtendedInEditor": false,
+                "GroupName": "To Pinchwhistle"
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "Travel"
+          },
+          {
+            "$type": "ActionSequence",
+            "Children": [
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [
+                    {
+                      "$type": "If",
+                      "IsExtendedInEditor": false,
+                      "ActionsFalse": {
+                        "Children": [],
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Else",
+                        "GroupName": ""
+                      },
+                      "ActionsTrue": {
+                        "Children": [
+                          {
+                            "$type": "CSharpAction",
+                            "CSharpCode": "Flight.Fib = new Fiber<int>(Flight.FlyTo(\"Frostwall Garrison, Frostfire Ridge\"));\r\nwhile(Flight.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                          }
+                        ],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Then",
+                        "GroupName": ""
+                      },
+                      "Conditions": [
+                        {
+                          "Condition": {
+                            "$type": "CSharpCondition",
+                            "CSharpCode": "Me.ContinentID == 1116 && !IsInGarrison"
+                          },
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        }
+                      ],
+                      "IsNot": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "VM",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": true
+                    },
+                    {
+                      "$type": "CSharpAction",
+                      "CSharpCode": "QH.Fib = new Fiber<int>(QH.HearthToGarrison());\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}"
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "VM",
+                      "PauseThread": false
+                    },
+                    {
+                      "$type": "PauseResumeThread",
+                      "ThreadName": "XP_Macro",
+                      "PauseThread": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "ItemCooldown(110560) == 0 && !IsInGarrison"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              }
+            ],
+            "IsExtendedInEditor": false,
+            "GroupName": "Garrison Return"
           },
           {
             "$type": "ActionSequence",
@@ -8180,45 +8662,6 @@
                                                     ],
                                                     "IsNot": false,
                                                     "CheckFrequently": true
-                                                  },
-                                                  {
-                                                    "$type": "While",
-                                                    "IsExtendedInEditor": false,
-                                                    "LoopActions": {
-                                                      "Children": [
-                                                        {
-                                                          "$type": "Wait",
-                                                          "Delay": 1.0,
-                                                          "DelayMax": 0.0
-                                                        }
-                                                      ],
-                                                      "IsExtendedInEditor": false,
-                                                      "IsSpecialElement": true,
-                                                      "SpecialElementName": "Do",
-                                                      "GroupName": ""
-                                                    },
-                                                    "Conditions": [
-                                                      {
-                                                        "Condition": {
-                                                          "$type": "CSharpCondition",
-                                                          "CSharpCode": "Me.ZoneId != 7025"
-                                                        },
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      },
-                                                      {
-                                                        "Condition": null,
-                                                        "IsNot": false
-                                                      }
-                                                    ],
-                                                    "IsNot": false
                                                   },
                                                   {
                                                     "$type": "Comment",
