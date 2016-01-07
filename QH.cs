@@ -12,7 +12,7 @@
 |               Full Information on actual use in live profiles: http://www.rebot.to/showthread.php?t=4930
 |               QH = Q.H. = QuestingHelps
 |
-|               Last Update: December 17th, 2015
+|               Last Update: January 17th, 2016
 |
 */  
 	
@@ -133,6 +133,8 @@ public class QH
     }
     
     // Method:          "BuyVendorItemByID(int ID)"
+    // What it Does:    Exactly what it says... if the vendor has the matching item, it purchases it. Player must be at vendor with trade window open.
+    // Purpose:         Occasionally vendor items change positions.  This makes that issue negligent.
     public static IEnumerable<int> BuyVendorItemByID(int itemToBuy, int howMany)
     {
         // parsing through vendor
@@ -165,6 +167,87 @@ public class QH
 			}
     }
     
+    // Method:          "CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot, Vector3[] blacklist, float blacklistDistance)"
+    // What it Does:    Collects the closest object based on EntryID, and if it does not find an object within the targetable range, it moves to the next hotspot and researches.
+    //                  It also successfully avoids blacklisted zones based on the given blacklist distance.
+    // Purpose:         I found that in rare cases the built-in tool does not work properly in regards to collecting objects. Sometimes it doesn't identify them properly.
+    public static IEnumerable<int> CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot, Vector3[] blacklist, float blacklistDistance)
+    {
+        int hotSpotNum = 0;
+        string name;
+        while (API.HasQuest(questID) && !API.IsQuestObjectiveComplete(questID,questObjective))
+        {
+            var killTarget = API.Me.GUID;
+            name = "";
+            float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+            int count = 0; // Blacklisted nodes
+            
+            // Identifying Closest Desired Unit
+            foreach (var unit in API.GameObjects)
+            {
+            for (int i = 0; i < itemID.Length;  i++)                                        // To Parse through the array of items
+                {
+                    if (unit.EntryID == itemID[i])                                          // Match Found!
+                    {
+                        if (unit.Distance < closestUnit)                                    // Unit is closer if true!
+                        {
+                        for (int j = 0; j < blacklist.Length; j++)                          // To parse through blacklisted spots
+                            {
+                                if (unit.Distance2DTo(blacklist[j]) <= blacklistDistance)   // Unit is within blacklist range, so unit will be ignored
+                                {
+                                    count++;
+                                    break;
+                                }
+                            }
+                            if (count == 0)                                                 // If the unit is matched and not found within the blacklisted range, unit is chosen!
+                            {
+                                // This stores the distance of the new unit, so when it re-iterates through,
+                                // ultimately the unit with the lowest distance, or the one closest to you is stored
+                                closestUnit = unit.Distance;
+                                killTarget = unit.GUID;
+                                name = unit.Name;
+                            }
+                        }
+                    }
+                }
+            }
+            if (closestUnit == 5000)
+            {
+                API.Print("No Items Found Within Targetable Range.");
+                while(!API.MoveTo(hotSpot[hotSpotNum]))
+                {
+                    yield return 100;
+                }
+                hotSpotNum++;
+                if (hotSpotNum >= hotSpot.Length)
+                {
+                    hotSpotNum = 0;
+                }
+            }
+            else
+            {
+                Int32 closest = (Int32)closestUnit;
+                API.Print("Closest " + name + " to Collect is " + closest + " yards away.");
+                foreach (var unit in API.GameObjects)
+                {
+                    if (unit.GUID == killTarget)
+                    {
+                        while(API.Me.Distance2DTo(unit.Position) > 10)
+                        {
+                            API.MoveTo(unit.Position);
+                            yield return 100;
+                        }
+                        unit.Interact();
+                        while(API.Me.IsChanneling)
+                        {
+                            yield return 100;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     // Method:          "CTA_GarrisonAbility()"
     // What it Does:     This uses the Frotfire Ridge Garrison ability "Call to Arms" on targeted NPC.
     // Purpose:          Many extremely challenging mobs are made simple with this script. This opens the door to accelerated
@@ -190,6 +273,174 @@ public class QH
             API.Print("Player Intended to Use the \"Call to Arms\" Garrison Ability, But it Was unfortunately on CD");
             yield break;
         }
+    }
+    
+    // Method:          "DemolisherGarrisonAbility()"
+    // What it Does:    Activates and uses the Garrison Outpost Demolisher ability within the Draenor zone of Nagrand.
+    // Purpose:         Ease of killing challenging Bosses.
+    public static IEnumerable<int> DemolisherGarrisonAbility()
+    {
+        if (RemainingSpellCD(160241) == 0 || API.Me.IsOnTransport) 
+        {
+            // Necessary to disable combat because bot will get distracted and activate combat base and not attack the main target.
+            API.DisableCombat = true;
+
+            // This is important because often you get turned around for whatever reason right when you target NPC
+            // and then your first shot or two is wasted.
+            if (API.Me.Focus != null)
+            {
+                API.SetFacing(API.Me.Focus);
+            }
+            if (!API.Me.IsOnTransport) 
+            {
+                int health;
+                while (!API.Me.IsOnTransport)
+                {
+                    health = API.Me.Health;
+                    API.Print("Activating Demolisher!");
+                    API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
+                    yield return 3500;
+                    if (health > API.Me.Health)
+                    {
+                        // Player is being attacked - Allowing combat again... then disabling again.
+                        API.DisableCombat = false;
+                        yield return 2500;
+                        API.DisableCombat = true;
+                    }
+                }
+            }
+            
+            // Count keeps track of cannon shots whilst at a distance before gap is closed.
+            int count = 0;
+            float distance1;
+            float distance2;
+            while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
+            {
+                // Initial distance firing...
+                while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead && API.Me.Focus.Distance2D > 14.0 && count < 5 )
+                {
+                    // This brings player close enough for cannon shot.
+                    while (API.Me.IsOnTransport && API.Me.Focus != null && API.Me.Focus.Distance2D >= 35.0)
+                    {
+                        API.MoveTo(API.Me.Focus.Position);
+                        yield return 100;
+                        
+                        // This stops the player after moving close enough.
+                        if (API.Me.Focus != null && API.Me.Focus.Distance2D < 35.0)
+                        {
+                            API.MoveToStop();
+                            break;
+                        }
+                    }
+                    
+                    if (API.Me.Focus.Distance2D > 14 && API.Me.Focus.Distance2D < 35.0 && count < 5)
+                    {
+                        // Hurl Boulder
+                        API.MoveToStop();
+                        API.Print("Hurling Boulder!");
+                        API.ExecuteLua("OverrideActionBarButton1:Click()");
+                        distance1 = API.Me.Focus.Distance2D;
+                        yield return 100;
+                        distance2 = API.Me.Focus.Distance2D;
+                        // Position check. If distance is less, unit is moving closer to us.  Used predictive positioning instead.
+                        if (distance2 < distance1)
+                        {
+                            API.ClickOnTerrain(API.Me.Focus.PositionPredicted);
+                        }
+                        else
+                        {
+                            API.ClickOnTerrain(API.Me.Focus.Position);
+                        }
+                        yield return 2800;
+                        count++;
+                    }
+                    else
+                    {
+                        if (count < 5)
+                        {
+                            API.Print(API.Me.Focus.Name + " Has Closed the Distance. Changing Firing Tactics...");
+                        }
+                        else
+                        {
+                            API.Print("Moving closer to " + API.Me.Focus.Name + " to Use Heavier Attacks!");
+                        }
+                        break;
+                        
+                    }
+                }
+                
+                // Moving Closer for strong attacks
+                while (API.Me.Focus != null && API.Me.Focus.Distance2D > 6.0)
+                {
+                    API.CTM(API.Me.Focus.Position);
+                    yield return 100;
+                }
+                
+                // Faces the unit to kill
+                if (API.Me.Focus != null)
+                {
+                    API.CTM(API.Me.Focus.Position);
+                    API.MoveToStop();
+                }
+                
+                // Prioritising the shots.
+                // Rain of Death
+                if (RemainingSpellCD(160283) == 0) 
+                {
+                    API.Print("Firing! Rain of Death Incoming...");
+                    API.ExecuteLua("OverrideActionBarButton4:Click()");
+                    yield return 500;
+                }
+                // Hurl Boulder
+                else if (RemainingSpellCD(160142) == 0 && API.Me.Focus.Distance2D >= 6.0)
+                {
+                    API.MoveToStop();
+                    API.Print("Hurling Boulder!");
+                    API.ExecuteLua("OverrideActionBarButton1:Click()");
+                    yield return 100;
+                    API.ClickOnTerrain(API.Me.Focus.Position);
+                    yield return 1300;
+                }
+                // Flame Vents
+                else if (RemainingSpellCD(167706) == 0 && API.Me.Focus.Distance2D < 6.0)
+                {
+                    API.Print("Burn! Flame Vents!!!");
+                    API.ExecuteLua("OverrideActionBarButton2:Click()");
+                    yield return 2000;
+                }
+                // Between each check...
+                yield return 100;
+            }
+            
+            // Determing Vehicle HP and if player should exit vehicle.
+            yield return 1000;
+            bool exitVehicle = true;
+            if (API.IsQuestInLogAndComplete(34662) || API.IsQuestInLogAndComplete(34663) || API.IsQuestInLogAndComplete(34664))  // Arena Trials quests... basically it will stay in the vehicle
+            {
+                foreach (UnitObject unit in API.Units)
+                {
+                    if (unit.EntryID == 79246)
+                    {
+                        if (unit.Health > 49000)
+                        {
+                            exitVehicle = false;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (exitVehicle && API.Me.IsOnTransport)
+            {
+                // If NPC is killed with time still left, why stand there and wait til it goes away?  Just exit it and keep moving on.
+                API.Print("Exiting Demolisher...");
+                API.ExecuteLua("OverrideActionBarLeaveFrameLeaveButton:Click()");
+            }
+            else if (!exitVehicle)
+            {
+                API.Print("It Appears Your Vehicle is Still in Fair Enough Condition. Let's Challenge Another Boss!");
+            }
+        }
+        API.DisableCombat = false;
     }
     
     // Method:          DestroyKnownToys()
@@ -240,8 +491,8 @@ public class QH
         {
             Vector3 location = API.Me.Position;
             API.ExecuteLua("ReloadUI()");
-            yield return 1500;
             API.Print("On Loading screen...");
+            yield return 5000;
         }
     }
     
@@ -250,7 +501,7 @@ public class QH
     //                  And then after disabling, give the boolean option set to true and the player's UI will reload.  This would typically be done as in most cases a reload is necessary to disable.
     // Purpose:         As with the previous method's description, it is mainly to be able to add a Quality of Life feature to prevent the user's experience from being sub-par by managing their addons
     //                  for them as with certain items there can be certain UI issues that affect macro interactions...
-    public static void DisableAddons(string[] addonName, bool reloadUI)
+    public static IEnumerable<int> DisableAddOns(string[] addonName, bool reloadUI)
     {
         int numDisabled = 0;
         
@@ -269,6 +520,8 @@ public class QH
         {
             API.Print("You Have Disabled " + numDisabled + " Addons and Need to Reload.\nReloading Now!");
             API.ExecuteLua("ReloadUI()");
+            API.Print("On Loading screen...");
+            yield return 5000;
         }
     }
     
@@ -481,6 +734,11 @@ public class QH
 		durability = durability / count * 100;
 		return (int)durability;
 	}
+    
+    public static int GetFollowerDisplayID(string followerName)
+    {
+        return API.ExecuteLua<int>("local table = C_Garrison.GetFollowers(); local displayId = 0; for x,y in pairs(table) do if y.name == \"" + followerName + "\" then displayId = y.displayID end end; return displayId;");
+    }
     
     // Method:          "GetGarrisonBuildingInfo(int)"
     // What it Does:    Returns a List of 2 objects, an int representing the buildingID that is placed there, and a string representing the name of that building
@@ -1093,6 +1351,55 @@ public class QH
         return result;
     }
     
+    // Method:          "IsPlayerStrongEnough(int minPlayerItemLevel)"
+    // What it Does:    Returns true if the player's avg item level is as equal or greater than the given avg ilvl.
+    // Purpose:         Useful gear check for strong mobs.
+    public static bool IsPlayerStrongEnough(int minPlayerItemLevel)
+    {
+        if (GetPlayerItemLevel() >= minPlayerItemLevel)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    // Method:          "IsPlayerStrongEnough(int minPlayerItemLevel, int minPlayerLevel)"
+    // What it Does:    Returns true if the player's avg item level is as equal or greater than the given avg ilvl OR they are high enough Player level.
+    // Purpose:         Useful gear/level check for strong mobs.
+    public static bool IsPlayerStrongEnough(int minPlayerItemLevel, int minPlayerLevel)
+    {
+        if (GetPlayerItemLevel() >= minPlayerItemLevel)
+        {
+            return true;
+        }
+        else if (API.Me.Level >= minPlayerLevel)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    // Method:          "IsPlayerStrongEnough(int minPlayerItemLevel, int minPlayerLevel, int minNumPartyMembers)"
+    // What it Does:    Returns true if the player's avg item level is as equal or greater than the given avg ilvl OR they are high enough Player level,
+    //                  OR they have enough party members in their group.
+    // Purpose:         Useful gear/level/party member check for strong mobs.
+    public static bool IsPlayerStrongEnough(int minPlayerItemLevel, int minPlayerLevel, int minNumPartyMembers)
+    {
+        if (GetPlayerItemLevel() >= minPlayerItemLevel)
+        {
+            return true;
+        }
+        else if (API.Me.Level >= minPlayerLevel)
+        {
+            return true;
+        }
+        else if (Group.GetNumGroupMembers() >= minNumPartyMembers)
+        {
+            return true;
+        }
+        return false;
+    }
+    
     // Method:          "IsRepairVendorNearby()"
     // What it Does:    Returns true if a player is within 100 yards of a Repair vendor
     // Purpose:         Could be a useful check if player wanted to search for a vendor if passing through town
@@ -1174,7 +1481,16 @@ public class QH
     // Purpose:         This helps to determine if a player should waste time attempting to retrieve said follower or not.
     public static bool NeedsFollower(int followerDisplayID)
     {
-        return API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + followerDisplayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
+        if (followerDisplayID == 0)
+        {
+            API.Print("Follower DisplayID Not Recognized.");
+            return false;
+        }
+        else
+        {
+            return API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == " + followerDisplayID + " and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
+        }
+
     }
     
     // Method:          "PlaceGarrisonBuildingAt(int,int)"
@@ -1809,7 +2125,10 @@ public class QH
             }
             // This is important because often you get turned around for whatever reason right when you target NPC
             // and then your first shot or two is wasted.
-            API.SetFacing(API.Me.Focus);
+            if (API.Me.Focus != null)
+            {
+                API.SetFacing(API.Me.Focus);
+            }
             if (!API.Me.IsOnTransport) 
             {
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
@@ -1828,6 +2147,7 @@ public class QH
                 // Without this the npc often will move, and in a vehicle, the shredder, player movement doesn't function normal
                 // with the bot.
                 API.CTM(API.Me.Focus.Position);
+                API.MoveToStop();
                 // The following if/else is to prioritise vehicle abilities...Number 2 is prioritised. 
                 if (RemainingSpellCD(165422) > 0) 
                 {
@@ -2551,4 +2871,178 @@ public class QH
         }
     }
     
+    
+    // Method:          "IsPlayerAbleToEquipItem(int itemID)"
+    // What it Does:    Returns true if the gear item is equipable to the player's class.
+    // Purpose:         Filtering for vendoring issues.
+    public static bool IsGearItemForPlayerClass(int itemID)
+    {
+        string playerClass = API.Me.Class.ToString();
+        bool result = false;
+        string type = API.ExecuteLua<string>("local _,_,_,_,_,_,subclass = GetItemInfo(" + itemID + "); return subclass;");
+        
+        // All classes can wear trinkets or rings
+        if (type.Equals("Miscellaneous"))
+        {
+            result = true;
+        }
+        else
+        {
+            switch (playerClass)
+            {
+                case "DeathKnight":
+                    if (type.Equals("Plate") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("Two-Handed Swords"))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Demon Hunter":
+                    if (type.Equals("Leather") || type.Equals("Daggers")  || type.Equals("Warglaives") || type.Equals("Fist Weapons") || type.Equals("One-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("One-Handed Axes"))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Druid":
+                    if (type.Equals("Leather") || type.Equals("Daggers") || type.Equals("Fist Weapons") || type.Equals("Polearms") || type.Equals("Staves") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces"))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Hunter":
+                    if (API.Me.Level < 40 && (type.Equals("Leather") || type.Equals("Bows") || type.Equals("Guns") || type.Equals("Crossbows")))
+                    {
+                        result = true;
+                    }
+                    else if (API.Me.Level >= 40 && (type.Equals("Mail") || type.Equals("Bows") || type.Equals("Guns") || type.Equals("Crossbows")))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Mage":
+                    if (type.Equals("Cloth") || type.Equals("Daggers") || type.Equals("Staves") || type.Equals("One-Handed Swords") || type.Equals("Wands"))
+                    {
+                        return true;
+                    }
+                    break;
+                case "Monk":
+                    if (type.Equals("Leather") || type.Equals("Fist Weapons") || type.Equals("Polearms") || type.Equals("Staves") || type.Equals("One-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("One-Handed Axes"))
+                    {
+                        return true;
+                    }
+                    break;
+                case "Paladin":
+                    if (API.Me.Level < 40 && (type.Equals("Mail") || type.Equals("Shields") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("Two-Handed Swords")))
+                    {
+                        result = true;
+                    }
+                    else if (API.Me.Level >= 40 && (type.Equals("Plate") || type.Equals("Shields") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("Two-Handed Swords")))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Priest":
+                    if (type.Equals("Cloth") || type.Equals("Daggers") || type.Equals("Staves") || type.Equals("One-Handed Maces") || type.Equals("Wands"))
+                    {
+                        return true;
+                    }
+                    break;
+                case "Rogue":
+                    if (type.Equals("Leather") || type.Equals("Daggers")  || type.Equals("Bows") || type.Equals("Guns") || type.Equals("Crossbows") || type.Equals("Fist Weapons") || type.Equals("One-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("One-Handed Axes"))
+                    {
+                        return true;
+                    }
+                    break;
+                case "Shaman":
+                     if (API.Me.Level < 40 && (type.Equals("Leather") || type.Equals("Shields") || type.Equals("Daggers") || type.Equals("Fist Weapons") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("Staves")))
+                    {
+                        result = true;
+                    }
+                    else if (API.Me.Level >= 40 && (type.Equals("Mail") || type.Equals("Shields") || type.Equals("Daggers") || type.Equals("Fist Weapons") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("Staves")))
+                    {
+                        result = true;
+                    }
+                    break;
+                case "Warlock":
+                    if (type.Equals("Cloth") || type.Equals("Daggers") || type.Equals("Staves") || type.Equals("One-Handed Swords") || type.Equals("Wands"))
+                    {
+                        return true;
+                    }
+                    break;
+                case "Warrior":
+                    if (API.Me.Level < 40 && (type.Equals("Mail") || type.Equals("Shields") || type.Equals("Bows") || type.Equals("Guns") || type.Equals("Crossbows") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("Two-Handed Swords") || type.Equals("Daggers") || type.Equals("Staves") || type.Equals("Polearms") || type.Equals("Fist Weapons")))
+                    {
+                        result = true;
+                    }
+                    else if (API.Me.Level >= 40 && (type.Equals("Plate") || type.Equals("Shields") || type.Equals("Bows") || type.Equals("Guns") || type.Equals("Crossbows") || type.Equals("One-Handed Axes") || type.Equals("Two-Handed Axes") || type.Equals("One-Handed Maces") || type.Equals("Two-Handed Maces") || type.Equals("One-Handed Swords") || type.Equals("Two-Handed Swords") || type.Equals("Daggers") || type.Equals("Staves") || type.Equals("Polearms") || type.Equals("Fist Weapons")))
+                    {
+                        result = true;
+                    }
+                    break;
+                default:
+                    API.Print("DeBug: Player Class Not Known... Please Report");
+                    break;            
+            }
+        }
+        return result;
+    }
+    
+    // Method:          "GetGearSlotItemLevel(string slot)"
+    // What it Does:    Returns the itemLevel of the given equipment slot as an int.
+    // Purpose          Assist in filtering gear upgrades and vendor options.
+    //                  Note: The formatting is as such for the argument: "HEAD", "SHOULDER", "CHEST", "TRINKET", "FINGER" and so on... 
+    //                  the trinket and the ring both return the slot with the lowest iLvl to be weight against.
+    public static int GetGearSlotItemLevel(string slot)
+    {
+        int itemLevel = -1; // So as not to sell if unable to identify. For safety.
+        int trinketLevel = -1;
+        int trinkCount = 0;
+        int ringLevel = -1;
+        int ringCount = 0;
+        foreach (var item in Equip.Items)
+        {
+            if (item.ItemInfo.EquipSlot.ToString().Substring(item.ItemInfo.EquipSlot.ToString().IndexOf('_') + 1).Equals(slot))
+            {
+                if (slot.Equals("TRINKET"))                     // 2 Trinket slots to parse through...
+                {
+                    if (trinketLevel > item.ItemInfo.ItemLevel || trinketLevel == -1)
+                    {
+                        trinketLevel = item.ItemInfo.ItemLevel; // This ultimately gives me the lowest trinket ilvl
+                        trinkCount++;
+                        if (trinkCount == 2)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else if (slot.Equals("FINGER"))                     // 2 Ring slots to parse through...
+                {
+                    if (ringLevel > item.ItemInfo.ItemLevel || ringLevel == -1)
+                    {
+                        ringLevel = item.ItemInfo.ItemLevel; // This ultimately gives me the lowest Ring ilvl
+                        ringCount++;
+                        if (ringCount == 2)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else if (trinketLevel == -1 && ringLevel == -1)
+                {
+                    itemLevel = item.ItemInfo.ItemLevel;
+                    break;
+                }
+            }
+        }
+        if (trinketLevel != -1)
+        {
+            itemLevel = trinketLevel;
+        }
+        else if (ringLevel != -1)
+        {
+            itemLevel = ringLevel;
+        }
+        return itemLevel;
+    }
 }
+
+    
