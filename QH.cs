@@ -46,10 +46,9 @@ public class QH
         {
             if ((questArray[i] != questToKeep) && (API.HasQuest(questArray[i])))
             {
-                API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
-                string title = API.ExecuteLua<string>("return title;");
+                string title = API.ExecuteLua<string>("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest(); return title;");
                 API.Print("Removing Quest(temporarily) to Leave One Gossip Option at Flightmaster \"" + title + "\"");
-                yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.q
+                yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.
             }
         }
     }
@@ -61,8 +60,7 @@ public class QH
     //                  a quest.  This will assist the profile creator in expanding their toolbox for quality of life safeguards.
     public static void AbandonQuest(int questID)
     {
-        API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questID + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
-        string title = API.ExecuteLua<string>("return title;");
+        string title = API.ExecuteLua<string>("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest(); return title;");
         API.Print("The Quest \"" + title + "\" Has Been Removed.");
     }
     
