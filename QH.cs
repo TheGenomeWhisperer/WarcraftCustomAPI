@@ -46,9 +46,10 @@ public class QH
         {
             if ((questArray[i] != questToKeep) && (API.HasQuest(questArray[i])))
             {
-                string title = API.ExecuteLua<string>("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest(); return title;");
+                API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+                string title = API.ExecuteLua<string>("return title;");
                 API.Print("Removing Quest(temporarily) to Leave One Gossip Option at Flightmaster \"" + title + "\"");
-                yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.
+                yield return 1000; // Found this to be necessary as often removing quests needs a slight delay.q
             }
         }
     }
@@ -60,7 +61,8 @@ public class QH
     //                  a quest.  This will assist the profile creator in expanding their toolbox for quality of life safeguards.
     public static void AbandonQuest(int questID)
     {
-        string title = API.ExecuteLua<string>("local ind = GetQuestLogIndexByID(" + questArray[i] + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest(); return title;");
+        API.ExecuteLua("local ind = GetQuestLogIndexByID(" + questID + "); local title = GetQuestLogTitle(ind); SelectQuestLogEntry(ind); SetAbandonQuest(); AbandonQuest();");
+        string title = API.ExecuteLua<string>("return title;");
         API.Print("The Quest \"" + title + "\" Has Been Removed.");
     }
     
@@ -1817,8 +1819,14 @@ public class QH
         
         if (!professions[0].Equals("None"))
         {
-            buildingID1 = GetProfessionBuildingID(professions[0]);
-            if (buildingID1 != 0)
+            int id = GetProfessionBuildingID(professions[0]);
+            bool changeName = false;
+            if (id != 0)
+            {
+                buildingID1 = id;
+                changeName = true;
+            }
+            if (buildingID1 != 0 && changeName)
             {
                 plotID1 = API.ExecuteLua<int>("local count = 1; local plotID1 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID1 + ")) do if count == 1 then plotID1 = y count = count + 1 end end; return plotID1");
                 pName1 = professions[0];
@@ -1827,14 +1835,19 @@ public class QH
         
         if (!professions[1].Equals("None"))
         {
-            buildingID2 = GetProfessionBuildingID(professions[1]);
-            if (buildingID2 != 0)
+            int id2 = GetProfessionBuildingID(professions[1]);
+            bool changeName2 = false;
+            if (id2 != 0)
+            {
+                buildingID2 = id2;
+                changeName2 = true;
+            }
+            if (buildingID2 != 0 && changeName2)
             {
                 plotID2 = API.ExecuteLua<int>("local count = 1; local plotID2 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID2 + ")) do if count == 1 then count = count + 1 elseif count == 2 then plotID2 = y end end; return plotID2");
                 pName2 = professions[1];
             }
         }
-        
         // PlotInfo containes a bool representing if building is built there or not, and building name if there is one.
         List<object> plotInfo =  GetGarrisonBuildingInfo(plotID1);
         List<object> plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
