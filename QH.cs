@@ -175,11 +175,13 @@ public class QH
     {
         int hotSpotNum = 0;
         string name;
+        var killTarget = API.Me.GUID;
+        float closestUnit;
         while (API.HasQuest(questID) && !API.IsQuestObjectiveComplete(questID,questObjective))
         {
-            var killTarget = API.Me.GUID;
+            killTarget = API.Me.GUID;
             name = "";
-            float closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+            closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
             int count = 0; // Blacklisted nodes
             
             // Identifying Closest Desired Unit
@@ -191,7 +193,7 @@ public class QH
                     {
                         if (unit.Distance < closestUnit)                                    // Unit is closer if true!
                         {
-                        for (int j = 0; j < blacklist.Length; j++)                          // To parse through blacklisted spots
+                            for (int j = 0; j < blacklist.Length; j++)                          // To parse through blacklisted spots
                             {
                                 if (unit.Distance2DTo(blacklist[j]) <= blacklistDistance)   // Unit is within blacklist range, so unit will be ignored
                                 {
@@ -238,11 +240,92 @@ public class QH
                             yield return 100;
                         }
                         unit.Interact();
-                        while(API.Me.IsChanneling)
+                        yield return 2000;
+                        while(API.Me.IsChanneling || API.Me.IsCasting)
                         {
                             yield return 100;
                         }
+                        break;
                     }
+                }
+                while (IsInCombat())
+                {
+                    yield return 1000;
+                }
+            }
+        }
+    }
+    
+     // Method:          "CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot)"
+    // What it Does:    Collects the closest object based on EntryID, and if it does not find an object within the targetable range, it moves to the next hotspot and researches.
+    // Purpose:         I found that in rare cases the built-in tool does not work properly in regards to collecting objects. Sometimes it doesn't identify them properly.
+    public static IEnumerable<int> CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot)
+    {
+        int hotSpotNum = 0;
+        string name;
+        var killTarget = API.Me.GUID;
+        float closestUnit;
+        while (API.HasQuest(questID) && !API.IsQuestObjectiveComplete(questID,questObjective))
+        {
+            killTarget = API.Me.GUID;
+            name = "";
+            closestUnit = 5000f; // Insanely large distance, so first found distance will always be lower.
+            // Identifying Closest Desired Unit
+            foreach (var unit in API.GameObjects)
+            {
+            for (int i = 0; i < itemID.Length;  i++)                                        // To Parse through the array of items
+                {
+                    if (unit.EntryID == itemID[i])                                          // Match Found!
+                    {
+                        if (unit.Distance < closestUnit)                                    // Unit is closer if true!
+                        {
+                            // This stores the distance of the new unit, so when it re-iterates through,
+                            // ultimately the unit with the lowest distance, or the one closest to you is stored
+                            closestUnit = unit.Distance;
+                            killTarget = unit.GUID;
+                            name = unit.Name;
+                        }
+                    }
+                }
+            }
+            if (closestUnit == 5000)
+            {
+                API.Print("No Items Found Within Targetable Range.");
+                while(!API.MoveTo(hotSpot[hotSpotNum]))
+                {
+                    yield return 100;
+                }
+                hotSpotNum++;
+                if (hotSpotNum >= hotSpot.Length)
+                {
+                    hotSpotNum = 0;
+                }
+            }
+            else
+            {
+                Int32 closest = (Int32)closestUnit;
+                API.Print("Closest " + name + " to Collect is " + closest + " yards away.");
+                foreach (var unit in API.GameObjects)
+                {
+                    if (unit.GUID == killTarget)
+                    {
+                        while(API.Me.Distance2DTo(unit.Position) > 10)
+                        {
+                            API.MoveTo(unit.Position);
+                            yield return 100;
+                        }
+                        unit.Interact();
+                        yield return 2000;
+                        while(API.Me.IsChanneling || API.Me.IsCasting)
+                        {
+                            yield return 100;
+                        }
+                        break;
+                    }
+                }
+                while (IsInCombat())
+                {
+                    yield return 1000;
                 }
             }
         }
@@ -296,6 +379,8 @@ public class QH
                 int health;
                 while (!API.Me.IsOnTransport)
                 {
+                    API.MoveToStop();
+                    yield return 100;
                     health = API.Me.Health;
                     API.Print("Activating Demolisher!");
                     API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
@@ -312,8 +397,8 @@ public class QH
             
             // Count keeps track of cannon shots whilst at a distance before gap is closed.
             int count = 0;
-            float distance1;
-            float distance2;
+            float distance1 = 0.0f;
+            float distance2 = 0.0f;
             while (API.Me.IsOnTransport && API.Me.Focus != null && !API.Me.Focus.IsDead)
             {
                 // Initial distance firing...
@@ -333,21 +418,25 @@ public class QH
                         }
                     }
                     
-                    if (API.Me.Focus.Distance2D > 14 && API.Me.Focus.Distance2D < 35.0 && count < 5)
+                    if (API.Me.Focus != null && API.Me.Focus.Distance2D > 14 && API.Me.Focus.Distance2D < 35.0 && count < 5)
                     {
                         // Hurl Boulder
                         API.MoveToStop();
                         API.Print("Hurling Boulder!");
                         API.ExecuteLua("OverrideActionBarButton1:Click()");
-                        distance1 = API.Me.Focus.Distance2D;
-                        yield return 100;
-                        distance2 = API.Me.Focus.Distance2D;
+                        if (API.Me.Focus != null)
+                        {
+                            distance1 = API.Me.Focus.Distance2D;
+                            yield return 100;
+                            distance2 = API.Me.Focus.Distance2D;
+                        }
+                        
                         // Position check. If distance is less, unit is moving closer to us.  Used predictive positioning instead.
-                        if (distance2 < distance1)
+                        if (API.Me.Focus != null && distance2 < distance1)
                         {
                             API.ClickOnTerrain(API.Me.Focus.PositionPredicted);
                         }
-                        else
+                        else if (API.Me.Focus != null)
                         {
                             API.ClickOnTerrain(API.Me.Focus.Position);
                         }
@@ -356,11 +445,11 @@ public class QH
                     }
                     else
                     {
-                        if (count < 5)
+                        if (API.Me.Focus != null && count < 5)
                         {
                             API.Print(API.Me.Focus.Name + " Has Closed the Distance. Changing Firing Tactics...");
                         }
-                        else
+                        else if (API.Me.Focus != null)
                         {
                             API.Print("Moving closer to " + API.Me.Focus.Name + " to Use Heavier Attacks!");
                         }
@@ -392,7 +481,7 @@ public class QH
                     yield return 500;
                 }
                 // Hurl Boulder
-                else if (RemainingSpellCD(160142) == 0 && API.Me.Focus.Distance2D >= 6.0)
+                else if (API.Me.Focus != null && RemainingSpellCD(160142) == 0 && API.Me.Focus.Distance2D >= 6.0)
                 {
                     API.MoveToStop();
                     API.Print("Hurling Boulder!");
@@ -415,13 +504,17 @@ public class QH
             // Determing Vehicle HP and if player should exit vehicle.
             yield return 1000;
             bool exitVehicle = true;
-            if (API.IsQuestInLogAndComplete(34662) || API.IsQuestInLogAndComplete(34663) || API.IsQuestInLogAndComplete(34664))  // Arena Trials quests... basically it will stay in the vehicle
+            if (API.IsQuestInLogAndComplete(34662) || API.IsQuestInLogAndComplete(34663) || API.IsQuestInLogAndComplete(34664) || API.IsQuestInLogAndComplete(34665))  // Arena Trials quests... basically it will stay in the vehicle
             {
                 foreach (UnitObject unit in API.Units)
                 {
                     if (unit.EntryID == 79246)
                     {
-                        if (unit.Health > 49000)
+                        if (API.IsQuestInLogAndComplete(34665) && unit.Health > 75000)
+                        {
+                            exitVehicle = false;
+                        }
+                        else if ((API.IsQuestInLogAndComplete(34662) || API.IsQuestInLogAndComplete(34663) || API.IsQuestInLogAndComplete(34664)) && unit.Health > 49000)
                         {
                             exitVehicle = false;
                         }
@@ -1742,6 +1835,7 @@ public class QH
             if (!API.IsQuestCompleted(questArray[i]))
             {
                 count++;
+                API.Print(questArray[i]);
             }
         }
         API.Print("You Have " + count + " quests left to complete in this questpack!");
@@ -2228,35 +2322,22 @@ public class QH
                     yield return 1000;
                     // First check if player needs to buy the rare follower on here.
                     bool toBuy = API.ExecuteLua<bool>("local allFollowers = C_Garrison.GetFollowers(); local toBuy = false; for x, y in pairs(allFollowers) do if (y.displayID == 58876 and y.isCollected == nil) then toBuy = true; break; end end; return toBuy;");
-                    if (toBuy && GetPlayerGold() > 400)
+                    if (toBuy && GetPlayerGold() > 400 && !API.HasItem(116915))
                     {
                         var check0 = new Fiber<int>(BuyVendorItemByID(116915,1));
                         while (check0.Run()) {yield return 100;}
+                        API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
                         yield return 1000;
-                        Inventory.Refresh();
-                        if (API.HasItem(116915))
-                        {
-                            API.Print("Buying Follower Ziri'ak, Yay! He's Pretty Rare to See on the Vendor Here!");
-                            API.UseItem(116915);
-                            yield return 2000;
-                            API.Print("Yay! Ziri'ak is Now Your Follower!"); 
-                        }    
                     }
+                    
                     // Let's check for that 500g toy as well, Bloodmane Charm.
                     bool notOwned = PlayerHasToy(113096);
-                    if (notOwned && GetPlayerGold() > 400)
+                    if (notOwned && GetPlayerGold() > 400 && !API.HasItem(113096))
                     {
                         var check0 = new Fiber<int>(BuyVendorItemByID(113096,1));
                         while (check0.Run()) {yield return 100;}
+                        API.Print("Buying the Rare Toy \"Bloodmane Charm \" Found on the Vendor!");
                         yield return 1000;
-                        Inventory.Refresh();
-                        if (API.HasItem(113096))
-                        {
-                            API.Print("Buying the Rare Toy \"Bloodmane Charm \" Found on the Vendor!");
-                            API.UseItem(113096);
-                            yield return 2000;
-                            API.Print("Toy is now learned! Yay!"); 
-                        }    
                     }
                     
                     // If player is not already in posession of an item and doesn't have the aura, he sells it.
@@ -2289,6 +2370,25 @@ public class QH
                     API.ExecuteLua("CloseMerchant()");
                     yield return 1000;
                     API.Me.ClearFocus();
+                }
+                
+                Inventory.Refresh();
+                if (API.HasItem(116915) || API.HasItem(113096))
+                {
+                    if (API.HasItem(116915))
+                    {
+                        yield return 1000;
+                        API.UseItem(116915);
+                        yield return 2000;
+                        API.Print("Yay! Ziri'ak is Now Your Follower!"); 
+                    }
+                    if (API.HasItem(113096))
+                    {
+                        yield return 1000;
+                        API.UseItem(113096);
+                        yield return 2000;
+                        API.Print("Toy is now learned! Yay!"); 
+                    }   
                 }
             }
         }
@@ -3056,4 +3156,3 @@ public class QH
     }
 }
 
-    

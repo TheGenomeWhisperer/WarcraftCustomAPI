@@ -75,7 +75,7 @@
           },
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) \r\n{\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 90) \r\n{\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 90 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DisableSkinning\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\n"
+            "CSharpCode": "if (Me.IsAlliance) \r\n{\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 90) \r\n{\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 90 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DisableSkinning\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.UseZigZagOptimization = true;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 3;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 0;\r\nGlobalBotSettings.SkipCinematics = true;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\nAutoEquipSettings.DisableIfMaxLevel = false;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) \r\n{\r\n\tPrint(\"\\n----------\\nWARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) \r\n{\r\n\tPrint(\"\\n----------\\nWARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\nelse if (GlobalBotSettings.PreferredGroundMount.Equals(\"> Don't use ground mount <\"))\r\n{\r\n\tPrint(\"\\n----------\\nWarning! No Ground Mount Selected!\\nPlease Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\n"
           },
           {
             "$type": "Comment",
@@ -165,7 +165,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray =  {33815, 34402, 34364, 34592, 34375, 34765, 34378, 34824, 34822, 34823, 34461, 34861, 34462, 34775, 34379, 34380, 33816, 33784, 34505, 33784, 33526, 33546, 33408, 33410, 33622, 33344, 33527, 33657, 33468, 33807, 33469, 33470, 33473, 33955, 33915, 33929, 32783, 32989, 33119, 33898, 33483, 33484, 34732, 33919, 33412, 33450, 33454, 33467, 32783, 32791, 32792, 32929, 32804, 32794, 32795, 32796, 36567, 34736, 33918, 32990, 33013, 32991, 32992, 34345, 34344, 34346, 34348, 34731, 32981, 33462, 34501, 32993, 33785, 33826, 33828, 32994, 33493, 37291, 33010, 34123, 33125, 33132, 33145, 33838, 34729, 34124, 37563, 33919, 34841, 34839, 34937, 36053, 34936, 34865, 34967, 33438, 34129, 34497, 34507, 35570, 35567, 35371, 35347, 35370, 35569, 35568, 34931, 33916, 33011, 32918, 34825, 36863, 34132, 33947};\r\n\r\nint count = 0;\r\n// This addresses an incompletable quest bug due to lvl 100 boost\r\nif (!IsQuestCompleted(33868)  && !IsQuestInLogAndComplete(33868) && !IsQuestCompleted(33815))\r\n{\r\n\tcount = 1;\r\n}\r\n\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray[i])) \r\n\t{\r\n\t\tcount2++;\r\n\t}\r\n}\r\n\r\nint count3 = count + count2;\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0) \r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray =  {33815, 34402, 34364, 34592, 34375, 34765, 34378, 34824, 34822, 34823, 34461, 34861, 34462, 34775, 34379, 34380, 33816, 33784, 34505, 33784, 33526, 33546, 33408, 33410, 33622, 33344, 33527, 33657, 33468, 33807, 33469, 33470, 33473, 33955, 33915, 33929, 32783, 32989, 33119, 33898, 33483, 33484, 34732, 33919, 33412, 33450, 33454, 33467, 32783, 32791, 32792, 32929, 32804, 32794, 32795, 32796, 36567, 34736, 33918, 32990, 33013, 32991, 32992, 34345, 34344, 34346, 34348, 34731, 32981, 33462, 34501, 32993, 33785, 33826, 33828, 32994, 33493, 37291, 33010, 34123, 33125, 33132, 33145, 33838, 34729, 34124, 37563, 33919, 34841, 34839, 34937, 36053, 34936, 34865, 34967, 33438, 34129, 34497, 34507, 35570, 35567, 35371, 35347, 35370, 35569, 35568, 34931, 33916, 33011, 32918, 34825, 36863, 34132, 33947};\r\n\r\nint[] followers = {62467};\r\n\r\nint count = 0;\r\n// This addresses an incompletable quest bug due to lvl 100 boost\r\nif (!IsQuestCompleted(33868)  && !IsQuestInLogAndComplete(33868) && !IsQuestCompleted(33815))\r\n{\r\n\tcount = 1;\r\n}\r\n\r\nint count2 = 0;\r\nfor (int i = 0; i < questArray.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray[i])) \r\n\t{\r\n\t\tcount2++;\r\n\t}\r\n}\r\n\r\nint count3 = 0;\r\nfor (int i = 0; i < followers.Length; i++)\r\n{\r\n    if (QH.NeedsFollower(followers[i]))\r\n    {\r\n        count3++;\r\n    }\r\n}\r\n\r\nint count4 = count + count2 + count3;\r\nG[\"DoNoTFly\"] = \"false\";\r\nif (count4 == 1 && count3 == 1 && Me.ZoneId == 7333)\r\n{\r\n    G[\"DoNoTFly\"] = \"true\";\r\n}\r\n\r\nPrint(\"You Have \" + count4 + \" quests left to complete in this questpack!\");\r\nif (count4 == 0) \r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -191,7 +191,7 @@
           },
           {
             "$type": "CSharpAction",
-            "CSharpCode": "// Disabling Addons With Known Conflict\r\nint numDisabled = 0;\r\nstring[] addons = new String[] {\"MasterPlan\", \"MasterPlanA\"};\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\nif (QH.QuestNotDone(34775))\r\n{   \r\n\tfor (int i = 0; i < addons.Length; i++)\r\n\t{\r\n\t\tif (QH.HasAddOnEnabled(addons[i]))\r\n    \t\t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addons[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addons[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t\t}\r\n\t}\r\n}\r\n\r\nfor (int i = 0; i < addonName.Length; i++)\r\n{\r\n\tif (QH.HasAddOnEnabled(addonName[i]))\r\n    \t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addonName[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addonName[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t}\r\n}\r\n\r\nif (numDisabled > 0)\r\n{\r\n\tPrint(\"You Have Disabled \" + numDisabled + \" Addons and Need to Reload.\\nReloading Now!\");\r\n\tExecuteLua(\"ReloadUI()\");\r\n}"
+            "CSharpCode": "// Disabling Addons With Known Conflict\r\nint numDisabled = 0;\r\nstring[] addons = new String[] {\"MasterPlan\", \"MasterPlanA\"};\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\nif (QH.QuestNotDone(34775))\r\n{   \r\n\tfor (int i = 0; i < addons.Length; i++)\r\n\t{\r\n\t\tif (QH.HasAddOnEnabled(addons[i]))\r\n    \t\t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addons[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addons[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t\t}\r\n\t}\r\n}\r\n\r\nfor (int i = 0; i < addonName.Length; i++)\r\n{\r\n\tif (QH.HasAddOnEnabled(addonName[i]))\r\n    \t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addonName[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addonName[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t}\r\n}\r\n\r\nif (numDisabled > 0)\r\n{\r\n\tPrint(\"You Have Disabled \" + numDisabled + \" Addons and Need to Reload.\\nReloading Now!\");\r\n\tExecuteLua(\"ReloadUI()\");\r\n\tyield return 5000;\r\n}"
           },
           {
             "$type": "Comment",
@@ -3411,9 +3411,20 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "5841.685 5216.672 93.02814",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "5841.685 5216.672 93.4936",
                     "IsGroundPosition": false,
                     "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "5851.44 5251.11 139.9845",
+                    "GroundPosition": "0 0 0",
+                    "NoMount": true,
+                    "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
                   "Method": "Navi"
@@ -3466,6 +3477,26 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "5815.604 5173.872 82.70464",
+                    "GroundPosition": "5815.604 5173.872 83.37724",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "5823.838 5153.779 75.5416",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "5829.937 5148.884 75.40444",
                     "GroundPosition": "0 0 0",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -3732,6 +3763,10 @@
                   "DelayMax": 10.0
                 },
                 {
+                  "$type": "ExecuteLua",
+                  "LuaCode": "DraenorZoneAbilityButtonAlert:Hide();"
+                },
+                {
                   "$type": "AcceptQuestCommand",
                   "QuestIds": [],
                   "ContinentId": 1116,
@@ -3781,6 +3816,10 @@
                   "$type": "Comment",
                   "Text": "\"We Need an Army\"",
                   "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "ExecuteLua",
+                  "LuaCode": "DraenorZoneAbilityButtonAlert:Hide();"
                 },
                 {
                   "$type": "If",
@@ -3887,15 +3926,6 @@
                   "$type": "Wait",
                   "Delay": 1.0,
                   "DelayMax": 2.0
-                },
-                {
-                  "$type": "Comment",
-                  "Text": "Let's Close That Zone Ability Help Box...",
-                  "Color": "64, 128, 128"
-                },
-                {
-                  "$type": "ExecuteLua",
-                  "LuaCode": "DraenorZoneAbilityButtonAlert:Hide();"
                 }
               ],
               "IsExtendedInEditor": false,
@@ -6181,6 +6211,28 @@
             "ActionsTrue": {
               "Children": [
                 {
+                  "$type": "ExecuteLua",
+                  "LuaCode": "TutorialFrameCloseButton:Click()"
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 0.5,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "ExecuteLua",
+                  "LuaCode": "TutorialFrameCloseButton:Click()"
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 0.5,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "ExecuteLua",
+                  "LuaCode": "TutorialFrameCloseButton:Click()"
+                },
+                {
                   "$type": "CallBlock",
                   "Target": "To Wor'gol v2"
                 },
@@ -6511,6 +6563,106 @@
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "IsQuestCompleted(33657)"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": true
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Save Wolf Home\"",
+                  "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "CallBlock",
+                  "Target": "To Wor'gol"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "AcceptQuestCommand",
+                        "QuestIds": [
+                          33468
+                        ]
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 1.0,
+                        "DelayMax": 0.0
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "HasQuest",
+                        "QuestId": 33468
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": true
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "IsQuestCompleted(33468)"
                 },
                 "IsNot": false
               },
@@ -6991,6 +7143,364 @@
             "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Treasure: Ogre Moonshine\"",
+                  "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "Comment",
+                  "Text": "Note: Due to Phasing this was NOT Obtainable Earlier...",
+                  "Color": "Red"
+                },
+                {
+                  "$type": "CallBlock",
+                  "Target": "To Wor'gol"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6744.291 5859.659 325.2131",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6785.898 5902.137 342.2455",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6854.62 5899.341 345.6197",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6897.92 5854.53 359.3975",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6903.168 5794.044 359.4267",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6858.816 5744.42 382.956",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6815.193 5737.099 401.7121",
+                          "GroundPosition": "0 0 0",
+                          "UseCTM": true,
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        }
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6810.259 5778.468 410.1504",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(6787.7f, 5856.8f, 410.6f, 7)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6786.881 5869.569 411.877",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "CollectObjectsTemplateScriptAction",
+                  "Template": {
+                    "$type": "CollectObjectsTemplate",
+                    "TargetObjects": [
+                      {
+                        "Hotspot": {
+                          "Position": "6790.163 5892.411 417.0802",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Name": "Gorr'thogg's Personal Reserve",
+                        "EntryId": 232215
+                      }
+                    ],
+                    "HotspotsX": [
+                      {
+                        "Position": "6790.916 5889.309 417.0709",
+                        "GroundPosition": "0 0 0",
+                        "IsGroundPosition": false,
+                        "IsIndoors": true,
+                        "ContinentId": 1116
+                      }
+                    ],
+                    "Blackspots": [],
+                    "IsLoot": true,
+                    "OpeningCast": false,
+                    "NoMovement": false,
+                    "GameObjectiveIndex": 1,
+                    "RunTime": 5.0
+                  },
+                  "TimeLimit": 0
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "IsQuestCompleted(35367)"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": true
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6810.259 5778.468 410.1504",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6815.193 5737.099 401.7121",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6858.816 5744.42 382.956",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6903.168 5794.044 359.4267",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6897.92 5854.53 359.3975",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6854.62 5899.341 345.6197",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6785.898 5902.137 342.2455",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6744.291 5859.659 325.2131",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  }
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "QH.IsClose(6787.7f, 5856.8f, 410.6f, 75)"
+                },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
               "IsSpecialElement": true,
               "SpecialElementName": "Else",
               "GroupName": ""
@@ -7397,106 +7907,6 @@
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "IsQuestCompleted(35370)"
-                },
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              }
-            ],
-            "IsNot": true
-          },
-          {
-            "$type": "If",
-            "IsExtendedInEditor": false,
-            "ActionsFalse": {
-              "Children": [],
-              "IsSpecialElement": true,
-              "SpecialElementName": "Else",
-              "GroupName": ""
-            },
-            "ActionsTrue": {
-              "Children": [
-                {
-                  "$type": "Comment",
-                  "Text": "\"Save Wolf Home\"",
-                  "Color": "0, 128, 192"
-                },
-                {
-                  "$type": "CallBlock",
-                  "Target": "To Wor'gol"
-                },
-                {
-                  "$type": "If",
-                  "IsExtendedInEditor": false,
-                  "ActionsFalse": {
-                    "Children": [],
-                    "IsSpecialElement": true,
-                    "SpecialElementName": "Else",
-                    "GroupName": ""
-                  },
-                  "ActionsTrue": {
-                    "Children": [
-                      {
-                        "$type": "AcceptQuestCommand",
-                        "QuestIds": [
-                          33468
-                        ]
-                      },
-                      {
-                        "$type": "Wait",
-                        "Delay": 1.0,
-                        "DelayMax": 0.0
-                      }
-                    ],
-                    "IsExtendedInEditor": false,
-                    "IsSpecialElement": true,
-                    "SpecialElementName": "Then",
-                    "GroupName": ""
-                  },
-                  "Conditions": [
-                    {
-                      "Condition": {
-                        "$type": "HasQuest",
-                        "QuestId": 33468
-                      },
-                      "IsNot": false
-                    },
-                    {
-                      "Condition": null,
-                      "IsNot": false
-                    },
-                    {
-                      "Condition": null,
-                      "IsNot": false
-                    },
-                    {
-                      "Condition": null,
-                      "IsNot": false
-                    }
-                  ],
-                  "IsNot": true
-                }
-              ],
-              "IsExtendedInEditor": false,
-              "IsSpecialElement": true,
-              "SpecialElementName": "Then",
-              "GroupName": ""
-            },
-            "Conditions": [
-              {
-                "Condition": {
-                  "$type": "CSharpCondition",
-                  "CSharpCode": "IsQuestCompleted(33468)"
                 },
                 "IsNot": false
               },
@@ -9688,8 +10098,19 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "6294.131 6269.912 109.0536",
+                    "Position": "6213.008 6182.134 108.018",
                     "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6294.131 6269.912 109.0536",
+                    "GroundPosition": "6294.131 6269.912 109.2638",
                     "IsGroundPosition": false,
                     "IsIndoors": true,
                     "ContinentId": 1116
@@ -9752,6 +10173,57 @@
                   "Target": "To Wor'gol"
                 },
                 {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6261.704 6222.219 107.2966",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "IsIndoors": true,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.IsClose(6243.2f, 6212.3f, 103.9f, 60)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
                   "$type": "TurnInQuestsCommand",
                   "QuestIds": [
                     33929
@@ -9809,12 +10281,98 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "6040.839 5898.947 119.3086",
+                    "Position": "5996.115 5897.588 121.3077",
                     "GroundPosition": "0 0 0",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
                   "Method": "Navi"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "CollectObjectsTemplateScriptAction",
+                        "Template": {
+                          "$type": "CollectObjectsTemplate",
+                          "TargetObjects": [
+                            {
+                              "Hotspot": {
+                                "Position": "5996.666 5973.112 125.0992",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Frostwolf Grunt",
+                              "EntryId": 78870
+                            },
+                            {
+                              "Hotspot": {
+                                "Position": "5948.266 5928.232 121.9155",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Frost Wolf Howler",
+                              "EntryId": 78894
+                            },
+                            {
+                              "Hotspot": {
+                                "Position": "5959.074 5868.624 122.907",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
+                              },
+                              "Name": "Frostwolf Grunt",
+                              "EntryId": 78907
+                            }
+                          ],
+                          "HotspotsX": [],
+                          "Blackspots": [],
+                          "IsLoot": true,
+                          "OpeningCast": true,
+                          "NoMovement": false,
+                          "GameObjectiveIndex": 1,
+                          "RunTime": 5.0
+                        },
+                        "TimeLimit": 1
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "HasQuest(34505) && !IsQuestObjectiveComplete(34505,2)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "CSharpAction",
@@ -10028,10 +10586,25 @@
             "IsNot": false
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: Forbidden Glacier\"",
+                  "Color": "0, 128, 192"
+                },
+                {
+                  "$type": "CallBlock",
+                  "Target": "To Wor'gol"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -10044,91 +10617,187 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: Forbidden Glacier\"",
-                        "Color": "0, 128, 192"
+                        "$type": "AcceptQuestCommand",
+                        "QuestIds": [
+                          34505
+                        ]
                       },
                       {
-                        "$type": "CallBlock",
-                        "Target": "To Wor'gol"
+                        "$type": "Wait",
+                        "Delay": 3.0,
+                        "DelayMax": 5.0
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "HasQuest(34505)"
                       },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": true
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
                       {
-                        "$type": "If",
+                        "$type": "CSharpAction",
+                        "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(6044.6f, 5899.1f, 120.0f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.BannerAvailable() && Me.Level < 100"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "While",
+                  "IsExtendedInEditor": false,
+                  "LoopActions": {
+                    "Children": [
+                      {
+                        "$type": "While",
                         "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
+                        "LoopActions": {
                           "Children": [
                             {
-                              "$type": "AcceptQuestCommand",
-                              "QuestIds": [
-                                34505
-                              ]
-                            },
-                            {
-                              "$type": "Wait",
-                              "Delay": 3.0,
-                              "DelayMax": 5.0
+                              "$type": "CollectObjectsTemplateScriptAction",
+                              "Template": {
+                                "$type": "CollectObjectsTemplate",
+                                "TargetObjects": [
+                                  {
+                                    "Hotspot": {
+                                      "Position": "5996.666 5973.112 125.0992",
+                                      "GroundPosition": "0 0 0",
+                                      "IsGroundPosition": false,
+                                      "ContinentId": 1116
+                                    },
+                                    "Name": "Frostwolf Grunt",
+                                    "EntryId": 78870
+                                  },
+                                  {
+                                    "Hotspot": {
+                                      "Position": "5948.266 5928.232 121.9155",
+                                      "GroundPosition": "0 0 0",
+                                      "IsGroundPosition": false,
+                                      "ContinentId": 1116
+                                    },
+                                    "Name": "Frost Wolf Howler",
+                                    "EntryId": 78894
+                                  },
+                                  {
+                                    "Hotspot": {
+                                      "Position": "5959.074 5868.624 122.907",
+                                      "GroundPosition": "0 0 0",
+                                      "IsGroundPosition": false,
+                                      "ContinentId": 1116
+                                    },
+                                    "Name": "Frostwolf Grunt",
+                                    "EntryId": 78907
+                                  }
+                                ],
+                                "HotspotsX": [
+                                  {
+                                    "Position": "5966.495 5945.506 121.2803",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  },
+                                  {
+                                    "Position": "5964.759 5872.123 122.3816",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  },
+                                  {
+                                    "Position": "6073.722 5753.92 133.2248",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  },
+                                  {
+                                    "Position": "6130.064 5773.664 133.6387",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  },
+                                  {
+                                    "Position": "6137.248 5859.338 142.5166",
+                                    "GroundPosition": "0 0 0",
+                                    "IsGroundPosition": false,
+                                    "ContinentId": 1116
+                                  }
+                                ],
+                                "Blackspots": [],
+                                "IsLoot": true,
+                                "OpeningCast": true,
+                                "NoMovement": false,
+                                "GameObjectiveIndex": 1,
+                                "RunTime": 5.0
+                              },
+                              "TimeLimit": 0
                             }
                           ],
                           "IsExtendedInEditor": false,
                           "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
+                          "SpecialElementName": "Do",
                           "GroupName": ""
                         },
                         "Conditions": [
                           {
                             "Condition": {
                               "$type": "CSharpCondition",
-                              "CSharpCode": "HasQuest(34505)"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": true
-                      },
-                      {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "CSharpAction",
-                              "CSharpCode": "QH.Fib = new Fiber<int>(QH.PlaceGuildBannerAt(6044.6f, 5899.1f, 120.0f));\r\nwhile(QH.Fib.Run()) {\r\n\tyield return 100;\r\n}\r\n"
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "QH.BannerAvailable() && Me.Level < 100"
+                              "CSharpCode": "HasQuest(34505) && !IsQuestObjectiveComplete(34505, 2)"
                             },
                             "IsNot": false
                           },
@@ -10148,219 +10817,72 @@
                         "IsNot": false
                       },
                       {
-                        "$type": "While",
-                        "IsExtendedInEditor": false,
-                        "LoopActions": {
-                          "Children": [
+                        "$type": "KillMobsTemplateScriptAction",
+                        "Template": {
+                          "$type": "KillMobsTemplate",
+                          "TargetObjects": [
                             {
-                              "$type": "While",
-                              "IsExtendedInEditor": false,
-                              "LoopActions": {
-                                "Children": [
-                                  {
-                                    "$type": "CollectObjectsTemplateScriptAction",
-                                    "Template": {
-                                      "$type": "CollectObjectsTemplate",
-                                      "TargetObjects": [
-                                        {
-                                          "Hotspot": {
-                                            "Position": "5996.666 5973.112 125.0992",
-                                            "GroundPosition": "0 0 0",
-                                            "IsGroundPosition": false,
-                                            "ContinentId": 1116
-                                          },
-                                          "Name": "Frostwolf Grunt",
-                                          "EntryId": 78870
-                                        },
-                                        {
-                                          "Hotspot": {
-                                            "Position": "5948.266 5928.232 121.9155",
-                                            "GroundPosition": "0 0 0",
-                                            "IsGroundPosition": false,
-                                            "ContinentId": 1116
-                                          },
-                                          "Name": "Frost Wolf Howler",
-                                          "EntryId": 78894
-                                        },
-                                        {
-                                          "Hotspot": {
-                                            "Position": "5959.074 5868.624 122.907",
-                                            "GroundPosition": "0 0 0",
-                                            "IsGroundPosition": false,
-                                            "ContinentId": 1116
-                                          },
-                                          "Name": "Frostwolf Grunt",
-                                          "EntryId": 78907
-                                        }
-                                      ],
-                                      "HotspotsX": [
-                                        {
-                                          "Position": "5966.495 5945.506 121.2803",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        {
-                                          "Position": "5964.759 5872.123 122.3816",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        {
-                                          "Position": "6073.722 5753.92 133.2248",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        {
-                                          "Position": "6130.064 5773.664 133.6387",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        {
-                                          "Position": "6137.248 5859.338 142.5166",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        }
-                                      ],
-                                      "Blackspots": [],
-                                      "IsLoot": true,
-                                      "OpeningCast": true,
-                                      "NoMovement": false,
-                                      "GameObjectiveIndex": 1,
-                                      "RunTime": 5.0
-                                    },
-                                    "TimeLimit": 0
-                                  }
-                                ],
-                                "IsExtendedInEditor": false,
-                                "IsSpecialElement": true,
-                                "SpecialElementName": "Do",
-                                "GroupName": ""
+                              "Hotspot": {
+                                "Position": "5968.243 5969.932 122.38",
+                                "GroundPosition": "0 0 0",
+                                "IsGroundPosition": false,
+                                "ContinentId": 1116
                               },
-                              "Conditions": [
-                                {
-                                  "Condition": {
-                                    "$type": "CSharpCondition",
-                                    "CSharpCode": "IsQuestObjectiveComplete(34505, 2)"
-                                  },
-                                  "IsNot": false
-                                },
-                                {
-                                  "Condition": null,
-                                  "IsNot": false
-                                },
-                                {
-                                  "Condition": null,
-                                  "IsNot": false
-                                },
-                                {
-                                  "Condition": null,
-                                  "IsNot": false
-                                }
-                              ],
-                              "IsNot": true,
-                              "CheckFrequently": true
-                            },
-                            {
-                              "$type": "KillMobsTemplateScriptAction",
-                              "Template": {
-                                "$type": "KillMobsTemplate",
-                                "TargetObjects": [
-                                  {
-                                    "Hotspot": {
-                                      "Position": "5968.243 5969.932 122.38",
-                                      "GroundPosition": "0 0 0",
-                                      "IsGroundPosition": false,
-                                      "ContinentId": 1116
-                                    },
-                                    "Name": "Malevolent Breath",
-                                    "EntryId": 78791
-                                  }
-                                ],
-                                "HotspotsX": [
-                                  {
-                                    "Position": "5935.18 5905.375 125.0635",
-                                    "GroundPosition": "0 0 0",
-                                    "IsGroundPosition": false,
-                                    "ContinentId": 1116
-                                  },
-                                  {
-                                    "Position": "6060.142 5780.433 130.0293",
-                                    "GroundPosition": "0 0 0",
-                                    "IsGroundPosition": false,
-                                    "ContinentId": 1116
-                                  },
-                                  {
-                                    "Position": "6124.041 5787.326 133.003",
-                                    "GroundPosition": "0 0 0",
-                                    "IsGroundPosition": false,
-                                    "ContinentId": 1116
-                                  },
-                                  {
-                                    "Position": "6160.765 5899.131 137.7835",
-                                    "GroundPosition": "0 0 0",
-                                    "IsGroundPosition": false,
-                                    "ContinentId": 1116
-                                  },
-                                  {
-                                    "Position": "6148.75 5969.559 132.2864",
-                                    "GroundPosition": "0 0 0",
-                                    "IsGroundPosition": false,
-                                    "ContinentId": 1116
-                                  }
-                                ],
-                                "Blackspots": [],
-                                "ForceLoot": false,
-                                "ForcePullMobs": false,
-                                "GameObjectiveIndex": 1,
-                                "RunTime": 5.0
-                              },
-                              "TimeLimit": 0
+                              "Name": "Malevolent Breath",
+                              "EntryId": 78791
                             }
                           ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Do",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "IsQuestCompleted(34505)"
+                          "HotspotsX": [
+                            {
+                              "Position": "5935.18 5905.375 125.0635",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
                             },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": true,
-                        "CheckFrequently": true
+                            {
+                              "Position": "6060.142 5780.433 130.0293",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            {
+                              "Position": "6124.041 5787.326 133.003",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            {
+                              "Position": "6160.765 5899.131 137.7835",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            {
+                              "Position": "6148.75 5969.559 132.2864",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            }
+                          ],
+                          "Blackspots": [],
+                          "ForceLoot": false,
+                          "ForcePullMobs": false,
+                          "GameObjectiveIndex": 1,
+                          "RunTime": 5.0
+                        },
+                        "TimeLimit": 0
                       }
                     ],
                     "IsExtendedInEditor": false,
                     "IsSpecialElement": true,
-                    "SpecialElementName": "Then",
+                    "SpecialElementName": "Do",
                     "GroupName": ""
                   },
                   "Conditions": [
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "IsQuestCompleted(34505)"
+                        "CSharpCode": "!IsQuestCompleted(34505)"
                       },
                       "IsNot": false
                     },
@@ -10377,19 +10899,19 @@
                       "IsNot": false
                     }
                   ],
-                  "IsNot": true
+                  "IsNot": false
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(34505)"
+                  "CSharpCode": "IsQuestCompleted(34505)"
                 },
                 "IsNot": false
               },
@@ -10406,7 +10928,7 @@
                 "IsNot": false
               }
             ],
-            "IsNot": false
+            "IsNot": true
           },
           {
             "$type": "If",
@@ -10967,15 +11489,38 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "6201.539 5658.955 160.1084",
-                    "GroundPosition": "6184.479 5644.953 189.0139",
+                    "Position": "6200.378 5659.451 160.0939",
+                    "GroundPosition": "6200.378 5659.451 161.138",
                     "UseCTM": true,
-                    "Jump": true,
                     "NoMount": true,
                     "IsGroundPosition": false,
                     "IsIndoors": true,
                     "ContinentId": 1116
                   }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6207.669 5657.77 163.0779",
+                    "GroundPosition": "0 0 0",
+                    "NoMount": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "6213.308 5648.531 168.5017",
+                    "GroundPosition": "0 0 0",
+                    "NoMount": true,
+                    "IsGroundPosition": false,
+                    "IsIndoors": true,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
                 },
                 {
                   "$type": "MoveTo",
@@ -11027,20 +11572,11 @@
                   "Hotspot": {
                     "Position": "6218.751 5630.085 209.7803",
                     "GroundPosition": "6218.751 5630.085 210.1686",
+                    "NoMount": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
                   "Method": "Navi"
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
-                    "Position": "6221.725 5629.193 209.2915",
-                    "GroundPosition": "6221.733 5629.211 209.4408",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
                 },
                 {
                   "$type": "MoveTo",
@@ -11105,18 +11641,8 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "6221.725 5629.193 209.2915",
-                    "GroundPosition": "0 0 0",
-                    "UseCTM": true,
-                    "IsGroundPosition": false,
-                    "ContinentId": 1116
-                  }
-                },
-                {
-                  "$type": "MoveTo",
-                  "Hotspot": {
                     "Position": "6321.464 5757.743 125.415",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "6321.464 5757.743 127.0038",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -11162,6 +11688,66 @@
             },
             "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6335.521 5837.203 114.3955",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6315.294 5969.37 127.6294",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.IsClose(6320.3f, 5767.2f, 123.8f, 75)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -11482,6 +12068,15 @@
                         "$type": "Comment",
                         "Text": "Saving Gutsrmash for Later --- Too Many Deaths For Some Classes Solo",
                         "Color": "64, 128, 128"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 1.0,
+                        "DelayMax": 0.0
+                      },
+                      {
+                        "$type": "ExecuteLua",
+                        "LuaCode": "TutorialFrameCloseButton:Click()"
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -18497,6 +19092,10 @@
                         "Target": "Garrison Return"
                       },
                       {
+                        "$type": "CSharpAction",
+                        "CSharpCode": "Print(IsQuestCompleted(32989))\r\n"
+                      },
+                      {
                         "$type": "If",
                         "IsExtendedInEditor": false,
                         "ActionsFalse": {
@@ -19340,6 +19939,167 @@
                 {
                   "$type": "CallBlock",
                   "Target": "Exit Garrison By Foot"
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6143.048 4681.468 160.9665",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.IsClose(6099.6f, 4405.6f, 127.0f,200)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6077.662 4786.942 149.2988",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "QH.IsClose(6143.0f, 4681.5f, 161.0f,50)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6099.366 4894.774 147.4641",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6140.21 5045.964 134.04",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "!QH.IsClose(6138.6f, 5145.8f, 131.6f, 74)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "TurnInQuestsCommand",
@@ -22505,16 +23265,66 @@
                   "IsNot": false
                 },
                 {
-                  "$type": "DoQuestsCommand",
-                  "QuestIds": [
-                    33462
-                  ]
-                },
-                {
-                  "$type": "TurnInQuestsCommand",
-                  "QuestIds": [
-                    33462
-                  ]
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
+                      {
+                        "$type": "DoQuestsCommand",
+                        "QuestIds": [
+                          33462
+                        ]
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "7180.84 3830.566 92.37813",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "TurnInQuestsCommand",
+                        "QuestIds": [
+                          33462
+                        ]
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "HasQuest(33462)"
+                      },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": false
                 },
                 {
                   "$type": "DoQuestsCommand",
@@ -22623,7 +23433,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(36230) || HasQuest(34348) || HasQuest(32981)"
+                  "CSharpCode": "HasQuest(36230) || HasQuest(34348) || HasQuest(32981) || HasQuest(33462)"
                 },
                 "IsNot": false
               },
@@ -22759,10 +23569,14 @@
                   "Color": "64, 128, 128"
                 },
                 {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;"
+                },
+                {
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "7389.313 4302.87 114.4228",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "7389.313 4302.87 114.9086",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
@@ -22785,6 +23599,25 @@
                     "EntryId": 76787
                   },
                   "NumOfTimes": 1
+                },
+                {
+                  "$type": "Wait",
+                  "Delay": 1.0,
+                  "DelayMax": 0.0
+                },
+                {
+                  "$type": "CSharpAction",
+                  "CSharpCode": "GlobalBotSettings.FlightMasterDiscoverRange = 75.0f;"
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "7426.788 4330.038 120.4213",
+                    "GroundPosition": "7426.788 4330.038 121.2164",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
                 },
                 {
                   "$type": "MoveTo",
@@ -23197,7 +24030,47 @@
                         "$type": "Wait",
                         "Delay": 1.0,
                         "DelayMax": 2.0
+                      }
+                    ],
+                    "IsExtendedInEditor": false,
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Then",
+                    "GroupName": ""
+                  },
+                  "Conditions": [
+                    {
+                      "Condition": {
+                        "$type": "CSharpCondition",
+                        "CSharpCode": "IsQuestCompleted(34501)"
                       },
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    },
+                    {
+                      "Condition": null,
+                      "IsNot": false
+                    }
+                  ],
+                  "IsNot": true
+                },
+                {
+                  "$type": "If",
+                  "IsExtendedInEditor": false,
+                  "ActionsFalse": {
+                    "Children": [],
+                    "IsSpecialElement": true,
+                    "SpecialElementName": "Else",
+                    "GroupName": ""
+                  },
+                  "ActionsTrue": {
+                    "Children": [
                       {
                         "$type": "Comment",
                         "Text": "You Are in the Middle of Nowhere!!! Let's get Back to Your Garrison.",
@@ -23234,7 +24107,7 @@
                       "IsNot": false
                     }
                   ],
-                  "IsNot": true
+                  "IsNot": false
                 }
               ],
               "IsExtendedInEditor": false,
@@ -27350,10 +28223,21 @@
             "IsNot": true
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: Grimfrost Hill\"",
+                  "Color": "0, 128, 192"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -27366,68 +28250,23 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: Grimfrost Hill\"",
-                        "Color": "0, 128, 192"
+                        "$type": "CallBlock",
+                        "Target": "To Darkspear's Edge"
                       },
                       {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "6276.656 3467.294 134.6179",
+                          "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
                         },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "CallBlock",
-                              "Target": "To Darkspear's Edge"
-                            },
-                            {
-                              "$type": "MoveTo",
-                              "Hotspot": {
-                                "Position": "6276.656 3467.294 134.6179",
-                                "GroundPosition": "0 0 0",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1116
-                              },
-                              "Method": "Navi"
-                            },
-                            {
-                              "$type": "Wait",
-                              "Delay": 1.0,
-                              "DelayMax": 2.0
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "HasQuest",
-                              "QuestId": 33145
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": true
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "Wait",
+                        "Delay": 1.0,
+                        "DelayMax": 2.0
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -27438,8 +28277,8 @@
                   "Conditions": [
                     {
                       "Condition": {
-                        "$type": "CSharpCondition",
-                        "CSharpCode": "IsQuestCompleted(33145)"
+                        "$type": "HasQuest",
+                        "QuestId": 33145
                       },
                       "IsNot": false
                     },
@@ -27461,14 +28300,14 @@
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(33145)"
+                  "CSharpCode": "IsQuestCompleted(33145)"
                 },
                 "IsNot": false
               },
@@ -27485,7 +28324,7 @@
                 "IsNot": false
               }
             ],
-            "IsNot": false
+            "IsNot": true
           },
           {
             "$type": "If",
@@ -30528,7 +31367,47 @@
                         }
                       ],
                       "IsNot": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "!IsQuestCompleted(36709)"
                     },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
                     {
                       "$type": "If",
                       "IsExtendedInEditor": false,
@@ -30591,6 +31470,234 @@
                       "IsNot": false
                     },
                     {
+                      "$type": "MoveTo",
+                      "Hotspot": {
+                        "Position": "5299.552 -3969.396 18.4738",
+                        "GroundPosition": "0 0 0",
+                        "IsGroundPosition": false,
+                        "ContinentId": 1116
+                      },
+                      "Method": "Navi"
+                    },
+                    {
+                      "$type": "GossipTemplateScriptAction",
+                      "Template": {
+                        "$type": "GossipInteractionTemplate",
+                        "TargetObjects": [
+                          {
+                            "Hotspot": {
+                              "Position": "5300.499 -3964.762 18.90526",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            "Name": "Fen Tao",
+                            "EntryId": 91483
+                          }
+                        ],
+                        "HotspotsX": [
+                          {
+                            "Position": "5299.552 -3969.396 18.4738",
+                            "GroundPosition": "0 0 0",
+                            "IsGroundPosition": false,
+                            "ContinentId": 1116
+                          }
+                        ],
+                        "GossipIndex": 1,
+                        "Dismount": false,
+                        "GameObjectiveIndex": 1,
+                        "RunTime": 5.0
+                      },
+                      "TimeLimit": 0
+                    },
+                    {
+                      "$type": "Wait",
+                      "Delay": 1.0,
+                      "DelayMax": 0.0
+                    },
+                    {
+                      "$type": "GossipTemplateScriptAction",
+                      "Template": {
+                        "$type": "GossipInteractionTemplate",
+                        "TargetObjects": [
+                          {
+                            "Hotspot": {
+                              "Position": "5300.499 -3964.762 18.90526",
+                              "GroundPosition": "0 0 0",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            "Name": "Fen Tao",
+                            "EntryId": 91483
+                          }
+                        ],
+                        "HotspotsX": [
+                          {
+                            "Position": "5299.552 -3969.396 18.4738",
+                            "GroundPosition": "0 0 0",
+                            "IsGroundPosition": false,
+                            "ContinentId": 1116
+                          }
+                        ],
+                        "GossipIndex": 1,
+                        "Dismount": false,
+                        "GameObjectiveIndex": 1,
+                        "RunTime": 5.0
+                      },
+                      "TimeLimit": 0
+                    },
+                    {
+                      "$type": "Comment",
+                      "Text": "Yay! Fen Tao is Now Your Follower!!!",
+                      "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "If",
+                      "IsExtendedInEditor": false,
+                      "ActionsFalse": {
+                        "Children": [],
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Else",
+                        "GroupName": ""
+                      },
+                      "ActionsTrue": {
+                        "Children": [
+                          {
+                            "$type": "CallBlock",
+                            "Target": "Garrison Return"
+                          }
+                        ],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Then",
+                        "GroupName": ""
+                      },
+                      "Conditions": [
+                        {
+                          "Condition": {
+                            "$type": "CSharpCondition",
+                            "CSharpCode": "IsQuestCompleted(36709)"
+                          },
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        }
+                      ],
+                      "IsNot": false
+                    }
+                  ],
+                  "IsExtendedInEditor": false,
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Then",
+                  "GroupName": ""
+                },
+                "Conditions": [
+                  {
+                    "Condition": {
+                      "$type": "CSharpCondition",
+                      "CSharpCode": "QH.NeedsFollower(62467)"
+                    },
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  },
+                  {
+                    "Condition": null,
+                    "IsNot": false
+                  }
+                ],
+                "IsNot": false
+              },
+              {
+                "$type": "If",
+                "IsExtendedInEditor": false,
+                "ActionsFalse": {
+                  "Children": [],
+                  "IsSpecialElement": true,
+                  "SpecialElementName": "Else",
+                  "GroupName": ""
+                },
+                "ActionsTrue": {
+                  "Children": [
+                    {
+                      "$type": "If",
+                      "IsExtendedInEditor": false,
+                      "ActionsFalse": {
+                        "Children": [],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Else",
+                        "GroupName": ""
+                      },
+                      "ActionsTrue": {
+                        "Children": [
+                          {
+                            "$type": "MoveTo",
+                            "Hotspot": {
+                              "Position": "5306.095 -3952.286 19.77326",
+                              "GroundPosition": "5306.095 -3952.286 19.92707",
+                              "IsGroundPosition": false,
+                              "IsIndoors": true,
+                              "ContinentId": 1116
+                            },
+                            "Method": "Navi"
+                          },
+                          {
+                            "$type": "MoveTo",
+                            "Hotspot": {
+                              "Position": "5310.314 -3968.993 19.08227",
+                              "GroundPosition": "5310.314 -3968.993 19.92037",
+                              "IsGroundPosition": false,
+                              "ContinentId": 1116
+                            },
+                            "Method": "Navi"
+                          }
+                        ],
+                        "IsExtendedInEditor": false,
+                        "IsSpecialElement": true,
+                        "SpecialElementName": "Then",
+                        "GroupName": ""
+                      },
+                      "Conditions": [
+                        {
+                          "Condition": {
+                            "$type": "CSharpCondition",
+                            "CSharpCode": "QH.IsClose(5304.6f, -3947.3f, 20.8f,10)"
+                          },
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        },
+                        {
+                          "Condition": null,
+                          "IsNot": false
+                        }
+                      ],
+                      "IsNot": false
+                    },
+                    {
                       "$type": "TurnInQuestsCommand",
                       "QuestIds": [
                         36709
@@ -30600,6 +31707,26 @@
                       "$type": "Comment",
                       "Text": "Yay! Vivanne is Now Your Follower!!!",
                       "Color": "64, 128, 128"
+                    },
+                    {
+                      "$type": "MoveTo",
+                      "Hotspot": {
+                        "Position": "5416.982 -4081.105 8.973101",
+                        "GroundPosition": "0 0 0",
+                        "IsGroundPosition": false,
+                        "ContinentId": 1116
+                      },
+                      "Method": "Navi"
+                    },
+                    {
+                      "$type": "MoveTo",
+                      "Hotspot": {
+                        "Position": "5401.992 -4062.233 10.50148",
+                        "GroundPosition": "0 0 0",
+                        "IsGroundPosition": false,
+                        "ContinentId": 1116
+                      },
+                      "Method": "Navi"
                     },
                     {
                       "$type": "CallBlock",
@@ -30615,7 +31742,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "!IsQuestCompleted(36709)"
+                      "CSharpCode": "HasQuest(36709)"
                     },
                     "IsNot": false
                   },
@@ -31728,11 +32855,6 @@
             "$type": "ActionSequence",
             "Children": [
               {
-                "$type": "Comment",
-                "Text": "You Need to Get to Draenor!",
-                "Color": "64, 128, 128"
-              },
-              {
                 "$type": "If",
                 "IsExtendedInEditor": false,
                 "ActionsFalse": {
@@ -32189,7 +33311,7 @@
                   {
                     "Condition": {
                       "$type": "CSharpCondition",
-                      "CSharpCode": "(ItemCooldown(110560) < 30 && HasItem(110560)) && (!(HasQuest(36706) || HasQuest(36707) || HasQuest(36708) || HasQuest(36709)) && !(IsQuestCompleted(36706) && (!IsQuestCompleted(36707) || !IsQuestCompleted(36708) || !IsQuestCompleted(36709))))"
+                      "CSharpCode": "((ItemCooldown(110560) < 30 && HasItem(110560)) && (!(HasQuest(36706) || HasQuest(36707) || HasQuest(36708) || HasQuest(36709)) && !(IsQuestCompleted(36706) && (!IsQuestCompleted(36707) || !IsQuestCompleted(36708) || !IsQuestCompleted(36709))))) && G[\"DoNoTFly\"].Equals(\"false\");"
                     },
                     "IsNot": false
                   },
@@ -35207,7 +36329,106 @@
                                   "$type": "If",
                                   "IsExtendedInEditor": false,
                                   "ActionsFalse": {
-                                    "Children": [],
+                                    "Children": [
+                                      {
+                                        "$type": "Comment",
+                                        "Text": "Flying to Frostwolf Garrison",
+                                        "Color": "64, 128, 128"
+                                      },
+                                      {
+                                        "$type": "If",
+                                        "IsExtendedInEditor": false,
+                                        "ActionsFalse": {
+                                          "Children": [],
+                                          "IsSpecialElement": true,
+                                          "SpecialElementName": "Else",
+                                          "GroupName": ""
+                                        },
+                                        "ActionsTrue": {
+                                          "Children": [
+                                            {
+                                              "$type": "MoveTo",
+                                              "Hotspot": {
+                                                "Position": "5300.31 -4002.206 14.72277",
+                                                "GroundPosition": "0 0 0",
+                                                "IsGroundPosition": false,
+                                                "ContinentId": 1116
+                                              },
+                                              "Method": "Navi"
+                                            },
+                                            {
+                                              "$type": "MoveTo",
+                                              "Hotspot": {
+                                                "Position": "5325.339 -3978.532 21.01698",
+                                                "GroundPosition": "0 0 0",
+                                                "IsGroundPosition": false,
+                                                "ContinentId": 1116
+                                              },
+                                              "Method": "Navi"
+                                            }
+                                          ],
+                                          "IsExtendedInEditor": false,
+                                          "IsSpecialElement": true,
+                                          "SpecialElementName": "Then",
+                                          "GroupName": ""
+                                        },
+                                        "Conditions": [
+                                          {
+                                            "Condition": {
+                                              "$type": "CSharpCondition",
+                                              "CSharpCode": "!QH.IsClose(5361.1f, -3942.9f, 32.7f,25)"
+                                            },
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          },
+                                          {
+                                            "Condition": null,
+                                            "IsNot": false
+                                          }
+                                        ],
+                                        "IsNot": false
+                                      },
+                                      {
+                                        "$type": "UseTaxiTemplateScriptAction",
+                                        "Template": {
+                                          "$type": "UseTaxiTemplate",
+                                          "Hotspots": [
+                                            {
+                                              "Position": "5358.211 -3945.266 32.73372",
+                                              "GroundPosition": "5358.211 -3945.266 32.92804",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            }
+                                          ],
+                                          "Target": {
+                                            "Hotspot": {
+                                              "Position": "5361.05 -3942.934 32.73376",
+                                              "GroundPosition": "0 0 0",
+                                              "IsGroundPosition": false,
+                                              "ContinentId": 1116
+                                            },
+                                            "Name": "Ilalu",
+                                            "EntryId": 86049
+                                          },
+                                          "TaxiTarget": {
+                                            "Item1": "Frostwall Garrison, Frostfire Ridge",
+                                            "Item2": "0.3387086391449",
+                                            "Item3": "0.63124781847"
+                                          },
+                                          "GameObjectiveIndex": 1,
+                                          "RunTime": 5.0
+                                        },
+                                        "TimeLimit": 0
+                                      }
+                                    ],
+                                    "IsExtendedInEditor": false,
                                     "IsSpecialElement": true,
                                     "SpecialElementName": "Else",
                                     "GroupName": ""
@@ -35228,7 +36449,7 @@
                                     {
                                       "Condition": {
                                         "$type": "CSharpCondition",
-                                        "CSharpCode": "(HasQuest(36706) || HasQuest(36707) || HasQuest(36708) || HasQuest(36709)) || (IsQuestCompleted(36706) && (!IsQuestCompleted(36707) || !IsQuestCompleted(36708) || !IsQuestCompleted(36709)))"
+                                        "CSharpCode": "((HasQuest(36706) || HasQuest(36707) || HasQuest(36708) || HasQuest(36709)) || (IsQuestCompleted(36706) && (!IsQuestCompleted(36707) || !IsQuestCompleted(36708) || !IsQuestCompleted(36709)))) || G[\"DoNoTFly\"].Equals(\"true\");"
                                       },
                                       "IsNot": false
                                     },
@@ -35246,103 +36467,6 @@
                                     }
                                   ],
                                   "IsNot": false
-                                },
-                                {
-                                  "$type": "Comment",
-                                  "Text": "Flying to Frostwolf Garrison",
-                                  "Color": "64, 128, 128"
-                                },
-                                {
-                                  "$type": "If",
-                                  "IsExtendedInEditor": false,
-                                  "ActionsFalse": {
-                                    "Children": [],
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Else",
-                                    "GroupName": ""
-                                  },
-                                  "ActionsTrue": {
-                                    "Children": [
-                                      {
-                                        "$type": "MoveTo",
-                                        "Hotspot": {
-                                          "Position": "5300.31 -4002.206 14.72277",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        "Method": "Navi"
-                                      },
-                                      {
-                                        "$type": "MoveTo",
-                                        "Hotspot": {
-                                          "Position": "5325.339 -3978.532 21.01698",
-                                          "GroundPosition": "0 0 0",
-                                          "IsGroundPosition": false,
-                                          "ContinentId": 1116
-                                        },
-                                        "Method": "Navi"
-                                      }
-                                    ],
-                                    "IsExtendedInEditor": false,
-                                    "IsSpecialElement": true,
-                                    "SpecialElementName": "Then",
-                                    "GroupName": ""
-                                  },
-                                  "Conditions": [
-                                    {
-                                      "Condition": {
-                                        "$type": "CSharpCondition",
-                                        "CSharpCode": "!QH.IsClose(5361.1f, -3942.9f, 32.7f,25)"
-                                      },
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    },
-                                    {
-                                      "Condition": null,
-                                      "IsNot": false
-                                    }
-                                  ],
-                                  "IsNot": false
-                                },
-                                {
-                                  "$type": "UseTaxiTemplateScriptAction",
-                                  "Template": {
-                                    "$type": "UseTaxiTemplate",
-                                    "Hotspots": [
-                                      {
-                                        "Position": "5358.211 -3945.266 32.73372",
-                                        "GroundPosition": "5358.211 -3945.266 32.92804",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      }
-                                    ],
-                                    "Target": {
-                                      "Hotspot": {
-                                        "Position": "5361.05 -3942.934 32.73376",
-                                        "GroundPosition": "0 0 0",
-                                        "IsGroundPosition": false,
-                                        "ContinentId": 1116
-                                      },
-                                      "Name": "Ilalu",
-                                      "EntryId": 86049
-                                    },
-                                    "TaxiTarget": {
-                                      "Item1": "Frostwall Garrison, Frostfire Ridge",
-                                      "Item2": "0.3387086391449",
-                                      "Item3": "0.63124781847"
-                                    },
-                                    "GameObjectiveIndex": 1,
-                                    "RunTime": 5.0
-                                  },
-                                  "TimeLimit": 0
                                 }
                               ],
                               "IsExtendedInEditor": false,
