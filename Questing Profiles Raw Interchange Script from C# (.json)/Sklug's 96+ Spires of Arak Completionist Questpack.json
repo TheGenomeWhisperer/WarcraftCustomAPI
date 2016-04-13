@@ -80,7 +80,7 @@
           },
           {
             "$type": "CSharpAction",
-            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 4;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 1;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) {\r\n\tPrint(\"WARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) {\r\n\tPrint(\"WARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use. Settings Found under OPTIONS > GLOBAL\");\r\n}\r\n"
+            "CSharpCode": "if (Me.IsAlliance) {\r\n\tPrint(\"WARNING!!! This is a Horde Questing profile and you are Alliance. Stopping Bot!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\nif (Me.Level < 96) {\r\n\tPrint(\"Sorry, You are Not Yet High Enough Level!!! Hurry to 96 then come back!\");\r\n\tStopBot(\"\", false);\r\n}\r\n\r\n// Enabling AutoLoot\r\nExecuteLua(\"if GetCVar(\\\"autoLootDefault\\\") == \\\"0\\\" then print(\\\"Autoloot Now Enabled\\\"); SetCVar(\\\"autoLootDefault\\\", \\\"1\\\"); end\");\r\n\r\n// Default Settings....\r\nG[\"BuyExpPotionsOff\"] = \"true\";\r\nG[\"skipRares\"] = \"true\";\r\nG[\"DNF_To_Spires\"] = \"false\";\r\n\r\n// Rebot Features and Global Configuration (so you don't have to!)\r\nGlobalBotSettings.UseASPOptimization = false;\r\nGlobalBotSettings.UseZigZagOptimization = true;\r\nGlobalBotSettings.KillRares = false;\r\nGlobalBotSettings.LearnNewFlightmasters = true;\r\nGlobalBotSettings.FlightMasterDiscoverRange = 75.0f;\r\nGlobalBotSettings.AttackMobsOnRoute_Radius = 15;\r\nGlobalBotSettings.DismountMobCount = 3;\r\nGlobalBotSettings.BuyNumFood = 0;\r\nGlobalBotSettings.BuyNumDrink = 0;\r\nGlobalBotSettings.RestManaPercentage = 0.4;\r\nGlobalBotSettings.RestHpPercentage = 0.6;\r\nGlobalBotSettings.SellWhite = false; // to Protect Food\r\nGlobalBotSettings.MinimumFreeInventorySlots = 1;\r\nGlobalBotSettings.SkipCinematics = true;\r\n\r\n// Purge outdated Food/Drink items\r\nGlobalBotSettings.DrinkItemIds.Clear();\r\nGlobalBotSettings.FoodItemIds.Clear();\r\n\r\n// Ensuring AutoEquip is On\r\nAutoEquipSettings.EquipItems = true;\r\nAutoEquipSettings.ProtectHeirlooms = true;\r\nAutoEquipSettings.RollOnLoot = true;\r\nAutoEquipSettings.DisableIfMaxLevel = false;\r\n\r\n// Combat\r\nCombatSettings.UseCombatEvasions = true;\r\n\r\n// Misc Randomization is Good\r\nRandom rand = new Random();\r\nGlobalBotSettings.LogoutIdleMinutes = rand.Next(25,35);\r\nGlobalBotSettings.WalkingMakesSenseRange = rand.Next(45,60);\r\n\r\n// Vendor\r\nGlobalBotSettings.VendorOnMinDurability = 0;\r\nGlobalBotSettings.VendorOnNumDestroyedItems = 9;\r\nGlobalBotSettings.SellGreysBelowValue = false; // Defaults to just sell all greys.\r\nGlobalBotSettings.UseAutoItemProtection = true;\r\nGlobalBotSettings.ProtectProfessionCategories = true;\r\nGlobalBotSettings.SellSoulboundNotEquipable = true;\r\n\r\n// Mount Check\r\nif (GlobalBotSettings.PreferredFlyingMount.Equals(\"\") && !Me.Class.ToString().Equals(\"Druid\")) \r\n{\r\n\tPrint(\"\\n----------\\nWARNING!!! No User-Selected FLYING Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\nif (GlobalBotSettings.PreferredGroundMount.Equals(\"\")) \r\n{\r\n\tPrint(\"\\n----------\\nWARNING!!! No User-Selected GROUND Mount Chosen. Auto-Select Activated.\");\r\n\tPrint(\"Please Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\nelse if (GlobalBotSettings.PreferredGroundMount.Equals(\"> Don't use ground mount <\"))\r\n{\r\n\tPrint(\"\\n----------\\nWarning! No Ground Mount Selected!\\nPlease Consider Manually Choosing or Creating a \\\"Favorites\\\" List to Use.\\nSettings Found under OPTIONS > GLOBAL\\n----------\");\r\n}\r\n"
           },
           {
             "$type": "Comment",
@@ -170,7 +170,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "int[] questArray = {36951,34653,35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35257,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\nint[] questArray3 = {35669,35670,35672};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\n\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 || questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n        \t}\r\n\t}\r\n}\r\nif (!IsQuestCompleted(36602) && !IsQuestCompleted(36607))\r\n{\r\n    count3 = count3 -1;\r\n}\r\n\r\n// Tough Quests, need group or high level\r\nif (Group.GetNumGroupMembers() > 0)\r\n{\r\n\tcount3 += questArray3.Length;\r\n}\r\n\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
+                  "CSharpCode": "int[] questArray = {35277,35671,34659,34655,36265,34656,34657,34658,36395,36377,36244,35599,36246,36392,36400,36444,36247,34756,35636,34805,36364,36362,35668,36478,36445,36386,35272,35275,36451,35295,35697,35611,35627,37296,37330,35705,34998,34884,34827,34885,34838,34886,36411,34828,34829,36425,36361,34830,36267,36397,36388,34882,34883,36447,34942,35260,35259,35258,36470,35261,35273,35634,36792,36402,35649,34898,35322,35339,35353,35380,36798,36129,36864,35407,35408,36183,36462,35550,36420,35733,35734,35000,34999,35001,35002,36268,36276,35011,35004,35003,36288,36455,36375,36398,35013,35012,36279,35245,35706,35879,36297,35718,36298,35738,35766,36381,35797,36283,36410,36454,36340,36472,36278,36399,37168,36254,36660,36401,36390,35897,35895,34921,34991,35010,35007,34923,34922,34938,34939,34924,36790,35009,36085,35704,36059,35896,37141,36389,36887,36590,31769,36881,34398,34069,34066,34067,35151};\r\n\r\nint[] questArray2 = {36607,36602};\r\nint[] questArray3 = {35669,35670,35672};\r\n\r\nint count = 0;\r\nint count2 = 0;\r\nint count3 = 0;\r\n\r\nfor (int i = 0; i < questArray.Length; i++)\r\n{\r\n\tif (!IsQuestCompleted(questArray[i]))\r\n\t{\r\n\t\tif (questArray[i] == 36395 || questArray[i] == 36400 || questArray[i] == 36397 || questArray[i] == 36398 || questArray[i] == 36399 || questArray[i] == 36401)\r\n\t\t{\r\n\t\t\tcount2++;\r\n\t\t}\r\n\t\tcount++;\r\n\t}\r\n}\r\ncount3 = count;\r\nif (count == count2)\r\n{\r\n\tcount3 = 0;\r\n}\r\n\r\nfor (int i = 0; i < questArray2.Length; i++) \r\n{\r\n\tif (!IsQuestCompleted(questArray2[i]) ) \r\n\t{\r\n        \tif (count3 == 0)\r\n\t\t{\r\n\t\t\tG[\"DNF_To_Spires\"] = \"true\";\r\n\t\t}\r\n        \tif ((questArray2[i] != 36607 && questArray2[i] != 36602) || (!IsQuestCompleted(36952) && !IsQuestCompleted(34794) && !HasQuest(36952) && !HasQuest(34794)))\r\n        \t{\r\n            \t\tcount3++;\r\n\t\t\tbreak;\r\n        \t}\r\n\t}\r\n}\r\n\r\n// Tough Quests, need group or high level\r\nif (Group.GetNumGroupMembers() > 0 || QH.GetPlayerItemLevel() >= 675 || Me.Level > 102)\r\n{\r\n\tfor (int i = 0; i < questArray3.Length; i++)\r\n\t{\r\n\t\tif (!IsQuestCompleted(questArray3[i]))\r\n\t\t{\r\n\t\t\tcount3++;\r\n\t\t}\r\n\t}\r\n}\r\n\r\nPrint(\"You Have \" + count3 + \" quests left to complete in this questpack!\");\r\nif (count3 == 0)\r\n{\r\n\treturn true;\r\n}\r\nreturn false;"
                 },
                 "IsNot": false
               },
@@ -196,7 +196,7 @@
           },
           {
             "$type": "CSharpAction",
-            "CSharpCode": "// Disabling Addons With Known Conflict\r\nint numDisabled = 0;\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\n\r\nfor (int i = 0; i < addonName.Length; i++)\r\n{\r\n\tif (QH.HasAddOnEnabled(addonName[i]))\r\n    \t{\r\n\t\t\tnumDisabled++;\r\n\t\t\tPrint(\"Disabling \" + addonName[i] + \" addon!\");\r\n\t\t\tQH.Fib = new Fiber<int>(QH.DisableAddOn(addonName[i],false));\r\n\t\t\twhile(QH.Fib.Run())\r\n\t\t\t{\r\n\t\t\t\tyield return 100;\r\n\t\t\t}\r\n    \t}\r\n}\r\n\r\nif (numDisabled > 0)\r\n{\r\n\tPrint(\"You Have Disabled \" + numDisabled + \" Addons and Need to Reload.\\nReloading Now!\");\r\n\tExecuteLua(\"ReloadUI()\");\r\n}\r\n"
+            "CSharpCode": "// Disabling Addons With Known Conflict\r\nstring[] addonName = new String[] {\"_NPCScan\", \"!Swatter\"};\r\nQH.Fib = new Fiber<int>(QH.DisableAddOns(addonName,true));\r\nwhile(QH.Fib.Run())\r\n{\r\n\tyield return 100;\r\n}"
           },
           {
             "$type": "Comment",
@@ -1064,7 +1064,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951) && Me.Level > 95"
+                  "CSharpCode": "!IsQuestCompleted(35537) && !IsQuestCompleted(34653) && !HasQuest(34653) && !IsQuestCompleted(36951) && !HasQuest(36951) && Me.Level > 95 && !IsQuestCompleted(34655) && !HasQuest(34655)"
                 },
                 "IsNot": false
               },
@@ -1851,7 +1851,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(36951) && !IsQuestCompleted(34653)"
+                  "CSharpCode": "!IsQuestCompleted(36951) && !IsQuestCompleted(34653) && !IsQuestCompleted(34655) && !HasQuest(34655) "
                 },
                 "IsNot": false
               },
@@ -11040,7 +11040,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(35257)"
+                  "CSharpCode": "!IsQuestCompleted(35257) && !HasQuest(35258) && !IsQuestCompleted(35258) && !HasQuest(35260) && !IsQuestCompleted(35260)"
                 },
                 "IsNot": false
               },
@@ -12448,10 +12448,21 @@
             "IsNot": false
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: Bladefist Hold\"",
+                  "Color": "0, 128, 255"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -12464,71 +12475,10 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: Bladefist Hold\"",
-                        "Color": "0, 128, 255"
-                      },
-                      {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "AcceptQuestCommand",
-                              "QuestIds": [
-                                36792
-                              ]
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "!HasQuest(36792)"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": false
-                      },
-                      {
-                        "$type": "DoQuestsCommand",
+                        "$type": "AcceptQuestCommand",
                         "QuestIds": [
                           36792
                         ]
-                      },
-                      {
-                        "$type": "MoveTo",
-                        "Hotspot": {
-                          "Position": "39.16306 2826.825 44.2722",
-                          "GroundPosition": "0 0 0",
-                          "IsGroundPosition": false,
-                          "ContinentId": 1116
-                        },
-                        "Method": "Navi"
                       }
                     ],
                     "IsExtendedInEditor": false,
@@ -12540,7 +12490,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!IsQuestCompleted(36792)"
+                        "CSharpCode": "!HasQuest(36792)"
                       },
                       "IsNot": false
                     },
@@ -12558,11 +12508,27 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    36792
+                  ]
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "39.16306 2826.825 44.2722",
+                    "GroundPosition": "0 0 0",
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  },
+                  "Method": "Navi"
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
@@ -12870,10 +12836,21 @@
             "IsNot": false
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: The Writhing Mire\"",
+                  "Color": "0, 128, 255"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -12886,58 +12863,7 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: The Writhing Mire\"",
-                        "Color": "0, 128, 255"
-                      },
-                      {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "AcceptQuestCommand",
-                              "QuestIds": [
-                                35649
-                              ]
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "!HasQuest(35649)"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": false
-                      },
-                      {
-                        "$type": "DoQuestsCommand",
+                        "$type": "AcceptQuestCommand",
                         "QuestIds": [
                           35649
                         ]
@@ -12952,7 +12878,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!IsQuestCompleted(35649)"
+                        "CSharpCode": "!HasQuest(35649)"
                       },
                       "IsNot": false
                     },
@@ -12970,11 +12896,17 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    35649
+                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
@@ -21601,7 +21533,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1267.715 884.448 22.28527",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1267.556 884.4389 22.32065",
                     "IsGroundPosition": false,
                     "ContinentId": 1116
                   },
@@ -21611,7 +21543,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1301.438 851.3716 31.07144",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1301.438 851.3716 31.07149",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21621,7 +21553,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1307.946 838.2493 39.88356",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1307.946 838.2493 39.883",
                     "UseCTM": true,
                     "Jump": true,
                     "IsGroundPosition": false,
@@ -21631,8 +21563,28 @@
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
-                    "Position": "-1313.94 829.9656 44.32196",
+                    "Position": "-1309.685 833.2395 42.79498",
                     "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-1312.155 830.544 43.98108",
+                    "GroundPosition": "0 0 0",
+                    "UseCTM": true,
+                    "IsGroundPosition": false,
+                    "ContinentId": 1116
+                  }
+                },
+                {
+                  "$type": "MoveTo",
+                  "Hotspot": {
+                    "Position": "-1313.94 829.9656 44.32196",
+                    "GroundPosition": "-1317.167 828.6667 44.60606",
                     "UseCTM": true,
                     "Jump": true,
                     "IsGroundPosition": false,
@@ -21643,7 +21595,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1325.196 824.2806 47.37133",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1325.01 824.2726 47.45426",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21653,7 +21605,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1336.64 820.1222 54.09631",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1336.64 820.1222 54.65157",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21663,7 +21615,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1338.058 826.7488 56.10247",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1338.058 826.7488 56.29103",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21688,7 +21640,7 @@
                     "HotspotsX": [
                       {
                         "Position": "-1338.058 826.7488 56.10247",
-                        "GroundPosition": "0 0 0",
+                        "GroundPosition": "-1338.058 826.7488 56.29103",
                         "UseCTM": true,
                         "IsGroundPosition": false,
                         "ContinentId": 1116
@@ -21701,13 +21653,13 @@
                     "GameObjectiveIndex": 1,
                     "RunTime": 5.0
                   },
-                  "TimeLimit": 0
+                  "TimeLimit": 5
                 },
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1338.058 826.7488 56.10247",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1338.058 826.7488 56.29103",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21717,7 +21669,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1336.64 820.1222 54.09631",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1336.64 820.1222 54.65157",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21727,7 +21679,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1325.196 824.2806 47.37133",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1325.01 824.2726 47.45426",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21737,7 +21689,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1313.94 829.9656 44.32196",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1317.167 828.6667 44.60606",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21747,7 +21699,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1307.946 838.2493 39.88356",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1307.946 838.2493 39.883",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21757,7 +21709,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1301.438 851.3716 31.07144",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1301.438 851.3716 31.07149",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -21767,7 +21719,7 @@
                   "$type": "MoveTo",
                   "Hotspot": {
                     "Position": "-1267.715 884.448 22.28527",
-                    "GroundPosition": "0 0 0",
+                    "GroundPosition": "-1267.556 884.4389 22.32065",
                     "UseCTM": true,
                     "IsGroundPosition": false,
                     "ContinentId": 1116
@@ -23074,6 +23026,7 @@
             "IsExtendedInEditor": false,
             "ActionsFalse": {
               "Children": [],
+              "IsExtendedInEditor": false,
               "IsSpecialElement": true,
               "SpecialElementName": "Else",
               "GroupName": ""
@@ -23099,8 +23052,18 @@
                       {
                         "$type": "MoveTo",
                         "Hotspot": {
-                          "Position": "-1281.784 1543.897 79.24213",
+                          "Position": "-1246.354 1587.214 57.21666",
                           "GroundPosition": "0 0 0",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
+                      },
+                      {
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-1281.784 1543.897 79.24213",
+                          "GroundPosition": "-1281.784 1543.897 79.6125",
                           "IsGroundPosition": false,
                           "ContinentId": 1116
                         },
@@ -23210,7 +23173,7 @@
                         "$type": "MoveTo",
                         "Hotspot": {
                           "Position": "-1259.901 1350.646 216.1164",
-                          "GroundPosition": "0 0 0",
+                          "GroundPosition": "-1259.901 1350.646 216.6387",
                           "IsGroundPosition": false,
                           "ContinentId": 1116
                         },
@@ -23255,7 +23218,47 @@
                   "$type": "Comment",
                   "Text": "Yay! Leorajh is now your follower!",
                   "Color": "64, 128, 128"
+                }
+              ],
+              "IsExtendedInEditor": false,
+              "IsSpecialElement": true,
+              "SpecialElementName": "Then",
+              "GroupName": ""
+            },
+            "Conditions": [
+              {
+                "Condition": {
+                  "$type": "CSharpCondition",
+                  "CSharpCode": "!IsQuestCompleted(37168)"
                 },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              }
+            ],
+            "IsNot": false
+          },
+          {
+            "$type": "If",
+            "IsExtendedInEditor": false,
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
+              "Children": [
                 {
                   "$type": "MoveTo",
                   "Hotspot": {
@@ -23356,7 +23359,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(37168)"
+                  "CSharpCode": "QH.IsClose(-1166.9f, 1380.1f, 214.2f,75)"
                 },
                 "IsNot": false
               },
@@ -23674,7 +23677,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35670) && !IsQuestInLogAndComplete(35670) && Group.GetNumGroupMembers() > 0"
+                  "CSharpCode": "HasQuest(35670) && !IsQuestInLogAndComplete(35670) && (QH.GetPlayerItemLevel() >= 675 || Group.GetNumGroupMembers() > 0 || Me.Level > 102)"
                 },
                 "IsNot": false
               },
@@ -23694,10 +23697,21 @@
             "IsNot": false
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: Bloodmane Pridelands\"",
+                  "Color": "0, 128, 255"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -23710,68 +23724,17 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: Bloodmane Pridelands\"",
-                        "Color": "0, 128, 255"
+                        "$type": "MoveTo",
+                        "Hotspot": {
+                          "Position": "-1107.332 1907.397 17.12995",
+                          "GroundPosition": "-1107.332 1907.397 17.62751",
+                          "IsGroundPosition": false,
+                          "ContinentId": 1116
+                        },
+                        "Method": "Navi"
                       },
                       {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "MoveTo",
-                              "Hotspot": {
-                                "Position": "-1107.332 1907.397 17.12995",
-                                "GroundPosition": "-1107.332 1907.397 17.62751",
-                                "IsGroundPosition": false,
-                                "ContinentId": 1116
-                              },
-                              "Method": "Navi"
-                            },
-                            {
-                              "$type": "AcceptQuestCommand",
-                              "QuestIds": [
-                                36660
-                              ]
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "!HasQuest(36660)"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": false
-                      },
-                      {
-                        "$type": "DoQuestsCommand",
+                        "$type": "AcceptQuestCommand",
                         "QuestIds": [
                           36660
                         ]
@@ -23786,7 +23749,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!IsQuestCompleted(36660)"
+                        "CSharpCode": "!HasQuest(36660)"
                       },
                       "IsNot": false
                     },
@@ -23804,11 +23767,17 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    36660
+                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
@@ -23846,11 +23815,6 @@
             "ActionsTrue": {
               "Children": [
                 {
-                  "$type": "Comment",
-                  "Text": "You Are in a Party! This Quest Is Normally Skipped Otherwise as NPC is too Strong.",
-                  "Color": "64, 128, 128"
-                },
-                {
                   "$type": "DoQuestsCommand",
                   "QuestIds": [
                     35669
@@ -23866,7 +23830,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35669) &&  !IsQuestInLogAndComplete(35669) && Group.GetNumGroupMembers() > 0"
+                  "CSharpCode": "HasQuest(35669) && !IsQuestInLogAndComplete(35669) && (QH.GetPlayerItemLevel() >= 675 || Group.GetNumGroupMembers() > 0 || Me.Level > 102)"
                 },
                 "IsNot": false
               },
@@ -27022,7 +26986,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(36887) || !IsQuestCompleted(36590) || (HasQuest(35672) && !IsQuestInLogAndComplete(35672))"
+                  "CSharpCode": "!IsQuestCompleted(36887) || !IsQuestCompleted(36590) || (HasQuest(35672) && !IsQuestInLogAndComplete(35672) && (Group.GetNumGroupMembers() > 0 || QH.GetPlayerItemLevel() >= 675))"
                 },
                 "IsNot": false
               },
@@ -27355,7 +27319,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "HasQuest(35672) && !IsQuestInLogAndComplete(35672) && Group.GetNumGroupMembers() > 0"
+                  "CSharpCode": "HasQuest(35672) && !IsQuestInLogAndComplete(35672) && (QH.GetPlayerItemLevel() >= 675 || Group.GetNumGroupMembers() > 0 || Me.Level > 102)"
                 },
                 "IsNot": false
               },
@@ -27375,10 +27339,21 @@
             "IsNot": false
           },
           {
-            "$type": "While",
+            "$type": "If",
             "IsExtendedInEditor": false,
-            "LoopActions": {
+            "ActionsFalse": {
+              "Children": [],
+              "IsSpecialElement": true,
+              "SpecialElementName": "Else",
+              "GroupName": ""
+            },
+            "ActionsTrue": {
               "Children": [
+                {
+                  "$type": "Comment",
+                  "Text": "\"Bonus Objective: The Howling Crag\"",
+                  "Color": "0, 128, 255"
+                },
                 {
                   "$type": "If",
                   "IsExtendedInEditor": false,
@@ -27391,64 +27366,7 @@
                   "ActionsTrue": {
                     "Children": [
                       {
-                        "$type": "Comment",
-                        "Text": "\"Bonus Objective: The Howling Crag\"",
-                        "Color": "0, 128, 255"
-                      },
-                      {
-                        "$type": "If",
-                        "IsExtendedInEditor": false,
-                        "ActionsFalse": {
-                          "Children": [],
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Else",
-                          "GroupName": ""
-                        },
-                        "ActionsTrue": {
-                          "Children": [
-                            {
-                              "$type": "AcceptQuestCommand",
-                              "QuestIds": [
-                                36590
-                              ]
-                            }
-                          ],
-                          "IsExtendedInEditor": false,
-                          "IsSpecialElement": true,
-                          "SpecialElementName": "Then",
-                          "GroupName": ""
-                        },
-                        "Conditions": [
-                          {
-                            "Condition": {
-                              "$type": "CSharpCondition",
-                              "CSharpCode": "!HasQuest(36590)"
-                            },
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          },
-                          {
-                            "Condition": null,
-                            "IsNot": false
-                          }
-                        ],
-                        "IsNot": false
-                      },
-                      {
-                        "$type": "DoQuestsCommand",
-                        "QuestIds": [
-                          36590
-                        ]
-                      },
-                      {
-                        "$type": "TurnInQuestsCommand",
+                        "$type": "AcceptQuestCommand",
                         "QuestIds": [
                           36590
                         ]
@@ -27463,7 +27381,7 @@
                     {
                       "Condition": {
                         "$type": "CSharpCondition",
-                        "CSharpCode": "!IsQuestCompleted(36590)"
+                        "CSharpCode": "!HasQuest(36590)"
                       },
                       "IsNot": false
                     },
@@ -27481,31 +27399,37 @@
                     }
                   ],
                   "IsNot": false
+                },
+                {
+                  "$type": "DoQuestsCommand",
+                  "QuestIds": [
+                    36590
+                  ]
                 }
               ],
               "IsExtendedInEditor": false,
               "IsSpecialElement": true,
-              "SpecialElementName": "Do",
+              "SpecialElementName": "Then",
               "GroupName": ""
             },
             "Conditions": [
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
-              {
-                "Condition": null,
-                "IsNot": false
-              },
               {
                 "Condition": {
                   "$type": "CSharpCondition",
                   "CSharpCode": "!IsQuestCompleted(36590)"
                 },
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
+                "IsNot": false
+              },
+              {
+                "Condition": null,
                 "IsNot": false
               }
             ],
@@ -28051,7 +27975,7 @@
               {
                 "Condition": {
                   "$type": "CSharpCondition",
-                  "CSharpCode": "!IsQuestCompleted(36607) && !IsQuestCompleted(36602) && !IsQuestCompleted(36952) && !HasQuest(36952) && !IsQuestCompleted(34794) && !HasQuest(34794) && !HasQuest(36602) && Me.Level > 97"
+                  "CSharpCode": "!IsQuestCompleted(36607) && !IsQuestCompleted(36602) && !IsQuestCompleted(36952) && !HasQuest(36952) && !IsQuestCompleted(34794) && !HasQuest(34794) && !HasQuest(36602) && Me.Level > 97 && !HasQuest(34795) && !IsQuestCompleted(34795)"
                 },
                 "IsNot": false
               },
