@@ -25,14 +25,8 @@ Current Release: [Version 1.63 - April 12th, 2016 2015](http://www.mediafire.com
 
 |||
 |-----:|:--------------------------|
-|**IEnumerable\<int\>** | **AbandonGarrisonFlightQuests(int questToKeep)**|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop Gap method for localization issues in quest ID return (not used at all, but just in case)|
 |**void** | **AbandonQuest(int questID)**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
-|**IEnumerable\<int\>** | **ArsenalGarrisonAbility(int numStrikes)**|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Moves to Focus Position, then uses zone ability the given times on focused target (max 3).|
-|**bool** | **BannerAvailable()**|
-||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
 |**void** | **BuyExpPotions(int toBuy)**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buys the given number of +100% XP Bonus potions from the Garrison vendor.|
 |**IEnumerable\<int\>** | **BuyVendorItemByID(int itemToBuy, int howMany)**|
