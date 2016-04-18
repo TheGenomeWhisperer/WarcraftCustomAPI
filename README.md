@@ -10,7 +10,7 @@ Also included are full profiles representative of the QH Class in full implemnta
 
 Community Public Release is [HERE ON THE OFFICIAL REBOT FOURMS:](http://www.rebot.to/showthread.php?t=4930)
 
-Current Release: [Version 1.50 - November 4th, 2015](http://www.mediafire.com/download/rrl9vl68q2l69pa/Sklug%27s+90-100+No-Assist+Questpack+%28Ver.+1.50%29.zip)
+Current Release: [Version 1.63 - April 12th, 2016 2015](http://www.mediafire.com/download/rrl9vl68q2l69pa/Sklug%27s+90-100+No-Assist+Questpack+%28Ver.+1.50%29.zip)
 
 **The following list contains all Methods and Properties of the QH.cs Class:**
 
@@ -25,10 +25,20 @@ Current Release: [Version 1.50 - November 4th, 2015](http://www.mediafire.com/do
 
 |||
 |-----:|:--------------------------|
+|**IEnumerable\<int\>** | **AbandonGarrisonFlightQuests(int questToKeep)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop Gap method for localization issues in quest ID return (not used at all, but just in case)|
 |**void** | **AbandonQuest(int questID)**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abandons the given quest from the player's quest-log.|
-|**bool** |**BannerAvailable()**|
+|**IEnumerable\<int\>** | **ArsenalGarrisonAbility(int numStrikes)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Moves to Focus Position, then uses zone ability the given times on focused target (max 3).|
+|**bool** | **BannerAvailable()**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if any of the 3 Guild "Bonus XP" banners are available for use.|
+|**void** | **BuyExpPotions(int toBuy)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buys the given number of +100% XP Bonus potions from the Garrison vendor.|
+|**IEnumerable\<int\>** | **BuyVendorItemByID(int itemToBuy, int howMany)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If vendor has matching item by ID, it buys the given number of them.|
+|**IEnumerable\<int\>** | **CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot, Vector3[] blacklist, float blacklistDistance)**|
+||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on questID/objective num, navigates to given object, interacts/collects item until objective completed, taking into considerating given hotspots/blacklisted zones.|
 |**IEnumerable\<int\>** | **DisableAddOn(string name, bool reload)**|
 ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Disables the given addon (name reflects directory folder name), and reloads player UI if 2nd argument is true.|
 |**void** |**DoGossipOnMatch(string choice)**|
