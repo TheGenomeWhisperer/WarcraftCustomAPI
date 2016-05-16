@@ -12,7 +12,7 @@
 |               Full Information on actual use in live profiles: http://www.rebot.to/showthread.php?t=4930
 |               QH = Q.H. = QuestingHelps
 |
-|               Last Update: January 17th, 2016
+|               Last Update: May 7th, 2016
 |
 */  
 	
@@ -871,7 +871,7 @@ public class QH
 	{
 		return API.ExecuteLua<int>("local _,_,_,_,itemMinLevel = GetItemInfo(" + ID + "); return itemMinLevel;");
 	}
-    
+        
     // Method:          "GetNumItemsBroken()"
 	// What it Does:    Returns if player has any Broken ("RED") items equipped.
     // Purpose:         Could be useful if at a vendor to institute a brief repair.
@@ -906,7 +906,7 @@ public class QH
 		}
 		return count;
 	}
-    
+      
     // Method:          "GetPlayerGold()"
     // What it Does:    Returns the amount of Gold a player has (Rounded down to even(int) Gold number)
     // Purpose:         Much like with the Garrison Resources method, this can be useful to ensure player has the means to
@@ -1835,7 +1835,6 @@ public class QH
             if (!API.IsQuestCompleted(questArray[i]))
             {
                 count++;
-                API.Print(questArray[i]);
             }
         }
         API.Print("You Have " + count + " quests left to complete in this questpack!");
@@ -2220,6 +2219,7 @@ public class QH
     {
         if (RemainingSpellCD(164050) == 0 || API.Me.IsOnTransport) 
         {
+            var unit = API.Me.Focus;
             // Necessary to disable combat because bot will get distracted and activate combat base and not attack the main target.
             API.DisableCombat = true;
             // while player is far away... move to target
@@ -2264,6 +2264,11 @@ public class QH
                 {
                     API.ExecuteLua("OverrideActionBarButton2:Click()");
                 }
+            }
+            // Ensures Looting
+            if (unit != null && unit.IsDead && API.Me.Distance2DTo(unit.Position) < 15)
+            {
+                unit.Interact();
             }
             // If NPC is killed with time still left, why stand there and wait til it goes away?  Just exit it and keep moving on.
             API.ExecuteLua("OverrideActionBarLeaveFrameLeaveButton:Click()");
@@ -2878,7 +2883,7 @@ public class QH
     
     // Method:          "WaitForSpell(int)"
     // What it Does:    It will cause the player to pause in place until the spell is off cooldown, but also report to the log
-    //                  how much time is remaining every 15 seconds.
+    //                  how much time is remaining every 15 seconds. 
     // Purpose:         While this is recommended to be used on rare occasions, there are times when it is good to check if something
     //                  is on cooldown, and it would be prudent to wait until it is ready (think zone spell) if the timer
     //                  is lower.  For example, by setting a "wait" for say, your Gorgrond Shredder, rather than skipping a challenging NPC
@@ -3154,5 +3159,302 @@ public class QH
         }
         return itemLevel;
     }
-}
+    
+    
+    // CUSTOM NAVIGATION SYSTEM
+    // KEEPING IN SEPERATE SECTION
+    
+    
+    // Method:          "NavigateShipyard(Vector3 destination)"
+    public static IEnumerable<int> NavigateShipyard(Vector3 destination)
+    {                
+        // CTM positions
+        Vector3[] hotspots = new Vector3[]{new Vector3(5226.465f, 5103.418f, 5.177947f),new Vector3(5228.128f, 5099.702f, 5.177947f),new Vector3(5231.669f, 5091.785f, 3.380589f),new Vector3(5235.001f, 5084.335f, 3.268428f),new Vector3(5238.147f, 5076.524f, 3.26907f),new Vector3(5241.06f, 5068.825f, 3.269417f),new Vector3(5243.971f, 5061.015f, 3.269331f),new Vector3(5246.577f, 5053.362f, 3.269719f),new Vector3(5249.292f, 5045.341f, 3.270111f),new Vector3(5252.161f, 5036.862f, 3.279385f),new Vector3(5254.744f, 5029.231f, 3.281622f),new Vector3(5257.496f, 5021.1f, 3.281622f),new Vector3(5260.215f, 5013.065f, 4.370923f),new Vector3(5262.909f, 5005.366f, 5.023382f),new Vector3(5268.368f, 4999.576f, 5.022273f),new Vector3(5276.881f, 4999.54f, 5.02261f),new Vector3(5285.001f, 5001.184f, 5.024286f),new Vector3(5293.423f, 5002.99f, 5.022233f),new Vector3(5301.736f, 5005.184f, 5.035467f),new Vector3(5309.441f, 5007.458f, 5.030182f),new Vector3(5317.661f, 5009.984f, 5.145557f),new Vector3(5325.29f, 5012.334f, 5.024195f),new Vector3(5333.139f, 5014.767f, 5.022141f),new Vector3(5340.74f, 5018.779f, 5.02382f),new Vector3(5346.704f, 5024.007f, 5.02382f),new Vector3(5347.966f, 5031.805f, 5.021767f),new Vector3(5346.603f, 5039.763f, 5.022386f),new Vector3(5344.565f, 5048.033f, 3.454549f),new Vector3(5342.144f, 5055.838f, 3.280035f),new Vector3(5339.57f, 5063.75f, 3.281292f),new Vector3(5336.929f, 5071.516f, 3.279427f),new Vector3(5334.284f, 5079.233f, 3.271114f),new Vector3(5331.647f, 5086.923f, 3.271114f),new Vector3(5328.998f, 5094.546f, 3.269061f),new Vector3(5325.908f, 5101.985f, 3.271765f),new Vector3(5322.469f, 5110.187f, 3.269712f),new Vector3(5319.396f, 5117.553f, 3.365296f),new Vector3(5316.603f, 5124.887f, 3.266913f),new Vector3(5313.506f, 5133.693f, 3.26486f),new Vector3(5310.355f, 5141.261f, 3.262807f),new Vector3(5306.733f, 5149.109f, 5.007558f),new Vector3(5304.183f, 5154.635f, 5.179315f),new Vector3(5313.919f, 4999.146f, 5.031353f),new Vector3(5316.989f, 4991.349f, 4.590706f),new Vector3(5319.994f, 4983.496f, 3.261628f),new Vector3(5322.344f, 4976.021f, 3.262311f),new Vector3(5324.748f, 4968.041f, 3.454753f),new Vector3(5327.033f, 4960.454f, 3.355773f),new Vector3(5329.424f, 4952.516f, 3.354637f),new Vector3(5331.841f, 4944.493f, 3.814888f),new Vector3(5333.223f, 4939.904f, 4.313459f),new Vector3(5336.783f, 4942.057f, 3.987006f),new Vector3(5344.255f, 4946.576f, 3.750103f),new Vector3(5350.35f, 4952.551f, 3.886631f),new Vector3(5355.614f, 4958.595f, 3.89053f),new Vector3(5359.577f, 4965.995f, 4.598823f),new Vector3(5363.436f, 4974.154f, 6.17427f),new Vector3(5368.585f, 4980.556f, 6.895992f),new Vector3(5375.232f, 4985.608f, 6.570148f),new Vector3(5381.774f, 4990.581f, 6.060965f),new Vector3(5388.921f, 4995.311f, 5.513795f),new Vector3(5395.682f, 4999.771f, 5.192679f),new Vector3(5402.694f, 5004.194f, 4.248222f),new Vector3(5409.237f, 5008.819f, 3.37357f),new Vector3(5415.642f, 5013.987f, 3.103029f),new Vector3(5272.541f, 4938.235f, 8.941624f),new Vector3(5276.913f, 4938.519f, 7.778503f),new Vector3(5285.406f, 4939.062f, 5.868029f),new Vector3(5293.458f, 4939.168f, 5.076531f),new Vector3(5301.167f, 4940.197f, 3.863107f),new Vector3(5309.34f, 4942.798f, 2.662547f),new Vector3(5337.066f, 4935.606f, 5.080146f),new Vector3(5338.462f, 4933.899f, 5.410695f),new Vector3(5343.997f, 4926.92f, 7.379288f),new Vector3(5349.408f, 4921.278f, 10.13784f),new Vector3(5355.425f, 4915.238f, 13.54762f),new Vector3(5361.338f, 4909.301f, 18.02958f),new Vector3(5367.602f, 4904.31f, 22.16294f),new Vector3(5375.418f, 4902.233f, 25.21158f),new Vector3(5381.681f, 4907.238f, 26.89433f),new Vector3(5386.229f, 4914.455f, 30.41585f),new Vector3(5387.525f, 4922.56f, 33.92372f),new Vector3(5386.115f, 4930.876f, 35.5632f),new Vector3(5387.724f, 4938.739f, 35.5954f),new Vector3(5391.915f, 4946.38f, 34.34087f),new Vector3(5395.266f, 4953.227f, 32.81433f),new Vector3(5395.794f, 4955.711f, 32.35955f),new Vector3(5392.45f, 4935.087f, 36.59919f),new Vector3(5395.52f, 4934.9f, 37.70484f),new Vector3(5403.881f, 4934.011f, 40.71118f),new Vector3(5410.981f, 4929.611f, 43.73222f),new Vector3(5416.117f, 4922.526f, 45.84546f),new Vector3(5419.612f, 4915.138f, 48.19114f),new Vector3(5406.811f, 4930.285f, 42.55336f),new Vector3(5412.805f, 4923.976f, 45.10557f),new Vector3(5418.313f, 4918.179f, 47.16678f),new Vector3(5424.307f, 4911.87f, 50.2869f),new Vector3(5429.672f, 4905.676f, 53.36563f),new Vector3(5435.39f, 4899.387f, 56.10091f),new Vector3(5441.695f, 4894.402f, 58.92585f),new Vector3(5448.286f, 4889.825f, 62.17897f),new Vector3(5455.419f, 4885.038f, 66.39535f),new Vector3(5462.308f, 4880.404f, 70.21847f),new Vector3(5469.073f, 4875.818f, 74.21414f),new Vector3(5475.306f, 4870.763f, 77.82598f),new Vector3(5480.802f, 4864.634f, 82.19171f),new Vector3(5485.893f, 4858.343f, 87.268f),new Vector3(5489.982f, 4850.61f, 93.11131f),new Vector3(5491.314f, 4842.559f, 98.48849f),new Vector3(5490.236f, 4834.032f, 103.627f),new Vector3(5489.203f, 4825.97f, 106.6963f),new Vector3(5487.678f, 4817.781f, 109.5393f),new Vector3(5483.123f, 4810.932f, 111.7618f),new Vector3(5477.436f, 4805.284f, 113.4704f),new Vector3(5471.529f, 4799.627f, 115.9368f),new Vector3(5466.415f, 4793.621f, 118.6344f),new Vector3(5463.415f, 4785.923f, 121.064f)};
+                                            
+        // Why waste time parsing through them all if I am already right there?
+        if (API.Me.Distance2DTo(destination) > 5f)
+        {
+            Vector3[] route = CreatePath(hotspots, destination);
+            API.Print("Calculating Hotspots for Custom Navigation System...");
+            API.Print("Taking " + route.Length + " Nodes to Get to Your Destination!");
+            for (int i = 0; i < route.Length; i++)
+            {
+                while(!API.CTM(route[i]))
+                {
+                    yield return 100;
+                }
+            }
+        }
+        while(!API.CTM(destination))
+        {
+            yield return 250;
+        }
+        yield break;
+    }
+    
+    // Method:          "SortHotspots(Vector3[] hotspots, Vector3 destination)"
+    public static Vector3[] CreatePath(Vector3[] hotspots, Vector3 destination)
+    {
+        // Error Checking
+        if (hotspots.Length == 0)
+        {
+            return hotspots;
+        }
+               
+        // Variable initializations
+        List<Vector3> finalResult = new List<Vector3>();
+        List<Vector3> hotspotList = new List<Vector3>(hotspots);
+        Vector3 position = API.Me.Position;
+        Vector3 closest;
+        bool NotDoneSorting = true;
+        int index = 0;
+        int count = 0;
+        bool noReset = true;
+        int numWarnings = 0;
+        
+        // Determining which hotspot is closest to destination.
+        Vector3 final = hotspotList[0];
+        for (int i = 1; i < hotspotList.Count; i++)
+        {
+            if (hotspotList[i].Distance2D(destination) < final.Distance2D(destination))
+            {
+                final = hotspotList[i];
+            }
+        }
+        
+        while(NotDoneSorting)
+        {
+            // closest to current node (first will be closest to player)
+            closest = hotspotList[count];
+            for (int i = count + 1; i < hotspotList.Count; i++)
+            {
+                if (hotspotList[i].Distance2D(position) < closest.Distance2D(position))
+                {
+                    closest = hotspotList[i];
+                    index = i;
+                }
+            }
+            
+            // Player is far away from custom mesh.. possible Stuck issues could occur. Issue warning!
+            if (API.Me.Distance2DTo(closest) > 30f && count == 0 && numWarnings == 0)
+            {
+                API.Print("Warning! Player is " + (int)API.Me.Distance2DTo(closest) + " Yards From the Custom Mesh! Very Far! Dangerous to Navigate!");
+            }
+            numWarnings++;
+            
+            
+            if (closest.Distance2D(position) > 10f && count != 0)
+            {
+                hotspotList.RemoveAt(count - 1);
+                finalResult.Clear();
+                position = API.Me.Position;
+                index = 0;
+                count = 0;
+                noReset = false;
+            }
 
+            if (noReset)
+            {
+                // Now, shift everything below the next closest hotspot to the right;
+                for (int j = index; j > count; j--)
+                {
+                    hotspotList[j] = hotspotList[j-1];
+                }
+                hotspotList[count] = closest;
+                finalResult.Add(closest);
+                index = 0;
+                count++;
+                position = closest;
+            }
+            
+            
+            // Determining if we reached the last hotspot;
+            if (closest == final && noReset)
+            {
+                NotDoneSorting = false;
+            }
+            
+            noReset = true;
+
+        }
+             
+        // Building new, smaller array
+        Vector3[] result = new Vector3[finalResult.Count];
+        for (int i = 0; i < result.Length; i++)
+        {
+            result[i] = finalResult[i];
+        }
+        return result;
+    }
+    
+    // Method:          "InsertionSort(Vector3[] hotspots)"
+    public static void InsertionSortHotspots(Vector3[] hotspots)
+    {
+        Vector3 temp;
+        for (int i = 0; i < hotspots.Length; i++)
+        {
+            for (int j = i; j > 0; j--)
+            {
+                if (API.Me.Distance2DTo(hotspots[j-1]) > API.Me.Distance2DTo(hotspots[j]))
+                {
+                    temp = hotspots[j-1];
+                    hotspots[j-1] = hotspots[j];
+                    hotspots[j] = temp;
+                }
+            }
+        }
+    }
+    
+    // Method:             "HotspotGenerator(int seconds)"
+    // What it Does:        Run this method whilst running a path in the game to build the actual mesh.
+    public static IEnumerable<int> HotspotGenerator(int seconds)
+    {
+        string result = ("Vector3[] hotspots = new Vector3[]{{");
+        int count = seconds * 2;
+        int index = 0;
+        Vector3 currentPosition = API.Me.Position;
+        Vector3 tempPosition = currentPosition;
+        
+        while (index < count)
+        {
+            // Verifying Current Position has changed from the last one.
+            tempPosition = API.Me.Position;
+            if (tempPosition != currentPosition)
+            {
+                result += ("new Vector3(" + API.Me.Position.X + "f, " + API.Me.Position.Y + "f, " + API.Me.Position.Z + "f),");
+                currentPosition = tempPosition;
+            }
+            yield return 500;
+            index++;
+            if (index % 6 == 0)
+            {
+                if (!result.Equals("Vector3[] hotspots = new Vector3[]{{"))
+                {
+                    API.Print(result.Substring(0,result.Length - 1) + "}};");
+                }
+                else
+                {
+                    API.Print("No Hotzones Added Yet.  You may want to start moving!");
+                }
+            }
+        }
+        if (!result.Equals("Vector3[] hotspots = new Vector3[]{{"))
+        {
+            API.Print(result.Substring(0,result.Length - 1) + "}};");
+        }
+        else
+        {
+            API.Print("No Hotzones Were Added.  Please Move on a path in-game and the hotspot generator will build the mesh.");
+        }
+        yield break;
+    }
+    
+    // Method:          "GetClosestNode(Vector3[] hotspots, Vector3 currentNode)"
+    public static Vector3 GetClosestNode(Vector3[] hotspots, Vector3 currentNode)
+    {
+        Vector3 closest;
+        for (int i = 0; i < hotspots.Length; i++)
+        {
+            if (hotspots[i] != currentNode)
+            {
+                closest = hotspots[i];
+                break;
+            }
+        }
+        for (int i = 0; i < hotspots.Length; i++)
+        {
+            if (hotspots[i] != currentNode && hotspots[i] != closest && hotspots[i].Distance2D(currentNode) < closest.Distance2D(currentNode))
+            {
+                closest = hotspots[i];
+            }
+        }
+        return closest;
+    }
+    
+    
+    
+    
+    
+    
+    // Method:          "IsBossAvailable(string instanceName, string bossName)
+    // What it Does:    Returns true if a boss within a saved instance (like a heroic) has not yet been killed.
+    // Purpose:         Keeps track of boss progression in a heroic/saved dungeon.
+    public static bool IsBossAvailableInSavedInstance(string instanceName, string bossName)
+    {
+        int numSavedInstances = API.ExecuteLua<int>("return GetNumSavedInstances()");
+        if (numSavedInstances == 0)
+        {
+            return true;
+        }
+        // This Lua command refreshes the raid info before a query.  This is necessary or following info is not updated unless player opens window manually.
+        API.ExecuteLua("RequestRaidInfo()");
+        return API.ExecuteLua<bool>("local result = true; local found = false; for i = 1," + numSavedInstances + " do local instanceName, _, _, _, _, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if bossName == \"" + bossName + "\" then found = true end; if bossName == \"" + bossName + "\" and isKilled == true then print(\"Dungeons Progression: \" .. bossName .. \" has Been Killed.\"); result = false; break end end break end end if found == false then return found else return result end");
+    }
+    
+    public static int GetNumRemainingBossesInSavedInstance(string instanceName)
+    {
+        return API.ExecuteLua<int>("local count = 0; for i = 1,GetNumSavedInstances() do local instanceName, _, _, _, _, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if isKilled == true then count = count + 1; end end count = numEncounters - count; break end end return count");
+    }
+    
+    public static string GetBossesKilledInSavedInstance(string instanceName)
+    {
+        string result = "";
+        if (!IsPlayerSavedToInstance(instanceName))
+        {
+            result = "No Bosses Have Been Killed in that Instance! Player Currently Has No Save ID";
+            return result;
+        }
+        result = API.ExecuteLua<string>("local names = \"\"; for i = 1,GetNumSavedInstances() do local instanceName, _, _, _, _, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if isKilled == true then names = names .. \"\\nDungeons Progression: \" .. bossName .. \" has Been Killed.\"; end end break end end names = names .. \"\\n\" return names");
+        return result;
+    }
+    
+    // Method:          "GetCurrentInstanceName()
+    // What it Does:    Returns the name of the instance the player is in as a string, or reports back on NOT being in one, if that is the case.
+    // Purpose:         Ensures player is in the correct instance if say, starting the bot whilst already inside.
+    public static string GetCurrentInstanceName()
+    {
+        string result = "";
+        if (IsInInstance())
+        {
+            result = API.ExecuteLua<string>("local name = GetInstanceInfo(); return name");
+        }
+        else
+        {
+            result = "Player Not Currently In An Instance...";
+        }
+        return result;
+    }
+    
+    // Method:          "IsInInstance()"
+    // What it Does:    Returns true if the player is currently within any instance
+    // Purpose          Good conditional check to leave/enter dungeons.
+    public static bool IsInInstance()
+    {
+        return API.ExecuteLua<bool>("local isInstance = IsInInstance(); return isInstance;");
+    }
+
+    public static bool IsPlayerSavedToInstance(string instanceName)
+    {
+        int numSavedInstances = API.ExecuteLua<int>("return GetNumSavedInstances()");
+        if (numSavedInstances == 0)
+        {
+            return false;
+        }
+        return API.ExecuteLua<bool>("local result = false; for i = 1," + numSavedInstances + " do local instanceName = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then result = true; break; end end return result;");
+    }
+    
+    public static bool IsDungeonBossDead(int orderOfKill)
+    {
+        bool result = false;
+        // If on stage 2 then all bosses are dead.
+        if (ScenarioStageEquals(2))
+        {
+            result = true;
+        }
+        else
+        {
+            result = API.ExecuteLua<bool>("local _, _, completed = C_Scenario.GetCriteriaInfoByStep(1," + orderOfKill + "); return completed;");
+        }
+        return result;
+    }
+}
