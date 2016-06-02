@@ -12,7 +12,7 @@
 |               Full Information on actual use in live profiles: http://www.rebot.to/showthread.php?t=4930
 |               QH = Q.H. = QuestingHelps
 |
-|               Last Update: May 7th, 2016
+|               Last Update: June 1st, 2016
 |
 */  
 	
@@ -144,27 +144,27 @@ public class QH
         string temp;
         int ID;
         for (int i = 1; i <= API.ExecuteLua<int>("return GetMerchantNumItems()"); i++)
-			{
-				itemID = API.ExecuteLua<string>("return GetMerchantItemLink(" + i + ");");
-				temp = itemID.Substring(itemID.IndexOf(':') + 1);
-				itemID = itemID.Substring(itemID.IndexOf(':') + 1, temp.IndexOf(':'));
-				ID = int.Parse(itemID);
-				if (itemToBuy == ID)
-				{
-					// j = Multiples of 20
-					for (int j = 0; j < BuyTwenty; j++)
-					{
-						API.ExecuteLua("BuyMerchantItem(" + i + ", 20)");
-						yield return 500;
-					}
-					if (remainder > 0)
-					{
-						API.ExecuteLua("BuyMerchantItem(" + i + "," + remainder + ")");
-						yield return 500;
-					}
-					yield break;
-				}
-			}
+        {
+            itemID = API.ExecuteLua<string>("return GetMerchantItemLink(" + i + ");");
+            temp = itemID.Substring(itemID.IndexOf(':') + 1);
+            itemID = itemID.Substring(itemID.IndexOf(':') + 1, temp.IndexOf(':'));
+            ID = int.Parse(itemID);
+            if (itemToBuy == ID)
+            {
+                // j = Multiples of 20
+                for (int j = 0; j < BuyTwenty; j++)
+                {
+                    API.ExecuteLua("BuyMerchantItem(" + i + ", 20)");
+                    yield return 500;
+                }
+                if (remainder > 0)
+                {
+                    API.ExecuteLua("BuyMerchantItem(" + i + "," + remainder + ")");
+                    yield return 500;
+                }
+                yield break;
+            }
+        }
     }
     
     // Method:          "CollectObject(int questID, int questObjective, int[] itemID, Vector3[] hotSpot, Vector3[] blacklist, float blacklistDistance)"
@@ -428,7 +428,14 @@ public class QH
                         {
                             distance1 = API.Me.Focus.Distance2D;
                             yield return 100;
-                            distance2 = API.Me.Focus.Distance2D;
+                            if (API.Me.Focus != null)
+                            {
+                                distance2 = API.Me.Focus.Distance2D;
+                            }
+                            else
+                            {
+                                distance2 = distance1;
+                            }
                         }
                         
                         // Position check. If distance is less, unit is moving closer to us.  Used predictive positioning instead.
@@ -500,7 +507,6 @@ public class QH
                 // Between each check...
                 yield return 100;
             }
-            
             // Determing Vehicle HP and if player should exit vehicle.
             yield return 1000;
             bool exitVehicle = true;
@@ -527,6 +533,7 @@ public class QH
                 // If NPC is killed with time still left, why stand there and wait til it goes away?  Just exit it and keep moving on.
                 API.Print("Exiting Demolisher...");
                 API.ExecuteLua("OverrideActionBarLeaveFrameLeaveButton:Click()");
+                
             }
             else if (!exitVehicle)
             {
@@ -827,7 +834,33 @@ public class QH
 		durability = durability / count * 100;
 		return (int)durability;
 	}
+
+    // Method:          "GetElapsedTime(int startTime)"
+    // What it Does:     Returns an array of the elapsed time, with pos 0-2 as Hr, min, seconds
+    // Purpose:          Easier Log Reporting
+    public static int[] GetElapsedTime(int startTime)
+    {
+        // 3 nodes - Hrs, Min, Seconds
+        int[] time = new int[3];
+        float tempTime = API.ExecuteLua<float>("local time = GetSessionTime(); return time;");
+        int finalTime = (int)tempTime;
+        
+        // total time elapsed in seconds...
+        finalTime = finalTime - startTime;
+        int hr = finalTime / 3600;
+        int min = finalTime % 3600 / 60;
+        int sec = ((finalTime % 3600) % 60);
+        
+        time[2] = sec;
+        time[1] = min;
+        time[0] = hr;
+        
+        return time;
+    }
     
+    // Method:          "GetFollowerDisplayID(string followerName)"
+    // What it Does:    Exactly what it says, returns the display ID of the follower
+    // Purpose:         Can be useful in checking if follower is available
     public static int GetFollowerDisplayID(string followerName)
     {
         return API.ExecuteLua<int>("local table = C_Garrison.GetFollowers(); local displayId = 0; for x,y in pairs(table) do if y.name == \"" + followerName + "\" then displayId = y.displayID end end; return displayId;");
@@ -1075,22 +1108,22 @@ public class QH
         Vector3 location3 = new Vector3(5576.729f, 4584.367f, 141.0846f);
         Vector3 location4 = new Vector3(5591.181f, 4569.721f, 136.2159f);
         
-        if (API.Me.Distance2DTo(location) < 25 && API.IsInGarrison && (tier == 2 || tier == 3))
+        if (API.Me.Position.Distance(location) < 25 && API.IsInGarrison && (tier == 2 || tier == 3))
         {
             // If I do not disable Flightmaster discovery, then it tries to run to flightmaster BEFORE executing CTM actions
             // which with the lack of a mesh, often results in the player just running helplessly into the wall with mesh errors spamming.
             API.GlobalBotSettings.FlightMasterDiscoverRange = 0.0f;
-            while(API.Me.Distance2DTo(location2) > 5)
+            while(API.Me.Position.Distance(location2) > 5)
             {
                 API.CTM(location2);
                 yield return 100;
             }
-            while(API.Me.Distance2DTo(location3) > 5)
+            while(API.Me.Position.Distance(location3) > 5)
             {
                 API.CTM(location3);
                 yield return 100;
             }
-            while(API.Me.Distance2DTo(location4) > 5)
+            while(API.Me.Position.Distance(location4) > 5)
             {
                 API.CTM(location4);
                 yield return 100;
@@ -1873,7 +1906,7 @@ public class QH
         }
         return false;
     }
-    
+      
     // Method:          "SetFocusUnit(int)"
     // What it does:    Sets given NPC to the focus target and also targets it.
     // Purpose:         Useful to have a target set as focus as often it is easy to lose the target.
@@ -1893,97 +1926,7 @@ public class QH
         }
     }
     
-    // Method:          "SetGarrisonProfessionBuildings()"
-    // What it Does:    Matches your professions to the corresponding profession buildings, then plots them
-    //                  Note: It only plots them if the spaces are already vacant, thus not to disrupt player actions
-    //                  if they choose to have something else there.
-    // Purpose:         To automate profession building and garrison management whilst leveling, thus half the work
-    //                  is already completed by the time the player takes back over control at lvl 100.
-    public static void SetGarrisonProfessionBuildings()
-    {
-        int buildingID1 = 93; // Default is Storehouse
-        int buildingID2 = 51; // Default is Enchanter's Study
-        int plotID1 = 18;  // Default plot positions.
-        int plotID2 = 19;
-        string pName1 = "Storehouse"; // Default plot names
-        string pName2 = "Enchanting";
-        // Gathering player professions
-        string[] professions = GetPlayerProfessions();
-        
-        if (!professions[0].Equals("None"))
-        {
-            int id = GetProfessionBuildingID(professions[0]);
-            bool changeName = false;
-            if (id != 0)
-            {
-                buildingID1 = id;
-                changeName = true;
-            }
-            if (buildingID1 != 0 && changeName)
-            {
-                plotID1 = API.ExecuteLua<int>("local count = 1; local plotID1 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID1 + ")) do if count == 1 then plotID1 = y count = count + 1 end end; return plotID1");
-                pName1 = professions[0];
-            }
-        }
-        
-        if (!professions[1].Equals("None"))
-        {
-            int id2 = GetProfessionBuildingID(professions[1]);
-            bool changeName2 = false;
-            if (id2 != 0)
-            {
-                buildingID2 = id2;
-                changeName2 = true;
-            }
-            if (buildingID2 != 0 && changeName2)
-            {
-                plotID2 = API.ExecuteLua<int>("local count = 1; local plotID2 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID2 + ")) do if count == 1 then count = count + 1 elseif count == 2 then plotID2 = y end end; return plotID2");
-                pName2 = professions[1];
-            }
-        }
-        // PlotInfo containes a bool representing if building is built there or not, and building name if there is one.
-        List<object> plotInfo =  GetGarrisonBuildingInfo(plotID1);
-        List<object> plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
-        if ((int)plotInfo[0] == 0)
-        {
-            if (buildingID1 != (int)plotInfo2[0])
-            {
-                PlaceGarrisonBuildingAt(plotID1, buildingID1);
-                API.Print("Placing Plot For " + pName1 + "!!!");
-            }
-            else if ((int)plotInfo2[0] != 0)
-            {
-                PlaceGarrisonBuildingAt(plotID1, buildingID2);
-                API.Print("Placing Plot For " + pName2 + "!");
-            }
-        }
-        else
-        {
-            API.Print("You Already Have the " + (string)plotInfo[1] + " Building There!");
-        }
-               
-        // Second Profession Plotting.
-        // Remember, if no 2nd profession is found, the Enchanter's study is placed by default.
-        plotInfo =  GetGarrisonBuildingInfo(plotID1);
-        plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
-        if ((int)plotInfo2[0] == 0)
-        {
-            if (buildingID2 != (int)plotInfo[0])
-            {
-                PlaceGarrisonBuildingAt(plotID2, buildingID2);
-                API.Print("Placing Plot For " + pName2 + "!");
-            }
-            else if ((int)plotInfo[0] != 0)
-            {
-                PlaceGarrisonBuildingAt(plotID2, buildingID1);
-                API.Print("Placing Plot For " + pName1 + "!!");
-            }
-        }
-        else
-        {
-            API.Print("You Already Have the " + (string)plotInfo2[1] + " Building There!");
-        }
-    }
+    
 
     // Method:          "SetFocusUnit(int[])"
     // What it does:    Sets Focus to a unit from the given array of units
@@ -2183,6 +2126,98 @@ public class QH
         }
     }
     
+    // Method:          "SetGarrisonProfessionBuildings()"
+    // What it Does:    Matches your professions to the corresponding profession buildings, then plots them
+    //                  Note: It only plots them if the spaces are already vacant, thus not to disrupt player actions
+    //                  if they choose to have something else there.
+    // Purpose:         To automate profession building and garrison management whilst leveling, thus half the work
+    //                  is already completed by the time the player takes back over control at lvl 100.
+    public static void SetGarrisonProfessionBuildings()
+    {
+        int buildingID1 = 93; // Default is Storehouse
+        int buildingID2 = 51; // Default is Enchanter's Study
+        int plotID1 = 18;  // Default plot positions.
+        int plotID2 = 19;
+        string pName1 = "Storehouse"; // Default plot names
+        string pName2 = "Enchanting";
+        // Gathering player professions
+        string[] professions = GetPlayerProfessions();
+        
+        if (!professions[0].Equals("None"))
+        {
+            int id = GetProfessionBuildingID(professions[0]);
+            bool changeName = false;
+            if (id != 0)
+            {
+                buildingID1 = id;
+                changeName = true;
+            }
+            if (buildingID1 != 0 && changeName)
+            {
+                plotID1 = API.ExecuteLua<int>("local count = 1; local plotID1 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID1 + ")) do if count == 1 then plotID1 = y count = count + 1 end end; return plotID1");
+                pName1 = professions[0];
+            }
+        }
+        
+        if (!professions[1].Equals("None"))
+        {
+            int id2 = GetProfessionBuildingID(professions[1]);
+            bool changeName2 = false;
+            if (id2 != 0)
+            {
+                buildingID2 = id2;
+                changeName2 = true;
+            }
+            if (buildingID2 != 0 && changeName2)
+            {
+                plotID2 = API.ExecuteLua<int>("local count = 1; local plotID2 = 0; for x, y in pairs(C_Garrison.GetPlotsForBuilding(" + buildingID2 + ")) do if count == 1 then count = count + 1 elseif count == 2 then plotID2 = y end end; return plotID2");
+                pName2 = professions[1];
+            }
+        }
+        // PlotInfo containes a bool representing if building is built there or not, and building name if there is one.
+        List<object> plotInfo =  GetGarrisonBuildingInfo(plotID1);
+        List<object> plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
+        if ((int)plotInfo[0] == 0)
+        {
+            if (buildingID1 != (int)plotInfo2[0])
+            {
+                PlaceGarrisonBuildingAt(plotID1, buildingID1);
+                API.Print("Placing Plot For " + pName1 + "!!!");
+            }
+            else if ((int)plotInfo2[0] != 0)
+            {
+                PlaceGarrisonBuildingAt(plotID1, buildingID2);
+                API.Print("Placing Plot For " + pName2 + "!");
+            }
+        }
+        else
+        {
+            API.Print("You Already Have the " + (string)plotInfo[1] + " Building There!");
+        }
+               
+        // Second Profession Plotting.
+        // Remember, if no 2nd profession is found, the Enchanter's study is placed by default.
+        plotInfo =  GetGarrisonBuildingInfo(plotID1);
+        plotInfo2 =  GetGarrisonBuildingInfo(plotID2);
+        if ((int)plotInfo2[0] == 0)
+        {
+            if (buildingID2 != (int)plotInfo[0])
+            {
+                PlaceGarrisonBuildingAt(plotID2, buildingID2);
+                API.Print("Placing Plot For " + pName2 + "!");
+            }
+            else if ((int)plotInfo[0] != 0)
+            {
+                PlaceGarrisonBuildingAt(plotID2, buildingID1);
+                API.Print("Placing Plot For " + pName1 + "!!");
+            }
+        }
+        else
+        {
+            API.Print("You Already Have the " + (string)plotInfo2[1] + " Building There!");
+        }
+    }
+    
     // Method:          "ShadowElixirNeeded()"
     // What it Does:    Determines if a player even needs the shadow elixir in Spires of Arak anymore.  Returns boolean.
     // Purpose:         Essentially there are these repeatable weekly quests where you can loot shadow elixirs.  These elixirs
@@ -2297,6 +2332,7 @@ public class QH
             if (item1 < 1 || item2 < 1 || item3 < 1 || item4 < 1 || item5 < 1 || (NeedsFollower(58876) && GetPlayerGold() > 400))
             {
                 API.ExecuteLua("DraenorZoneAbilityFrame:Show(); DraenorZoneAbilityFrame.SpellButton:Click()");
+                API.MoveToStop();
                 yield return 6000;
                 // Targeting NPC Smuggler
                 int count = 0;
@@ -2831,9 +2867,9 @@ public class QH
                 {
                     API.Me.SetTarget(unit);
                     // Verifying Target is in front!!!
-                    position1 = API.Me.Distance2DTo(unit.Position);
+                    position1 = API.Me.Position.Distance(unit.Position);
                     yield return 250;
-                    position2 = API.Me.Distance2DTo(unit.Position);
+                    position2 = API.Me.Position.Distance(unit.Position);
                     if (position1 > position2) 
                     {
                         API.Print("Target Acquired... Firing on " + unit.Name + "!");
@@ -3161,221 +3197,205 @@ public class QH
     }
     
     
-    // CUSTOM NAVIGATION SYSTEM
-    // KEEPING IN SEPERATE SECTION
     
+    // GARRISON MISSION FOLLOWER API - BOTH SHIPYARD AND GARRISON
+    // Work in Progress
     
-    // Method:          "NavigateShipyard(Vector3 destination)"
-    public static IEnumerable<int> NavigateShipyard(Vector3 destination)
-    {                
-        // CTM positions
-        Vector3[] hotspots = new Vector3[]{new Vector3(5226.465f, 5103.418f, 5.177947f),new Vector3(5228.128f, 5099.702f, 5.177947f),new Vector3(5231.669f, 5091.785f, 3.380589f),new Vector3(5235.001f, 5084.335f, 3.268428f),new Vector3(5238.147f, 5076.524f, 3.26907f),new Vector3(5241.06f, 5068.825f, 3.269417f),new Vector3(5243.971f, 5061.015f, 3.269331f),new Vector3(5246.577f, 5053.362f, 3.269719f),new Vector3(5249.292f, 5045.341f, 3.270111f),new Vector3(5252.161f, 5036.862f, 3.279385f),new Vector3(5254.744f, 5029.231f, 3.281622f),new Vector3(5257.496f, 5021.1f, 3.281622f),new Vector3(5260.215f, 5013.065f, 4.370923f),new Vector3(5262.909f, 5005.366f, 5.023382f),new Vector3(5268.368f, 4999.576f, 5.022273f),new Vector3(5276.881f, 4999.54f, 5.02261f),new Vector3(5285.001f, 5001.184f, 5.024286f),new Vector3(5293.423f, 5002.99f, 5.022233f),new Vector3(5301.736f, 5005.184f, 5.035467f),new Vector3(5309.441f, 5007.458f, 5.030182f),new Vector3(5317.661f, 5009.984f, 5.145557f),new Vector3(5325.29f, 5012.334f, 5.024195f),new Vector3(5333.139f, 5014.767f, 5.022141f),new Vector3(5340.74f, 5018.779f, 5.02382f),new Vector3(5346.704f, 5024.007f, 5.02382f),new Vector3(5347.966f, 5031.805f, 5.021767f),new Vector3(5346.603f, 5039.763f, 5.022386f),new Vector3(5344.565f, 5048.033f, 3.454549f),new Vector3(5342.144f, 5055.838f, 3.280035f),new Vector3(5339.57f, 5063.75f, 3.281292f),new Vector3(5336.929f, 5071.516f, 3.279427f),new Vector3(5334.284f, 5079.233f, 3.271114f),new Vector3(5331.647f, 5086.923f, 3.271114f),new Vector3(5328.998f, 5094.546f, 3.269061f),new Vector3(5325.908f, 5101.985f, 3.271765f),new Vector3(5322.469f, 5110.187f, 3.269712f),new Vector3(5319.396f, 5117.553f, 3.365296f),new Vector3(5316.603f, 5124.887f, 3.266913f),new Vector3(5313.506f, 5133.693f, 3.26486f),new Vector3(5310.355f, 5141.261f, 3.262807f),new Vector3(5306.733f, 5149.109f, 5.007558f),new Vector3(5304.183f, 5154.635f, 5.179315f),new Vector3(5313.919f, 4999.146f, 5.031353f),new Vector3(5316.989f, 4991.349f, 4.590706f),new Vector3(5319.994f, 4983.496f, 3.261628f),new Vector3(5322.344f, 4976.021f, 3.262311f),new Vector3(5324.748f, 4968.041f, 3.454753f),new Vector3(5327.033f, 4960.454f, 3.355773f),new Vector3(5329.424f, 4952.516f, 3.354637f),new Vector3(5331.841f, 4944.493f, 3.814888f),new Vector3(5333.223f, 4939.904f, 4.313459f),new Vector3(5336.783f, 4942.057f, 3.987006f),new Vector3(5344.255f, 4946.576f, 3.750103f),new Vector3(5350.35f, 4952.551f, 3.886631f),new Vector3(5355.614f, 4958.595f, 3.89053f),new Vector3(5359.577f, 4965.995f, 4.598823f),new Vector3(5363.436f, 4974.154f, 6.17427f),new Vector3(5368.585f, 4980.556f, 6.895992f),new Vector3(5375.232f, 4985.608f, 6.570148f),new Vector3(5381.774f, 4990.581f, 6.060965f),new Vector3(5388.921f, 4995.311f, 5.513795f),new Vector3(5395.682f, 4999.771f, 5.192679f),new Vector3(5402.694f, 5004.194f, 4.248222f),new Vector3(5409.237f, 5008.819f, 3.37357f),new Vector3(5415.642f, 5013.987f, 3.103029f),new Vector3(5272.541f, 4938.235f, 8.941624f),new Vector3(5276.913f, 4938.519f, 7.778503f),new Vector3(5285.406f, 4939.062f, 5.868029f),new Vector3(5293.458f, 4939.168f, 5.076531f),new Vector3(5301.167f, 4940.197f, 3.863107f),new Vector3(5309.34f, 4942.798f, 2.662547f),new Vector3(5337.066f, 4935.606f, 5.080146f),new Vector3(5338.462f, 4933.899f, 5.410695f),new Vector3(5343.997f, 4926.92f, 7.379288f),new Vector3(5349.408f, 4921.278f, 10.13784f),new Vector3(5355.425f, 4915.238f, 13.54762f),new Vector3(5361.338f, 4909.301f, 18.02958f),new Vector3(5367.602f, 4904.31f, 22.16294f),new Vector3(5375.418f, 4902.233f, 25.21158f),new Vector3(5381.681f, 4907.238f, 26.89433f),new Vector3(5386.229f, 4914.455f, 30.41585f),new Vector3(5387.525f, 4922.56f, 33.92372f),new Vector3(5386.115f, 4930.876f, 35.5632f),new Vector3(5387.724f, 4938.739f, 35.5954f),new Vector3(5391.915f, 4946.38f, 34.34087f),new Vector3(5395.266f, 4953.227f, 32.81433f),new Vector3(5395.794f, 4955.711f, 32.35955f),new Vector3(5392.45f, 4935.087f, 36.59919f),new Vector3(5395.52f, 4934.9f, 37.70484f),new Vector3(5403.881f, 4934.011f, 40.71118f),new Vector3(5410.981f, 4929.611f, 43.73222f),new Vector3(5416.117f, 4922.526f, 45.84546f),new Vector3(5419.612f, 4915.138f, 48.19114f),new Vector3(5406.811f, 4930.285f, 42.55336f),new Vector3(5412.805f, 4923.976f, 45.10557f),new Vector3(5418.313f, 4918.179f, 47.16678f),new Vector3(5424.307f, 4911.87f, 50.2869f),new Vector3(5429.672f, 4905.676f, 53.36563f),new Vector3(5435.39f, 4899.387f, 56.10091f),new Vector3(5441.695f, 4894.402f, 58.92585f),new Vector3(5448.286f, 4889.825f, 62.17897f),new Vector3(5455.419f, 4885.038f, 66.39535f),new Vector3(5462.308f, 4880.404f, 70.21847f),new Vector3(5469.073f, 4875.818f, 74.21414f),new Vector3(5475.306f, 4870.763f, 77.82598f),new Vector3(5480.802f, 4864.634f, 82.19171f),new Vector3(5485.893f, 4858.343f, 87.268f),new Vector3(5489.982f, 4850.61f, 93.11131f),new Vector3(5491.314f, 4842.559f, 98.48849f),new Vector3(5490.236f, 4834.032f, 103.627f),new Vector3(5489.203f, 4825.97f, 106.6963f),new Vector3(5487.678f, 4817.781f, 109.5393f),new Vector3(5483.123f, 4810.932f, 111.7618f),new Vector3(5477.436f, 4805.284f, 113.4704f),new Vector3(5471.529f, 4799.627f, 115.9368f),new Vector3(5466.415f, 4793.621f, 118.6344f),new Vector3(5463.415f, 4785.923f, 121.064f)};
-                                            
-        // Why waste time parsing through them all if I am already right there?
-        if (API.Me.Distance2DTo(destination) > 5f)
-        {
-            Vector3[] route = CreatePath(hotspots, destination);
-            API.Print("Calculating Hotspots for Custom Navigation System...");
-            API.Print("Taking " + route.Length + " Nodes to Get to Your Destination!");
-            for (int i = 0; i < route.Length; i++)
-            {
-                while(!API.CTM(route[i]))
-                {
-                    yield return 100;
-                }
-            }
-        }
-        while(!API.CTM(destination))
-        {
-            yield return 250;
-        }
-        yield break;
-    }
-    
-    // Method:          "SortHotspots(Vector3[] hotspots, Vector3 destination)"
-    public static Vector3[] CreatePath(Vector3[] hotspots, Vector3 destination)
+    // Method:          "GetAvailableShipyardMissionsByID()"
+    // What it Does:    Gets all Shipyard Mission IDs in an array
+    // Purpose:         To be used to identify all available missions at the Shipyard Fleet Command Table
+    public static int[] GetAvailableShipyardMissionsByID()
     {
-        // Error Checking
-        if (hotspots.Length == 0)
-        {
-            return hotspots;
-        }
-               
-        // Variable initializations
-        List<Vector3> finalResult = new List<Vector3>();
-        List<Vector3> hotspotList = new List<Vector3>(hotspots);
-        Vector3 position = API.Me.Position;
-        Vector3 closest;
-        bool NotDoneSorting = true;
-        int index = 0;
-        int count = 0;
-        bool noReset = true;
-        int numWarnings = 0;
-        
-        // Determining which hotspot is closest to destination.
-        Vector3 final = hotspotList[0];
-        for (int i = 1; i < hotspotList.Count; i++)
-        {
-            if (hotspotList[i].Distance2D(destination) < final.Distance2D(destination))
-            {
-                final = hotspotList[i];
-            }
-        }
-        
-        while(NotDoneSorting)
-        {
-            // closest to current node (first will be closest to player)
-            closest = hotspotList[count];
-            for (int i = count + 1; i < hotspotList.Count; i++)
-            {
-                if (hotspotList[i].Distance2D(position) < closest.Distance2D(position))
-                {
-                    closest = hotspotList[i];
-                    index = i;
-                }
-            }
-            
-            // Player is far away from custom mesh.. possible Stuck issues could occur. Issue warning!
-            if (API.Me.Distance2DTo(closest) > 30f && count == 0 && numWarnings == 0)
-            {
-                API.Print("Warning! Player is " + (int)API.Me.Distance2DTo(closest) + " Yards From the Custom Mesh! Very Far! Dangerous to Navigate!");
-            }
-            numWarnings++;
-            
-            
-            if (closest.Distance2D(position) > 10f && count != 0)
-            {
-                hotspotList.RemoveAt(count - 1);
-                finalResult.Clear();
-                position = API.Me.Position;
-                index = 0;
-                count = 0;
-                noReset = false;
-            }
+        String ids = API.ExecuteLua<String>("local ids = \"\"; for x,y in pairs(C_Garrison.GetAvailableMissions(2)) do ids = ids .. y.missionID .. \" : \"; end return ids;");
+        List<int> result = new List<int>();
 
-            if (noReset)
+        if (!ids.Equals(""))
             {
-                // Now, shift everything below the next closest hotspot to the right;
-                for (int j = index; j > count; j--)
-                {
-                    hotspotList[j] = hotspotList[j-1];
-                }
-                hotspotList[count] = closest;
-                finalResult.Add(closest);
-                index = 0;
-                count++;
-                position = closest;
-            }
-            
-            
-            // Determining if we reached the last hotspot;
-            if (closest == final && noReset)
+            while (ids.IndexOf(':') != -1)
             {
-                NotDoneSorting = false;
+                int temp = Int32.Parse(ids.Substring(0,ids.IndexOf(':') - 1));
+                result.Add(temp);
+                ids = ids.Substring(ids.IndexOf(':') + 2);			
             }
-            
-            noReset = true;
+        }
+        int[] finalResult = new int[result.Count];
+        for (int i = 0; i < finalResult.Length; i++)
+        {
+            finalResult[i] = result[i];
+        }
+        return finalResult;
+    }
+    
+    // Method:          "GetAvailableGarrisonMissionsByID()"
+    // What it Does:    Gets all Garrison Mission IDs in an array
+    // Purpose:         To be used to identify all available missions at the Garrison Follower Command Table
+    public static int[] GetAvailableGarrisonMissionsByID()
+    {
+        String ids = API.ExecuteLua<String>("local ids = \"\"; for x,y in pairs(C_Garrison.GetAvailableMissions(1)) do ids = ids .. y.missionID .. \" : \"; end return ids;");
+        List<int> result = new List<int>();
 
-        }
-             
-        // Building new, smaller array
-        Vector3[] result = new Vector3[finalResult.Count];
-        for (int i = 0; i < result.Length; i++)
-        {
-            result[i] = finalResult[i];
-        }
-        return result;
-    }
-    
-    // Method:          "InsertionSort(Vector3[] hotspots)"
-    public static void InsertionSortHotspots(Vector3[] hotspots)
-    {
-        Vector3 temp;
-        for (int i = 0; i < hotspots.Length; i++)
-        {
-            for (int j = i; j > 0; j--)
+        if (!ids.Equals(""))
             {
-                if (API.Me.Distance2DTo(hotspots[j-1]) > API.Me.Distance2DTo(hotspots[j]))
-                {
-                    temp = hotspots[j-1];
-                    hotspots[j-1] = hotspots[j];
-                    hotspots[j] = temp;
-                }
+            while (ids.IndexOf(':') != -1)
+            {
+                int temp = Int32.Parse(ids.Substring(0,ids.IndexOf(':') - 1));
+                result.Add(temp);
+                ids = ids.Substring(ids.IndexOf(':') + 2);			
             }
         }
+        int[] finalResult = new int[result.Count];
+        for (int i = 0; i < finalResult.Length; i++)
+        {
+            finalResult[i] = result[i];
+        }
+        return finalResult;  
     }
     
-    // Method:             "HotspotGenerator(int seconds)"
-    // What it Does:        Run this method whilst running a path in the game to build the actual mesh.
-    public static IEnumerable<int> HotspotGenerator(int seconds)
+    // Method:          "GetFollowerIDForAllShips()"
+    // What it Does:    Returns all available follower ships by ID in a string array to be parsed
+    //                  easily by separating them with colons.
+    // Purpose:         Useful in managing Garrison missions so player knows which ships are available.
+    public static string[] GetFollowerIDForAllShips()
     {
-        string result = ("Vector3[] hotspots = new Vector3[]{{");
-        int count = seconds * 2;
-        int index = 0;
-        Vector3 currentPosition = API.Me.Position;
-        Vector3 tempPosition = currentPosition;
+        String ids = API.ExecuteLua<String>("local ids = \"\"; for x,y in pairs(C_Garrison.GetFollowers(2)) do ids = ids .. y.followerID .. \" : \"; end return ids;");
+        List<string> result = new List<string>();
+
+        if (!ids.Equals(""))
+            {
+            while (ids.IndexOf(':') != -1)
+            {
+                result.Add(ids.Substring(0,ids.IndexOf(':') - 1));
+                ids = ids.Substring(ids.IndexOf(':') + 2);			
+            }
+        }
+        string[] finalResult = new string[result.Count];
+        for (int i = 0; i < finalResult.Length; i++)
+        {
+            finalResult[i] = result[i];
+        }
+        return finalResult;  
+    }
+    
+    // Method:          "NumFollowersNeededForShipyardMission(int missionID)"
+    // What it Does:    Returns how many ships are needed for a mission (will be 1-3)
+    // Purpose:         Use a counter to loop through placement of ships.
+    public static int NumFollowersNeededForShipyardMission(int missionID)
+    {
+        return API.ExecuteLua<int>("local num = 0; for x,y in pairs(C_Garrison.GetAvailableMissions(2)) do if y.missionID == " + missionID + " then num = y.numFollowers; break; end; end; return num;");
+    }
+    
+    // Method:          "NumFollowersNeededForGarrisonMission(int missionID)"
+    // What it Does:    Returns how many ships are needed for a mission (will be 1-3)
+    // Purpose:         Use a counter to loop through placement of ships.
+    public static int NumFollowersNeededForGarrisonMission(int missionID)
+    {
+        return API.ExecuteLua<int>("local num = 0; for x,y in pairs(C_Garrison.GetAvailableMissions(1)) do if y.missionID == " + missionID + " then num = y.numFollowers; break; end; end; return num;");
+    }
+    
+    // Method:          "DoShipyardMissions()"
+    // What it Does:    Whilst standing at the Fleet Command table, it will activate all missions available
+    // Purpose:         Auto-execution of shipyard missions.
+    public static IEnumerable<int> DoShipyardMissions()
+    {
+        string[] ships = GetFollowerIDForAllShips();
+        int[] missions = GetAvailableShipyardMissionsByID();
+        int numShipsLeft = ships.Length;
+        int numShipsNeeded = 0;
+        int[] temp = GetAvailableShipyardMissionsByID();
+        int numMissions = missions.Length;
         
-        while (index < count)
+        for (int i = 0; i < numMissions; i++)
         {
-            // Verifying Current Position has changed from the last one.
-            tempPosition = API.Me.Position;
-            if (tempPosition != currentPosition)
+            numShipsNeeded = NumFollowersNeededForShipyardMission(missions[i]);
+            if (numShipsLeft < numShipsNeeded)
             {
-                result += ("new Vector3(" + API.Me.Position.X + "f, " + API.Me.Position.Y + "f, " + API.Me.Position.Z + "f),");
-                currentPosition = tempPosition;
-            }
-            yield return 500;
-            index++;
-            if (index % 6 == 0)
-            {
-                if (!result.Equals("Vector3[] hotspots = new Vector3[]{{"))
-                {
-                    API.Print(result.Substring(0,result.Length - 1) + "}};");
-                }
-                else
-                {
-                    API.Print("No Hotzones Added Yet.  You may want to start moving!");
-                }
-            }
-        }
-        if (!result.Equals("Vector3[] hotspots = new Vector3[]{{"))
-        {
-            API.Print(result.Substring(0,result.Length - 1) + "}};");
-        }
-        else
-        {
-            API.Print("No Hotzones Were Added.  Please Move on a path in-game and the hotspot generator will build the mesh.");
-        }
-        yield break;
-    }
-    
-    // Method:          "GetClosestNode(Vector3[] hotspots, Vector3 currentNode)"
-    public static Vector3 GetClosestNode(Vector3[] hotspots, Vector3 currentNode)
-    {
-        Vector3 closest;
-        for (int i = 0; i < hotspots.Length; i++)
-        {
-            if (hotspots[i] != currentNode)
-            {
-                closest = hotspots[i];
+                API.Print("Player Does Not Have Enough Ships to Complete Any More Missions.");
                 break;
             }
-        }
-        for (int i = 0; i < hotspots.Length; i++)
-        {
-            if (hotspots[i] != currentNode && hotspots[i] != closest && hotspots[i].Distance2D(currentNode) < closest.Distance2D(currentNode))
+            for (int j = 0; j < numShipsNeeded; j++) // No Logic checking, just generic ship adding right now. To Be Worked on Eventually...
             {
-                closest = hotspots[i];
+                API.ExecuteLua("C_Garrison.AddFollowerToMission(\"" + missions[i] + "\",\"" + ships[numShipsLeft - 1 - j] + "\")");
+                yield return 250;
             }
+            
+            // Forces Re-attempt efforts
+            if (temp.Length == missions.Length)
+            {
+                if ((API.ExecuteLua<bool>("return GarrisonShipyardFrame.MissionTab.MissionPage:IsVisible()")) == true)
+                {
+                    API.ExecuteLua("GarrisonShipyardMapMission1:Click();");
+                    yield return 1000;
+                }
+                // Starting Mission
+                yield return 500;
+                API.ExecuteLua("C_Garrison.StartMission(\""+ missions[i] +"\")");
+                yield return 500;
+                 // One Intro Shipyard quest this messes it up.. so skip one lines
+                // temp = GetAvailableShipyardMissionsByID();
+                // if (temp.Length < missions.Length)
+                // {
+                //     API.ExecuteLua("GarrisonShipyardFrame.MissionTab.MissionPage.StartMissionButton:Click()");
+                //     yield return 1000;
+                // }
+            }
+            
+            // Reducing Available Ships to send out.
+            numShipsLeft = numShipsLeft - numShipsNeeded;
+            missions = GetAvailableShipyardMissionsByID();
         }
-        return closest;
+        // Closes Window
+        // API.ExecuteLua("C_Garrison.CloseMissionNPC()");
+    }
+    
+    public static void DoShipyardMissionByID(int ID)
+    {
+        string[] ships = GetFollowerIDForAllShips();
+        int numShipsLeft = ships.Length;
+        int numShipsNeeded = NumFollowersNeededForShipyardMission(ID);
+        
+        if (numShipsLeft < numShipsNeeded)
+        {
+            API.Print("Player Does Not Have Enough Ships to Complete Any More Missions.");
+            return;
+        }
+        
+        for (int j = 0; j < numShipsNeeded; j++) // No Logic checking, just generic ship adding right now. To Be Worked on Eventually...
+        {
+            API.ExecuteLua("C_Garrison.AddFollowerToMission(\"" + ID + "\",\"" + ships[numShipsLeft - 1 - j] + "\")");
+        }
+        // Starting Mission
+        API.ExecuteLua("GarrisonShipyardFrame.MissionTab.MissionPage.StartMissionButton:Click()");
+        API.ExecuteLua("C_Garrison.StartMission(\""+ ID +"\")");
+        API.ExecuteLua("GarrisonShipyardFrame.MissionTab.MissionPage.CloseButton:Click()");
+    }
+    
+    // Method:          "IsShipyardMissionComplete(int missionID)"
+    // What it Does:    Returns true if the given Shipyard mission is finished and ready for player to collect award
+    // Purpose:         Boolean check is useful due to long mission timers.
+    public static bool IsShipyardMissionComplete(int missionID)
+    {
+        return API.ExecuteLua<bool>("local result = false; for x,y in pairs(C_Garrison.GetCompleteMissions(2)) do if y.missionID == " + missionID + " then result = true; break; end end; return result;");
+    }
+    
+    // Method:          "CompleteMissionFast(int missionID)"
+    // What it Does:    Upon opening either command table, Garrison or Fleet, this will auto-complete 
+    //                  every mission and also accept their rewards instantly.
+    // Purpose:         Skip the slow animation...
+    public static void CompleteMissionFast(int missionID)
+    {
+        API.ExecuteLua("C_Garrison.MarkMissionComplete(\"" + missionID + "\")");
+        if (API.ExecuteLua<bool>("local result = C_Garrison.CanOpenMissionChest(\"" + missionID + "\"); return result;"))
+        {
+            API.ExecuteLua("C_Garrison.MissionBonusRoll(\"" + missionID + "\")");
+            API.ExecuteLua("GarrisonShipyardFrame.MissionTab.MissionList.CompleteDialog.BorderFrame.ViewButton:Click()");
+        }
     }
     
     
     
-    
-    
-    
+    // DUNGEON LOGIC API!!!
+    // Necessary for Dungeon Scripts.
+     
     // Method:          "IsBossAvailable(string instanceName, string bossName)
     // What it Does:    Returns true if a boss within a saved instance (like a heroic) has not yet been killed.
     // Purpose:         Keeps track of boss progression in a heroic/saved dungeon.
@@ -3391,11 +3411,17 @@ public class QH
         return API.ExecuteLua<bool>("local result = true; local found = false; for i = 1," + numSavedInstances + " do local instanceName, _, _, _, _, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if bossName == \"" + bossName + "\" then found = true end; if bossName == \"" + bossName + "\" and isKilled == true then print(\"Dungeons Progression: \" .. bossName .. \" has Been Killed.\"); result = false; break end end break end end if found == false then return found else return result end");
     }
     
+    // Method:          "GetNumRemainingBossesInSavedInstance(string instanceName)"
+    // What it Does:    Returns the number of bosses still alive within a saved instance
+    // Purpose:         Useful for dungeon progression check for logic on whether to attempt saved instance or not.
     public static int GetNumRemainingBossesInSavedInstance(string instanceName)
     {
-        return API.ExecuteLua<int>("local count = 0; for i = 1,GetNumSavedInstances() do local instanceName, _, _, _, _, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if isKilled == true then count = count + 1; end end count = numEncounters - count; break end end return count");
+        return API.ExecuteLua<int>("local count = 0; for i = 1,GetNumSavedInstances() do local instanceName, _, _, _, locked, _, _, _, _, _, numEncounters = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" and locked == true then for j = 1,numEncounters do local bossName, _, isKilled, _ = GetSavedInstanceEncounterInfo(i, j); if isKilled == true then count = count + 1; end end count = numEncounters - count; break end end return count");
     }
     
+    // Method:          "GetBossesKilledInSavedInstance(string instanceName)"
+    // What it Does:    Returns a string with a list of names of all the dungeon bosses killed within a saved instance
+    // Purpose:         Quality of life information to present to player.
     public static string GetBossesKilledInSavedInstance(string instanceName)
     {
         string result = "";
@@ -3440,9 +3466,12 @@ public class QH
         {
             return false;
         }
-        return API.ExecuteLua<bool>("local result = false; for i = 1," + numSavedInstances + " do local instanceName = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" then result = true; break; end end return result;");
+        return API.ExecuteLua<bool>("local result = false; for i = 1," + numSavedInstances + " do local instanceName,_,_,_,locked = GetSavedInstanceInfo(i); if instanceName == \"" + instanceName + "\" and locked == true then result = true; break; end end return result;");
     }
     
+    // Method:          "IsDungeonBossDead(int orderOfKill)"
+    // What it Does:    Returns true if the given dungeon boss is dead based on the order of targeting...
+    // Purpose:         Basic non-saved dungeon boss progression logic.
     public static bool IsDungeonBossDead(int orderOfKill)
     {
         bool result = false;
@@ -3454,6 +3483,26 @@ public class QH
         else
         {
             result = API.ExecuteLua<bool>("local _, _, completed = C_Scenario.GetCriteriaInfoByStep(1," + orderOfKill + "); return completed;");
+        }
+        return result;
+    }
+    
+    // Method:          "IsPlayerExaltedWithFaction(int factionID)"
+    // What it Does:    Returns true if player is exalted
+    // Purpose:         Generally for dungeon or rep farming... to stop when finished.
+    public static bool IsPlayerExaltedWithFaction(int factionID, bool get_999_of_1000_Exalted)
+    {
+        bool result = false;
+        int repLevel = API.ExecuteLua<int>("local _,_,standingID = GetFactionInfoByID(" + factionID + "); return standingID;");
+        int currentRepAmount = API.ExecuteLua<int>("local _,_,_,_,_,barValue = GetFactionInfoByID(" + factionID + "); return barValue");
+
+        if (repLevel == 8 && get_999_of_1000_Exalted && currentRepAmount >= 42999)
+        {
+            result = true;
+        }
+        else if (repLevel == 8 && !get_999_of_1000_Exalted)
+        {
+            result = true;
         }
         return result;
     }
